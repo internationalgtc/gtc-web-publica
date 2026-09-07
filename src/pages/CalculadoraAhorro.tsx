@@ -1,35 +1,70 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useMemo, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { Download, CheckCircle, AlertCircle, ArrowDown, ArrowRight, MessageCircle } from 'lucide-react'
 import { trackLead } from '@/lib/tracking'
 import { getUTMs, getReferrer } from '@/lib/utm'
 import { getCountry } from '@/lib/geo'
-import { zodResolver } from '@hookform/resolvers/zod'
-import * as z from 'zod'
-import { Link } from 'react-router-dom'
-import { Download, CheckCircle, ArrowDown, ArrowRight } from 'lucide-react'
-import { useT } from '@/hooks/useT'
+import { BUDGET_MIN, withBudget } from '@/lib/budget'
+import { WHATSAPP_LINK } from '@/data/chatbotData'
+import { useT, useLang } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
 
 const API_URL =
   import.meta.env.VITE_PLATFORM_API_URL ||
   'https://www.globaltalentconnections.online/api/leads/public'
 
-const schema = z.object({
-  contact_name: z.string().min(1, 'Requerido'),
-  contact_email: z.string().email('Email inválido'),
-  company_name: z.string().optional(),
-})
+// Supuestos = los del Excel que se descarga (hoja «Calculadora»): Seguridad Social
+// empresa 33 %, 10.200 €/año de costes indirectos (equipo 1.200, oficina 3.600,
+// formación 800, software 500, selección 1.500, rotación 2.000, otros 600) y el
+// software se cuenta en los dos lados. Salarios por perfil orientativos.
+const SS = 0.33
+const OCULTOS = 10200
+const SOFTWARE = 500
+const PERFILES: { key: string; labelKey: string; salario: number }[] = [
+  { key: 'Administrativo', labelKey: 'serv_admin', salario: 22000 },
+  { key: 'Atención al Cliente', labelKey: 'serv_atencion', salario: 21000 },
+  { key: 'Marketing Digital', labelKey: 'serv_marketing', salario: 26000 },
+  { key: 'Ventas', labelKey: 'home_form_ventas', salario: 25000 },
+  { key: 'Financiero / Contable', labelKey: 'serv_finanzas', salario: 28000 },
+  { key: 'Automatización e IA', labelKey: 'serv_ia', salario: 32000 },
+]
+const NIVELES = [
+  { key: 'calc_junior', tarifa: 1200 },
+  { key: 'calc_mid', tarifa: 1400 },
+  { key: 'calc_senior', tarifa: 1650 },
+]
 
-type FormData = z.infer<typeof schema>
+const eur = (n: number) => `${Math.round(n).toLocaleString('es-ES')} €`
+
+const EMPTY = { company_name: '', contact_name: '', contact_email: '', contact_phone: '', budget: '' }
 
 export default function CalculadoraAhorro() {
   const t = useT()
-  const [submitted, setSubmitted] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const lang = useLang()
 
-  const { register, handleSubmit, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  })
+  const [perfil, setPerfil] = useState(0)
+  const [salario, setSalario] = useState(PERFILES[0].salario)
+  const [n, setN] = useState(1)
+  const [nivel, setNivel] = useState(0)
+  const [ocultos, setOcultos] = useState(true)
+
+  const [step, setStep] = useState<'calc' | 'form' | 'done'>('calc')
+  const [form, setForm] = useState(EMPTY)
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+
+  const r = useMemo(() => {
+    const tarifa = NIVELES[nivel].tarifa
+    const ss = salario * SS
+    const oc = ocultos ? OCULTOS : 0
+    const es = (salario + ss + oc + (ocultos ? 0 : SOFTWARE)) * n
+    const gtc = (tarifa * 12 + SOFTWARE) * n
+    const ahorro = es - gtc
+    return { tarifa, ss: ss * n, oc: oc * n, sal: salario * n, es, gtc, ahorro, pct: es > 0 ? Math.round((ahorro / es) * 100) : 0 }
+  }, [salario, n, nivel, ocultos])
+
+  const frase = lang === 'en'
+    ? `With ${n} ${n > 1 ? 'people' : 'person'}, your company spends ${eur(r.es)}/year in Spain. With GTC it would drop to ${eur(r.gtc)} — saving ${eur(r.ahorro)} a year (${r.pct} %) without giving up talent quality.`
+    : `Con ${n} ${n > 1 ? 'personas' : 'persona'}, tu empresa gasta ${eur(r.es)}/año en España. Con GTC bajaría a ${eur(r.gtc)} — un ahorro de ${eur(r.ahorro)} anuales (${r.pct} %) sin renunciar a la calidad del talento.`
 
   const triggerDownload = () => {
     const link = document.createElement('a')
@@ -40,23 +75,29 @@ export default function CalculadoraAhorro() {
     document.body.removeChild(link)
   }
 
-  const onSubmit = async (data: FormData) => {
-    setLoading(true)
+  const set = (k: keyof typeof EMPTY) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
+    setForm(f => ({ ...f, [k]: e.target.value }))
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setStatus('loading')
+    const { budget, ...data } = form
+    const perfilKey = PERFILES[perfil].key
+    const resumen = `Calculadora: ${n} × ${perfilKey}, salario ${eur(salario)}/año · España ${eur(r.es)}/año vs GTC ${eur(r.gtc)}/año (${r.tarifa} €/mes) · ahorro ${eur(r.ahorro)} (${r.pct} %)`
     try {
       const utms = getUTMs()
-      await fetch(API_URL, {
+      const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contact_name: data.contact_name,
-          contact_email: data.contact_email,
-          company_name: data.company_name || undefined,
+          ...data,
+          assistant_type: perfilKey,
+          description: withBudget(resumen, budget),
+          budget_option: BUDGET_MIN[budget],
           source: 'web_formulario',
           country: getCountry(),
-          description: 'Descargó la Calculadora de Ahorro Estratégico',
           // No pisar el origen real: si el visitante no trajo UTM, queda vacío
-          // (honesto) en vez de un falso "landing/calculadora" que tapaba de
-          // dónde vino (agencia, orgánico, etc.). El imán se marca en utm_content.
+          // (honesto). El imán se marca en utm_content.
           utm_source: utms.utm_source,
           utm_medium: utms.utm_medium,
           utm_campaign: utms.utm_campaign || '',
@@ -66,185 +107,208 @@ export default function CalculadoraAhorro() {
           referrer: getReferrer(),
         }),
       })
-    } catch {
-      // Descarga siempre, aunque falle la API
-    } finally {
-      setLoading(false)
-      setSubmitted(true)
+      if (!res.ok) throw new Error()
+      setStatus('idle')
+      setStep('done')
       // Disparar el evento ANTES de la descarga: así el beacon de analytics/ads
-      // ya salió cuando el navegador se pone a bajar el Excel. Antes iba al revés
-      // y se perdía ~85% de los leads de la calculadora en GA4/Ads.
+      // ya salió cuando el navegador se pone a bajar el Excel.
       trackLead('calculadora_ahorro')
       triggerDownload()
+    } catch {
+      setStatus('error')
     }
   }
+
+  const input = 'w-full px-4 py-3 rounded-lg border border-border-soft bg-white text-navy placeholder:text-navy/40 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all'
+  const label = 'block font-label text-xs uppercase tracking-widest text-navy/70 font-bold mb-2'
 
   return (
     <>
       <SEO
         title="Calculadora de ahorro: cuánto cuesta contratar talento remoto"
-        description="Calcula en segundos cuánto ahorra tu empresa contratando un asistente virtual o profesional remoto con GTC frente a una contratación local en España: hasta un 52% menos en costos."
+        description="Calcula en segundos cuánto ahorra tu empresa contratando un asistente virtual o profesional remoto con GTC frente a una contratación local en España: hasta un 52% menos en costes."
         path="/calculadora-ahorro"
       />
       {/* HERO */}
-      <section className="bg-navy pt-32 pb-20 relative overflow-hidden">
+      <section className="bg-navy pt-32 pb-16 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-prime/[0.06] blur-[120px] rounded-full -mr-48 -mt-24" />
         <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 text-center">
           <span className="text-blue-light text-xs font-label uppercase tracking-widest font-bold mb-4 block">{t('calc_label')}</span>
           <h1 className="font-headline font-bold text-4xl md:text-5xl lg:text-6xl text-white mb-6">
             {t('calc_titulo_1')} <span className="text-gold">{t('calc_titulo_2')}</span>?
           </h1>
-          <p className="text-white/60 text-lg max-w-2xl mx-auto mb-8">
-            {t('calc_subtitle')}
-          </p>
-          <div className="inline-flex items-center gap-4 bg-coral/10 border border-coral/20 rounded-xl px-8 py-4 mb-8">
-            <span className="text-coral font-headline font-bold text-4xl">52%</span>
-            <span className="text-white/70 text-sm text-left">{t('calc_ahorro_label')}</span>
-          </div>
-          <div className="flex justify-center">
-            <ArrowDown className="h-6 w-6 text-blue-light animate-bounce" />
-          </div>
+          <p className="text-white/60 text-lg max-w-2xl mx-auto mb-6">{t('calc_subtitle')}</p>
+          <div className="flex justify-center"><ArrowDown className="h-6 w-6 text-blue-light animate-bounce" /></div>
         </div>
       </section>
 
-      {/* FORMULARIO + PREVIEW */}
-      <section className="py-20 lg:py-28 bg-off-white">
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-          {/* Formulario */}
-          <div className="bg-white rounded-2xl p-8 lg:p-10 border border-border-soft shadow-xl">
-            {submitted ? (
-              <div className="text-center py-8">
-                <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-                <h3 className="font-headline font-bold text-2xl text-navy mb-2">{t('calc_descarga_ok')}</h3>
-                <p className="text-dark-gray mb-6">{t('calc_descarga_desc')}</p>
-                <a
-                  href="/Calculadora-de-Ahorro-Estrategico-GTC.xlsx"
-                  download
-                  className="inline-flex items-center gap-2 bg-coral text-white px-8 py-4 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:bg-coral/90 transition-all shadow-lg shadow-coral/20"
-                >
-                  <Download className="h-5 w-5" />
-                  {t('calc_descargar_btn')}
-                </a>
-                <p className="text-sm text-dark-gray mt-6">
-                  {t('calc_quieres')}{' '}
-                  <Link to="/contacto" className="text-blue-prime font-bold hover:underline">{t('calc_hablemos')}</Link>
-                </p>
+      {/* CALCULADORA */}
+      <section className="py-16 lg:py-20 bg-off-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 bg-white rounded-2xl border border-border-soft shadow-xl overflow-hidden">
+            {/* Entradas */}
+            <div className="p-8 lg:p-10 border-b lg:border-b-0 lg:border-r border-border-soft">
+              <h2 className="font-headline font-bold text-2xl text-navy mb-6">{t('calc_tus_datos')}</h2>
+
+              <div className="mb-6">
+                <label className={label} htmlFor="calc-perfil">{t('calc_perfil')}</label>
+                <select id="calc-perfil" className={input} value={perfil} onChange={e => { const i = Number(e.target.value); setPerfil(i); setSalario(PERFILES[i].salario) }}>
+                  {PERFILES.map((p, i) => <option key={p.key} value={i}>{t(p.labelKey)}</option>)}
+                </select>
+                <p className="text-xs text-navy/50 mt-1">{t('calc_perfil_hint')}</p>
               </div>
-            ) : (
-              <>
-                <h2 className="font-headline font-bold text-2xl text-navy mb-2">{t('calc_descargar_titulo')}</h2>
-                <p className="text-dark-gray text-sm mb-8">{t('calc_descargar_sub')}</p>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                  <div>
-                    <label className="block font-label text-xs uppercase tracking-widest text-navy/70 font-bold mb-2">{t('calc_nombre')}</label>
-                    <input
-                      {...register('contact_name')}
-                      placeholder={t('calc_ph_nombre')}
-                      className="w-full px-4 py-3 rounded-lg border border-border-soft bg-white text-navy placeholder:text-navy/40 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
-                    />
-                    {errors.contact_name && <p className="text-red-500 text-xs mt-1">{errors.contact_name.message}</p>}
-                  </div>
+              <div className="mb-6">
+                <label className={label} htmlFor="calc-salario">{t('calc_salario')}</label>
+                <input id="calc-salario" type="number" min={0} step={500} className={`${input} font-headline font-bold text-xl`} value={salario} onChange={e => setSalario(Number(e.target.value) || 0)} />
+                <p className="text-xs text-navy/50 mt-1">{t('calc_salario_hint')}</p>
+              </div>
 
-                  <div>
-                    <label className="block font-label text-xs uppercase tracking-widest text-navy/70 font-bold mb-2">Email *</label>
-                    <input
-                      {...register('contact_email')}
-                      type="email"
-                      placeholder="tu@email.com"
-                      className="w-full px-4 py-3 rounded-lg border border-border-soft bg-white text-navy placeholder:text-navy/40 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
-                    />
-                    {errors.contact_email && <p className="text-red-500 text-xs mt-1">{errors.contact_email.message}</p>}
-                  </div>
+              <div className="mb-6">
+                <label className={label} htmlFor="calc-n">{t('calc_personas')}</label>
+                <div className="flex items-center gap-4">
+                  <input id="calc-n" type="range" min={1} max={10} value={n} onChange={e => setN(Number(e.target.value))} className="flex-1 accent-coral" />
+                  <span className="font-headline font-bold text-2xl text-navy w-8 text-right">{n}</span>
+                </div>
+              </div>
 
-                  <div>
-                    <label className="block font-label text-xs uppercase tracking-widest text-navy/70 font-bold mb-2">{t('calc_empresa')} <span className="text-navy/40 normal-case font-normal">(opcional)</span></label>
-                    <input
-                      {...register('company_name')}
-                      placeholder={t('calc_ph_empresa')}
-                      className="w-full px-4 py-3 rounded-lg border border-border-soft bg-white text-navy placeholder:text-navy/40 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
-                    />
-                  </div>
+              <div className="mb-6">
+                <span className={label}>{t('calc_nivel')}</span>
+                <div className="grid grid-cols-3 gap-2">
+                  {NIVELES.map((nv, i) => (
+                    <button key={nv.key} type="button" onClick={() => setNivel(i)}
+                      className={`rounded-lg border px-3 py-3 text-center transition-all ${i === nivel ? 'border-coral bg-coral/5' : 'border-border-soft hover:border-navy/30'}`}>
+                      <span className="block font-headline font-bold text-lg text-navy">{nv.tarifa.toLocaleString('es-ES')} €</span>
+                      <span className="text-xs text-navy/50">{t(nv.key)}</span>
+                    </button>
+                  ))}
+                </div>
+                <p className="text-xs text-navy/50 mt-1">{t('calc_nivel_hint')}</p>
+              </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="w-full bg-coral text-white py-4 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:bg-coral/90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-coral/20 disabled:opacity-50"
-                  >
-                    {loading ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <>
-                        <Download className="h-5 w-5" />
-                        {t('calc_descargar_cta')}
-                      </>
-                    )}
+              <label className="flex items-start gap-3 text-sm text-dark-gray cursor-pointer">
+                <input type="checkbox" checked={ocultos} onChange={e => setOcultos(e.target.checked)} className="mt-1 accent-coral w-4 h-4" />
+                {t('calc_ocultos')}
+              </label>
+            </div>
+
+            {/* Resultado */}
+            <div className="p-8 lg:p-10 bg-navy text-white">
+              <h2 className="font-headline font-bold text-2xl mb-6">{t('calc_resultado')}</h2>
+              <div className="divide-y divide-white/10 border-t border-white/10">
+                <Row k={t('calc_r_salario')} s={n > 1 ? `${n} ${t('calc_personas').toLowerCase()}` : undefined} v={eur(r.sal)} />
+                <Row k={t('calc_r_ss')} s="~33 %" v={eur(r.ss)} />
+                {ocultos && <Row k={t('calc_r_ocultos')} s={t('calc_r_ocultos_d')} v={eur(r.oc)} />}
+                <Row k={t('calc_r_es')} v={eur(r.es)} big />
+                <Row k={t('calc_r_gtc')} s={`${r.tarifa.toLocaleString('es-ES')} €/${lang === 'en' ? 'month' : 'mes'} × 12 + ${t('calc_r_software')}`} v={eur(r.gtc)} big gold />
+              </div>
+              <div className="grid grid-cols-2 gap-3 mt-6">
+                <div className="border border-white/15 rounded-lg p-4">
+                  <div className="font-headline font-bold text-4xl text-coral leading-none">{r.pct} %</div>
+                  <div className="text-xs text-white/55 uppercase tracking-widest font-label font-bold mt-2">{t('calc_menos_coste')}</div>
+                </div>
+                <div className="border border-white/15 rounded-lg p-4">
+                  <div className="font-headline font-bold text-4xl text-coral leading-none">{eur(r.ahorro)}</div>
+                  <div className="text-xs text-white/55 uppercase tracking-widest font-label font-bold mt-2">{t('calc_ahorro_anual')}</div>
+                </div>
+              </div>
+              <p className="text-sm text-white/70 leading-relaxed mt-5">{frase}</p>
+              {step === 'calc' && (
+                <>
+                  <button type="button" onClick={() => { setStep('form'); setTimeout(() => document.getElementById('calc-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50) }}
+                    className="w-full bg-coral text-white py-4 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:bg-coral/90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-coral/20 mt-6">
+                    {t('calc_cta_propuesta')} <ArrowRight className="w-4 h-4" />
                   </button>
-
-                  <p className="text-xs text-navy/40 text-center">
-                    {t('calc_privacidad')}{' '}
-                    <Link to="/politica-de-privacidad" className="text-blue-prime hover:underline">Política de Privacidad</Link>.
-                  </p>
-                </form>
-              </>
-            )}
+                  <p className="text-xs text-white/45 text-center mt-3">{t('calc_cta_note')}</p>
+                </>
+              )}
+            </div>
           </div>
 
-          {/* Preview comparativa */}
-          <div className="space-y-8">
-            <div>
-              <h3 className="font-headline font-bold text-2xl text-navy mb-4">{t('calc_que_incluye')}</h3>
-              <p className="text-dark-gray leading-relaxed">
-                {t('calc_que_incluye_d')}
-              </p>
+          {/* PASO 2 — formulario */}
+          {step === 'form' && (
+            <div id="calc-form" className="mt-6 bg-white rounded-2xl border border-border-soft shadow-xl p-8 lg:p-10 scroll-mt-28">
+              <h3 className="font-headline font-bold text-2xl text-navy mb-1">{t('calc_paso2_titulo')}</h3>
+              <p className="text-dark-gray mb-6">{t('calc_paso2_sub')}</p>
+              <form onSubmit={onSubmit} className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div><label className={label}>{t('home_form_empresa')} *</label><input className={input} value={form.company_name} onChange={set('company_name')} placeholder={t('home_form_empresa_ph')} autoComplete="organization" required /></div>
+                <div><label className={label}>{t('home_form_nombre')} *</label><input className={input} value={form.contact_name} onChange={set('contact_name')} placeholder={t('home_form_nombre_ph')} autoComplete="name" required /></div>
+                <div><label className={label}>Email *</label><input className={input} type="email" value={form.contact_email} onChange={set('contact_email')} placeholder={t('home_form_email_ph')} autoComplete="email" required /></div>
+                <div><label className={label}>{t('home_form_telefono')} *</label><input className={input} type="tel" value={form.contact_phone} onChange={set('contact_phone')} placeholder={t('home_form_telefono_ph')} autoComplete="tel" required /></div>
+                <div>
+                  <label className={label}>{t('form_presupuesto')} *</label>
+                  <select className={input} value={form.budget} onChange={set('budget')} required>
+                    <option value="">{t('form_presupuesto_ph')}</option>
+                    <option value="menos_1200">{t('form_presupuesto_1')}</option>
+                    <option value="1200_2000">{t('form_presupuesto_2')}</option>
+                    <option value="mas_2000">{t('form_presupuesto_3')}</option>
+                  </select>
+                  <p className="text-xs text-navy/50 mt-1">{t('form_presupuesto_hint')}</p>
+                </div>
+                <div><label className={label}>{t('calc_perfil')}</label><input className={`${input} bg-off-white`} value={t(PERFILES[perfil].labelKey)} readOnly /></div>
+                {status === 'error' && (
+                  <div className="md:col-span-3 flex items-center gap-3 text-red-600 bg-red-50 p-3 rounded-lg text-sm"><AlertCircle className="w-4 h-4 flex-shrink-0" />{t('contacto_error')}</div>
+                )}
+                <div className="md:col-span-3 flex flex-col sm:flex-row items-center gap-4">
+                  <button type="submit" disabled={status === 'loading'} className="bg-coral text-white px-8 py-4 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:bg-coral/90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-coral/20 disabled:opacity-50">
+                    {status === 'loading' ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <>{t('calc_enviar')} <ArrowRight className="w-4 h-4" /></>}
+                  </button>
+                  <p className="text-xs text-navy/40">{t('calc_privacidad')} <Link to="/politica-de-privacidad" className="text-blue-prime hover:underline">Política de Privacidad</Link>.</p>
+                </div>
+              </form>
             </div>
+          )}
 
-            <div className="bg-navy rounded-2xl p-8 space-y-6">
-              <h4 className="text-white/60 text-xs font-label uppercase tracking-widest font-bold">{t('calc_ejemplo')}</h4>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-white/60">{t('calc_local')}</span>
-                  <span className="text-white font-headline font-bold text-xl">€2.500/mes</span>
-                </div>
-                <div className="w-full h-[1px] bg-white/10" />
-                <div className="flex justify-between items-center">
-                  <span className="text-white/60">{t('calc_gtc')}</span>
-                  <span className="text-gold font-headline font-bold text-xl">€1.200/mes</span>
-                </div>
-                <div className="w-full h-[1px] bg-white/10" />
-                <div className="flex justify-between items-center">
-                  <span className="text-coral font-bold">{t('calc_ahorro_mes')}</span>
-                  <span className="text-coral font-headline font-bold text-2xl">€1.300</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-coral font-bold">{t('calc_ahorro_anual')}</span>
-                  <span className="text-coral font-headline font-bold text-2xl">€15.600</span>
-                </div>
-              </div>
-              <div className="bg-coral/10 rounded-lg p-4 text-center">
-                <span className="text-coral font-headline font-bold text-4xl">52%</span>
-                <span className="text-coral/80 text-sm block">{t('calc_de_ahorro')}</span>
+          {/* PASO 3 — hecho */}
+          {step === 'done' && (
+            <div className="mt-6 bg-white rounded-2xl border border-border-soft shadow-xl p-10 text-center">
+              <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+              <h3 className="font-headline font-bold text-3xl text-navy mb-2">{t('calc_ok_titulo')}</h3>
+              <p className="text-dark-gray max-w-xl mx-auto mb-6">{t('calc_ok_desc')}</p>
+              <div className="flex flex-col sm:flex-row justify-center gap-3">
+                <a href="/Calculadora-de-Ahorro-Estrategico-GTC.xlsx" download className="inline-flex items-center justify-center gap-2 bg-coral text-white px-8 py-4 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:bg-coral/90 transition-all shadow-lg shadow-coral/20">
+                  <Download className="h-5 w-5" /> {t('calc_descargar_btn')}
+                </a>
+                <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center gap-2 border border-navy/20 text-navy px-8 py-4 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:border-navy transition-all">
+                  <MessageCircle className="h-5 w-5" /> {t('calc_whatsapp')}
+                </a>
               </div>
             </div>
+          )}
 
-            <div className="flex flex-wrap gap-3">
+          {/* Qué incluye + pills */}
+          <div className="mt-16">
+            <h3 className="font-headline font-bold text-2xl text-navy mb-6">{t('calc_incluye_titulo')}</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[1, 2, 3].map(i => (
+                <div key={i} className="bg-white rounded-xl border border-border-soft p-6">
+                  <h4 className="font-headline font-bold text-lg text-navy mb-2">{t(`calc_inc_${i}`)}</h4>
+                  <p className="text-dark-gray text-sm leading-relaxed">{t(`calc_inc_${i}_d`)}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-3 mt-8">
               {['calc_pill_1', 'calc_pill_2', 'calc_pill_3', 'calc_pill_4'].map(key => (
                 <div key={key} className="flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold text-blue-prime bg-blue-prime/10 border border-blue-prime/20">
                   <CheckCircle className="w-3 h-3" /> {t(key)}
                 </div>
               ))}
             </div>
-
-            <Link
-              to="/contacto"
-              className="inline-flex items-center gap-3 text-blue-prime font-label font-bold text-sm uppercase tracking-widest hover:gap-4 transition-all"
-            >
-              {t('calc_prefiero')}
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
         </div>
       </section>
     </>
+  )
+}
+
+function Row({ k, s, v, big, gold }: { k: string; s?: string; v: string; big?: boolean; gold?: boolean }) {
+  return (
+    <div className="flex justify-between items-baseline gap-4 py-3">
+      <span className={big ? 'text-white' : 'text-white/65'}>
+        {k}
+        {s && <span className="block text-xs text-white/40">{s}</span>}
+      </span>
+      <span className={`font-headline font-bold whitespace-nowrap ${big ? 'text-2xl' : 'text-lg'} ${gold ? 'text-gold' : 'text-white'}`}>{v}</span>
+    </div>
   )
 }

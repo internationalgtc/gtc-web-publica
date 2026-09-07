@@ -20,6 +20,7 @@ const BlogPost = lazy(() => import('@/pages/BlogPost'))
 const PoliticaPrivacidad = lazy(() => import('@/pages/PoliticaPrivacidad'))
 const Beneficios = lazy(() => import('@/pages/Beneficios'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
+const AsistenteVirtual = lazy(() => import('@/pages/AsistenteVirtual'))
 
 function PageLoader() {
   return (
@@ -37,6 +38,8 @@ export default function App() {
       <ScrollToTop />
       <Suspense fallback={<PageLoader />}>
         <Routes>
+          {/* Landing de pago: sin Header/Footer a propósito */}
+          <Route path="/asistente-virtual" element={<AsistenteVirtual />} />
           <Route element={<Layout />}>
             <Route path="/" element={<HomePage />} />
             <Route path="/nosotros" element={<Nosotros />} />

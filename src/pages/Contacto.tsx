@@ -5,7 +5,7 @@ import { getUTMs, getReferrer, getLandingUrl } from '@/lib/utm'
 import { getCountry } from '@/lib/geo'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Send, CheckCircle, AlertCircle, MessageCircle } from 'lucide-react'
+import { Send, CheckCircle, AlertCircle } from 'lucide-react'
 import { BUDGET_MIN, withBudget } from '@/lib/budget'
 import { WHATSAPP_LINK } from '@/data/chatbotData'
 import { RevealSection } from '@/components/shared/RevealSection'
@@ -113,17 +113,8 @@ export default function ContactoPage() {
                   </svg>
                 </div>
                 <div>
-                  <p className="font-label text-xs uppercase tracking-widest text-navy/60 font-bold mb-1">Teléfono</p>
-                  <a href="tel:+34689539896" className="text-navy font-medium hover:text-blue-prime transition-colors">+34 689 53 98 96</a>
-                </div>
-              </li>
-              <li className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-lg bg-blue-prime/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <MessageCircle className="w-5 h-5 text-blue-prime" />
-                </div>
-                <div>
                   <p className="font-label text-xs uppercase tracking-widest text-navy/60 font-bold mb-1">{t('contacto_whatsapp')}</p>
-                  <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="text-navy font-medium hover:text-blue-prime transition-colors">{t('contacto_whatsapp_cta')}</a>
+                  <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="text-navy font-medium hover:text-blue-prime transition-colors">+34 689 53 98 96</a>
                 </div>
               </li>
               <li className="flex items-start gap-4">

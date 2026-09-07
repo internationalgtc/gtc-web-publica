@@ -7,10 +7,11 @@ import logoDark from '@/assets/logos/logo-gtc-negro.png'
 
 // Variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos): portada de
 // comunidad + portal de vacantes. Sin secciones de clientes ni chatbot de
-// captación. Sin CTA en el header: duplicaba el link "Oportunidades".
+// captación. Un solo destino: «Únete al equipo» decía lo mismo que
+// «Oportunidades» y mandaba al mismo sitio (Ariel, 8-sep-2026).
 const NAV_LINKS = [
+  { key: 'nav_como_funciona', to: '/#proceso' },
   { key: 'empleos_label', to: '/empleos' },
-  { key: 'beneficios_label', to: '/beneficios' },
 ]
 
 export function Header() {

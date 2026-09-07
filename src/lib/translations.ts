@@ -453,7 +453,7 @@ const T: Record<string, Record<string, string>> = {
 
   // ── DETALLES EMPLEO ──
   det_not_found: { es: 'Vacante no encontrada', en: 'Job not found' },
-  det_volver: { es: 'Volver a empleos', en: 'Back to jobs' },
+  det_volver: { es: 'Todas las oportunidades', en: 'All opportunities' },
   det_postular: { es: 'Postularme', en: 'Apply now' },
   det_descripcion: { es: 'Descripción', en: 'Description' },
   det_responsabilidades: { es: 'Responsabilidades', en: 'Responsibilities' },
@@ -522,6 +522,21 @@ const T: Record<string, Record<string, string>> = {
   testi_t3_cargo: { es: 'CEO en PMV Factory', en: 'CEO at PMV Factory' },
   testi_t4_texto: { es: 'Estamos muy satisfechos con la calidad de los asistentes y la facilidad de contratación que ofrece Global Talent Connections.', en: 'We are very satisfied with the quality of the assistants and how easy hiring is with Global Talent Connections.' },
   testi_t4_cargo: { es: 'CEO en Coseba, Seguros Paco Saban', en: 'CEO at Coseba, Seguros Paco Saban' },
+
+  // --- Portal de candidatos: nav unificada + detalle editorial (8-sep-2026) ---
+  nav_como_funciona: { es: 'Cómo funciona', en: 'How it works' },
+  footer_portal: { es: 'Portal', en: 'Portal' },
+  det_cargando: { es: 'Cargando la vacante…', en: 'Loading the position…' },
+  det_not_found_p: { es: 'Puede que esa búsqueda ya haya cerrado. Mira las que siguen abiertas.', en: 'That search may have closed already. Browse the ones still open.' },
+  det_postular_nota: { es: 'Formulario de tres minutos · CV en PDF', en: 'Three-minute form · PDF CV' },
+  det_48h: { es: 'Si tu perfil encaja, te contactamos en menos de 48 horas.', en: 'If your profile fits, we contact you within 48 hours.' },
+  det_remoto: { es: '100% remoto', en: '100% remote' },
+  det_sec_postulacion: { es: 'Postulación', en: 'Application' },
+  det_otras: { es: 'Otras oportunidades', en: 'Other opportunities' },
+  det_ver_todas: { es: 'Ver todas las oportunidades', en: 'See all opportunities' },
+  det_area: { es: 'Área', en: 'Area' },
+  det_ubicacion: { es: 'Ubicación', en: 'Location' },
+  det_jornada: { es: 'Jornada', en: 'Schedule' },
 }
 
 export function t(key: string, lang: string): string {

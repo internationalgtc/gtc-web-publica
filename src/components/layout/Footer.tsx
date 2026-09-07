@@ -18,10 +18,11 @@ export function Footer() {
           </div>
 
           <div>
-            <h5 className="ed-caps !text-[10px] text-cream/40 mb-5">{t('footer_empresa')}</h5>
+            <h5 className="ed-caps !text-[10px] text-cream/40 mb-5">{t('footer_portal')}</h5>
             <ul className="space-y-3">
               <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/empleos">{t('empleos_label')}</Link></li>
-              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/beneficios">{t('beneficios_label')}</Link></li>
+              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/#proceso">{t('nav_como_funciona')}</Link></li>
+              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/#comunidad">{t('cand_sec_comunidad')}</Link></li>
             </ul>
           </div>
 

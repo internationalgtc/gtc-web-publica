@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
@@ -68,13 +69,16 @@ const STEPS = [
   { tKey: 'cand_proc_4_t', dKey: 'cand_proc_4_d' },
 ]
 
+// Cada área abre la bolsa de empleos ya filtrada (?area=). El departamento es
+// el que usa la web (src/data/jobs.ts): finanzas convive con Administración y
+// diseño con Marketing en el filtro público.
 const AREAS = [
-  { nameKey: 'home_area_1', tagKey: 'home_area_1_tag' },
-  { nameKey: 'home_area_2', tagKey: 'home_area_2_tag' },
-  { nameKey: 'home_area_3', tagKey: 'home_area_3_tag' },
-  { nameKey: 'home_area_4', tagKey: 'home_area_4_tag' },
-  { nameKey: 'home_area_5', tagKey: 'home_area_5_tag' },
-  { nameKey: 'home_area_6', tagKey: 'home_area_6_tag' },
+  { nameKey: 'home_area_1', tagKey: 'home_area_1_tag', dept: 'Administración' },
+  { nameKey: 'home_area_2', tagKey: 'home_area_2_tag', dept: 'Marketing' },
+  { nameKey: 'home_area_3', tagKey: 'home_area_3_tag', dept: 'Administración' },
+  { nameKey: 'home_area_4', tagKey: 'home_area_4_tag', dept: 'Ventas y Comercial' },
+  { nameKey: 'home_area_5', tagKey: 'home_area_5_tag', dept: 'Marketing' },
+  { nameKey: 'home_area_6', tagKey: 'home_area_6_tag', dept: 'Tecnología' },
 ]
 
 const STATS = [
@@ -86,12 +90,14 @@ const STATS = [
 export default function HomeCandidatos() {
   const t = useT()
   useLang()
+  // Acordeón del proceso: tocar un paso despliega su texto (no redirige).
+  const [pasoAbierto, setPasoAbierto] = useState<number | null>(0)
 
   return (
     <>
       <SEO
         title="Trabajo remoto para Latinoamérica"
-        description="Trabajá para empresas de España y EE.UU. desde tu casa. Salario en euros, formación continua y una comunidad de profesionales remotos que te respalda."
+        description="Trabaja para empresas de España y EE.UU. desde tu casa. Salario en dólares, formación continua y una comunidad de profesionales remotos que te respalda."
         path="/"
         keywords="trabajo remoto latinoamerica, empleo remoto en euros, vacantes remotas, asistente virtual, trabajo desde casa, Global Talent Connections"
       />
@@ -201,15 +207,29 @@ export default function HomeCandidatos() {
           <RevealGroup>
             {STEPS.map((step, i) => (
               <RevealItem key={step.tKey}>
-                <Link className="ed-prow" to="/empleos">
+                <button
+                  type="button"
+                  className="ed-prow w-full text-left"
+                  onClick={() => setPasoAbierto(pasoAbierto === i ? null : i)}
+                  aria-expanded={pasoAbierto === i}
+                >
                   <span className="idx">{String(i + 1).padStart(2, '0')}</span>
                   <h3 className="font-display font-normal text-[clamp(22px,2.4vw,32px)] tracking-[-0.01em]">{t(step.tKey)}</h3>
-                  <p className="desc text-[14.5px] text-cream/60 max-w-[46ch] leading-relaxed">{t(step.dKey)}</p>
-                  <span className="arr">→</span>
-                </Link>
+                  {pasoAbierto === i && (
+                    <p className="desc text-[14.5px] text-cream/60 max-w-[46ch] leading-relaxed">{t(step.dKey)}</p>
+                  )}
+                  <span className="arr">{pasoAbierto === i ? '−' : '+'}</span>
+                </button>
               </RevealItem>
             ))}
           </RevealGroup>
+          <Reveal>
+            <div className="mt-14">
+              <Link className="ed-btn ed-btn-primary !px-8 !py-3.5" to="/empleos">
+                {t('beneficios_cta')} <ArrowRight className="w-4 h-4 arrow" />
+              </Link>
+            </div>
+          </Reveal>
         </div>
       </section>
 
@@ -254,7 +274,7 @@ export default function HomeCandidatos() {
           <RevealGroup>
             {AREAS.map((area, i) => (
               <RevealItem key={area.nameKey}>
-                <Link className="ed-area-row" to="/empleos">
+                <Link className="ed-area-row" to={`/empleos?area=${encodeURIComponent(area.dept)}`}>
                   <span className="font-display italic text-sm text-sand">/ {String(i + 1).padStart(2, '0')}</span>
                   <span className="name font-display font-normal text-[clamp(24px,3vw,40px)] tracking-[-0.01em]">{t(area.nameKey)}</span>
                   <span className="tag ed-caps !text-[11px] text-sand">{t(area.tagKey)}</span>

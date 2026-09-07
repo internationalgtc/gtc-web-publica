@@ -13,15 +13,19 @@ interface SEOProps {
 
 }
 
-const BASE_URL = 'https://www.globaltalent-connections.com'
-const DEFAULT_IMAGE = `${BASE_URL}/blog/futuro-talento-remoto-2026.png`
+// Portal de candidatos: vive en su propio subdominio. El canonical y el og:url de
+// cada vacante tienen que apuntar acá, no a la web comercial.
+const BASE_URL = 'https://empleos.globaltalent-connections.com'
+// La entidad Organization sigue siendo la web corporativa.
+const CORP_URL = 'https://www.globaltalent-connections.com'
+const DEFAULT_IMAGE = `${BASE_URL}/og-image-empleos.png`
 
 const ORGANIZATION_SCHEMA = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'Global Talent Connections',
-  url: BASE_URL,
-  logo: `${BASE_URL}/og-image.png`,
+  url: CORP_URL,
+  logo: `${CORP_URL}/og-image.png`,
   description:
     'Conectamos empresas con profesionales remotos de alto rendimiento. Selección, gestión y supervisión integral.',
   contactPoint: {
@@ -40,9 +44,9 @@ const LOCAL_BUSINESS_SCHEMA = {
   '@context': 'https://schema.org',
   '@type': 'ProfessionalService',
   name: 'Global Talent Connections',
-  url: BASE_URL,
-  logo: `${BASE_URL}/og-image.png`,
-  image: `${BASE_URL}/og-image.png`,
+  url: CORP_URL,
+  logo: `${CORP_URL}/og-image.png`,
+  image: `${CORP_URL}/og-image.png`,
   description:
     'Conectamos empresas españolas con profesionales remotos de alto rendimiento en Latinoamérica. Asistentes virtuales, SDRs y perfiles administrativos con ahorro de hasta el 52%.',
   telephone: '+34623257706',

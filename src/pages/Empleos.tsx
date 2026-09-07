@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { Search, MapPin, Briefcase } from 'lucide-react'
 import { JOBS, DEPARTMENTS, JOBS_EN, DEPT_EN, TYPE_EN, LOCATION_EN } from '@/data/jobs'
 import { traerVacantes } from '@/lib/vacantes-nexus'
@@ -13,7 +13,12 @@ export default function EmpleosPage() {
   const t = useT()
   const lang = useLang()
   const [search, setSearch] = useState('')
-  const [dept, setDept] = useState('')
+  // La portada linkea /empleos?area=<departamento>: la bolsa se abre filtrada.
+  const [searchParams] = useSearchParams()
+  const [dept, setDept] = useState(() => {
+    const area = searchParams.get('area')
+    return area && DEPARTMENTS.includes(area) ? area : ''
+  })
 
   // Las vacantes salen del modulo de Nexus, que se actualiza solo cuando el
   // lead avanza o muere. `JOBS` queda como estado inicial y como reserva: si
@@ -40,7 +45,7 @@ export default function EmpleosPage() {
     <>
       <SEO
         title="Trabajo remoto — Empleos abiertos en Latinoamérica"
-        description="Trabajo remoto desde casa: vacantes abiertas en marketing, ventas, administración, desarrollo, diseño, finanzas y más. Empleos 100% remotos para Argentina, Chile, Colombia, México, Perú y toda Latinoamérica. Postulate hoy."
+        description="Trabajo remoto desde casa: vacantes abiertas en marketing, ventas, administración, desarrollo, diseño, finanzas y más. Empleos 100% remotos para Argentina, Chile, Colombia, México, Perú y toda Latinoamérica. PostÃºlate hoy."
         path="/empleos"
       />
       <section className="bg-navy pt-32 pb-20 relative overflow-hidden">

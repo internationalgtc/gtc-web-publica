@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion, useReducedMotion, useScroll, useTransform, useInView, animate, AnimatePresence } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
@@ -82,33 +82,120 @@ const AREAS = [
 ]
 
 const STATS = [
-  { n: '93', lKey: 'home_stat_profesionales', fKey: 'cand_stat_profesionales_foot' },
-  { n: '55', lKey: 'home_stat_empresas', fKey: 'cand_stat_empresas_foot' },
-  { n: '11', lKey: 'home_stat_areas', fKey: 'home_stat_areas_foot' },
+  { n: 93, lKey: 'home_stat_profesionales', fKey: 'cand_stat_profesionales_foot' },
+  { n: 55, lKey: 'home_stat_empresas', fKey: 'cand_stat_empresas_foot' },
+  { n: 11, lKey: 'home_stat_areas', fKey: 'home_stat_areas_foot' },
 ]
 
-/* Fondo animado del hero: video en loop con velo cream para que el texto
-   siga legible. Respeta prefers-reduced-motion (queda el poster estático). */
+const MARQUEE = ['cand_mq_1', 'cand_mq_2', 'cand_mq_3', 'cand_mq_4', 'cand_mq_5']
+
+/* Fondo animado del hero: video en loop con PARALLAX (se mueve más lento que
+   el scroll) + velo cream para legibilidad. Respeta prefers-reduced-motion. */
 function HeroBackground() {
+  const reduced = useReducedMotion()
+  const ref = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const y = useTransform(scrollYProgress, [0, 1], ['0%', '18%'])
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
+  if (reduced) return null
+  return (
+    <div ref={ref} className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+      <motion.div style={{ y, scale }} className="w-full h-full">
+        <video
+          className="w-full h-full object-cover opacity-40"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        >
+          <source src="/videos/hero-candidatos.webm" type="video/webm" />
+          <source src="/videos/hero-candidatos.mp4" type="video/mp4" />
+        </video>
+      </motion.div>
+      {/* Velo para legibilidad: fuerte arriba (texto), se disipa abajo */}
+      <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/60 to-cream" />
+    </div>
+  )
+}
+
+/* Video ambiental oscuro para las secciones navy (mismo lenguaje, otra luz) */
+function DarkAmbient() {
   const reduced = useReducedMotion()
   if (reduced) return null
   return (
-    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+    <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
       <video
-        className="w-full h-full object-cover opacity-40"
+        className="w-full h-full object-cover opacity-25"
         autoPlay
         muted
         loop
         playsInline
         preload="metadata"
       >
-        <source src="/videos/hero-candidatos.webm" type="video/webm" />
-        <source src="/videos/hero-candidatos.mp4" type="video/mp4" />
+        <source src="/videos/hero-dark.mp4" type="video/mp4" />
       </video>
-      {/* Velo para legibilidad: fuerte arriba (texto), se disipa abajo */}
-      <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/60 to-cream" />
+      <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/60 to-navy-deep/90" />
     </div>
   )
+}
+
+/* Reveal enmascarado por palabra para el H1 del hero */
+function HeroTitle() {
+  const t = useT()
+  const reduced = useReducedMotion()
+  const parts = [
+    { text: t('cand_hero_a'), em: false },
+    { text: t('cand_hero_b'), em: true },
+  ]
+  let wordIndex = 0
+  return (
+    <h1 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(46px,7.6vw,118px)] mt-16 max-w-[13ch] [text-wrap:balance]">
+      {parts.map((part, pi) => (
+        <span key={pi}>
+          {part.text.split(' ').map((word, wi) => {
+            const delay = 0.2 + wordIndex++ * 0.055
+            return (
+              <span key={wi}>
+                <span className="inline-block overflow-hidden align-bottom pb-[0.08em] -mb-[0.08em]">
+                  <motion.span
+                    className={`inline-block ${part.em ? 'italic text-gold-deep' : ''}`}
+                    initial={reduced ? false : { y: '112%' }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 1.15, ease: EASE, delay }}
+                  >
+                    {word}
+                  </motion.span>
+                </span>{' '}
+              </span>
+            )
+          })}
+        </span>
+      ))}
+    </h1>
+  )
+}
+
+/* Números que cuentan al entrar en viewport */
+function CountUp({ to }: { to: number }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-8% 0px' })
+  const reduced = useReducedMotion()
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !inView || reduced) return
+    const controls = animate(0, to, {
+      duration: 1.8,
+      ease: 'easeOut',
+      onUpdate: v => {
+        el.textContent = String(Math.round(v))
+      },
+    })
+    return () => controls.stop()
+  }, [inView, to, reduced])
+
+  return <span ref={ref}>{to}</span>
 }
 
 export default function HomeCandidatos() {
@@ -143,9 +230,7 @@ export default function HomeCandidatos() {
             </div>
           </Reveal>
 
-          <h1 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(46px,7.6vw,118px)] mt-16 max-w-[13ch] [text-wrap:balance]">
-            {t('cand_hero_a')} <em className="italic text-gold-deep">{t('cand_hero_b')}</em>
-          </h1>
+          <HeroTitle />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-[54px] pb-[70px] items-end">
             <Reveal delay={0.3}>
@@ -173,7 +258,7 @@ export default function HomeCandidatos() {
                 className={`py-9 md:pb-12 ${i > 0 ? 'md:border-l md:border-navy/15 md:pl-10' : ''} ${i < STATS.length - 1 ? 'border-b md:border-b-0 border-navy/15' : ''}`}
               >
                 <div className="font-display font-light text-[clamp(48px,5vw,76px)] tracking-[-0.02em] leading-none text-navy tabular-nums">
-                  {s.n}
+                  <CountUp to={s.n} />
                 </div>
                 <div className="ed-caps !text-[11px] mt-3.5">{t(s.lKey)}</div>
                 <div className="ed-caps !text-[9.5px] !tracking-[0.16em] text-sand mt-1.5">{t(s.fKey)}</div>
@@ -182,6 +267,13 @@ export default function HomeCandidatos() {
           </RevealGroup>
         </div>
       </section>
+
+      {/* MARQUEE DE LA COMUNIDAD */}
+      <div className="ed-marquee" aria-hidden="true">
+        <div className="ed-marquee-track">
+          {Array.from({ length: 6 }, (_, half) => MARQUEE.map((k, i) => <span key={`${half}-${i}`}>{t(k)}</span>))}
+        </div>
+      </div>
 
       {/* 01 PROPUESTA DE VALOR */}
       <section id="propuesta" className="py-[110px]">
@@ -218,8 +310,9 @@ export default function HomeCandidatos() {
       </section>
 
       {/* 02 PROCESO DEL CANDIDATO */}
-      <section id="proceso" className="ed-on-dark py-[110px] bg-gradient-to-b from-navy to-navy-deep text-cream">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+      <section id="proceso" className="ed-on-dark py-[110px] relative bg-gradient-to-b from-navy to-navy-deep text-cream overflow-hidden">
+        <DarkAmbient />
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 relative">
           <Reveal>
             <div className="ed-sec-tag ed-caps">
               <span className="idx">02</span>
@@ -243,9 +336,20 @@ export default function HomeCandidatos() {
                 >
                   <span className="idx">{String(i + 1).padStart(2, '0')}</span>
                   <h3 className="font-display font-normal text-[clamp(22px,2.4vw,32px)] tracking-[-0.01em]">{t(step.tKey)}</h3>
-                  {pasoAbierto === i && (
-                    <p className="desc text-[14.5px] text-cream/60 max-w-[46ch] leading-relaxed">{t(step.dKey)}</p>
-                  )}
+                  <AnimatePresence initial={false}>
+                    {pasoAbierto === i && (
+                      <motion.div
+                        key="desc"
+                        className="desc overflow-hidden"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.45, ease: EASE }}
+                      >
+                        <p className="text-[14.5px] text-cream/60 max-w-[46ch] leading-relaxed">{t(step.dKey)}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                   <span className="arr">{pasoAbierto === i ? '−' : '+'}</span>
                 </button>
               </RevealItem>
@@ -318,8 +422,9 @@ export default function HomeCandidatos() {
       </section>
 
       {/* 05 CTA FINAL */}
-      <section className="ed-on-dark py-[130px] bg-gradient-to-b from-navy to-navy-deep text-cream text-center">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+      <section className="ed-on-dark py-[130px] relative bg-gradient-to-b from-navy to-navy-deep text-cream text-center overflow-hidden">
+        <DarkAmbient />
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 relative">
           <Reveal>
             <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.05] text-[clamp(38px,5.6vw,84px)] text-cream [text-wrap:balance] max-w-[16ch] mx-auto">
               {t('cand_final_h2_a')} <em className="italic text-gold">{t('cand_final_h2_b')}</em>

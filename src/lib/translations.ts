@@ -334,6 +334,11 @@ const T: Record<string, Record<string, string>> = {
   cand_final_h2_a: { es: 'Tu próximo paso', en: 'Your next step' },
   cand_final_h2_b: { es: 'empieza hoy.', en: 'starts today.' },
   cand_final_p: { es: 'Mira las vacantes abiertas y postúlate. Si tu perfil encaja, te contactamos en menos de 48 horas.', en: 'Browse the open positions and apply. If your profile fits, we will contact you within 48 hours.' },
+  cand_mq_1: { es: 'Trabajo 100% remoto', en: '100% remote work' },
+  cand_mq_2: { es: 'Salario en dólares', en: 'Salary in dollars' },
+  cand_mq_3: { es: 'España · EE.UU. · LatAm', en: 'Spain · US · LatAm' },
+  cand_mq_4: { es: 'Formación continua', en: 'Continuous training' },
+  cand_mq_5: { es: 'Comunidad que respalda', en: 'A community that backs you' },
 
   home_sec_equipo: { es: 'El equipo', en: 'The team' },
   home_sec_equipo_meta: { es: 'Las personas detrás de cada incorporación', en: 'The people behind every hire' },

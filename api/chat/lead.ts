@@ -66,13 +66,10 @@ const STRINGS = {
     emailPrompt:    (company: string) => `Gracias. ¿Cuál es su cargo o función en ${company}?`,
     invalidBudget:  () => `Ese no parece un email válido. Por favor ingresá tu dirección de correo (ejemplo: nombre@empresa.com).`,
     confirmation:   (name: string) => `¡Perfecto, ${name}! Su consulta ha quedado registrada ✅ Un asesor de GTC se pondrá en contacto a la brevedad.`,
-    gate: {
-      question:        '¡Hola! Soy el asistente de Global Talent Connections 👋 Para ayudarte mejor: ¿qué estás buscando?',
-      optionCompany:   'Quiero contratar talento',
-      optionCandidate: 'Busco empleo',
-      candidateMsg:    '¡Genial! En GTC ayudamos a empresas a contratar talento remoto, así que del otro lado de la mesa estás vos 🙌 Mirá nuestras vacantes abiertas y postulate desde ahí 👇',
-      seeJobsLabel:    'Ver vacantes abiertas',
-    },
+    // El chatbot de la web de clientes NO ofrece empleo; si alguien se delata
+    // como candidato, se lo redirige a /empleos sin más conversación.
+    candidateMsg:     '¡Genial! En GTC ayudamos a empresas a contratar talento remoto, así que del otro lado de la mesa estás vos 🙌 Mirá nuestras vacantes abiertas y postulate desde ahí 👇',
+    seeJobsLabel:     'Ver vacantes abiertas',
   },
   en: {
     greeting:              'Hello! I\'m the virtual assistant for Global Talent Connections. Who do I have the pleasure of speaking with?',
@@ -106,17 +103,13 @@ const STRINGS = {
     emailPrompt:    (company: string) => `Thank you. What is your role or position at ${company}?`,
     invalidBudget:  () => `That doesn't look like a valid email. Please enter your email address (e.g. name@company.com).`,
     confirmation:   (name: string) => `All set, ${name}! Your inquiry has been registered ✅ A GTC advisor will be in touch shortly.`,
-    gate: {
-      question:        'Hi! I\'m the Global Talent Connections assistant 👋 To help you better: what are you looking for?',
-      optionCompany:   'I want to hire talent',
-      optionCandidate: 'I\'m looking for a job',
-      candidateMsg:    'Great! At GTC we help companies hire remote talent — so you\'re exactly the talent we love to place 🙌 Check our open positions and apply right there 👇',
-      seeJobsLabel:    'View open positions',
-    },
+    candidateMsg:     'Great! At GTC we help companies hire remote talent — so you\'re exactly the talent we love to place 🙌 Check our open positions and apply right there 👇',
+    seeJobsLabel:     'View open positions',
   },
 }
 
-// Página de vacantes — adonde mandamos a los candidatos (NO se crea lead de cliente)
+// Página de vacantes — adonde mandamos a los candidatos que se delatan
+// (NO se crea lead de cliente; el chatbot nunca les ofrece empleo)
 const CANDIDATE_URL = '/empleos'
 
 // Frases que delatan a alguien buscando trabajo (no una empresa que quiere contratar)
@@ -124,18 +117,6 @@ const CANDIDATE_PATTERNS = /busco\s+(empleo|trabajo|laburo)|buscando\s+(empleo|t
 
 function looksLikeCandidate(...fields: (string | undefined)[]): boolean {
   return fields.some(f => f != null && CANDIDATE_PATTERNS.test(f))
-}
-
-// El portón: la primera respuesta del visitante decide todo el camino.
-function classifyGate(choice: string, lang: Lang): 'company' | 'candidate' | 'unclear' {
-  const g = STRINGS[lang].gate
-  const c = choice.trim().toLowerCase()
-  if (!c) return 'unclear'
-  if (c === g.optionCompany.toLowerCase()) return 'company'
-  if (c === g.optionCandidate.toLowerCase()) return 'candidate'
-  if (CANDIDATE_PATTERNS.test(choice)) return 'candidate'
-  if (/contrat|talento|asistente|empresa|negocio|hir(e|ing)|talent|staff|recruit/i.test(choice)) return 'company'
-  return 'unclear'
 }
 
 function extractName(text: string): string {
@@ -343,68 +324,33 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
     const lang: Lang = rawLang === 'en' ? 'en' : 'es'
     const s = STRINGS[lang]
-    const g = s.gate
 
-    // Etapa 0 — apertura: el portón con botones (determinista, SIEMPRE muestra botones)
+    // Etapa 0 — apertura: saludo directo en modo cliente (nombre). La web de
+    // clientes no ofrece empleo; el candidato se detecta solo más abajo.
     if (!messages?.length) {
-      return res.json({
-        message: g.question,
-        leadCreated: false,
-        quickReplies: [g.optionCompany, g.optionCandidate],
-      })
-    }
-
-    // Etapa 1 — el portón: la primera respuesta del visitante decide el camino.
-    const users = messages.filter(m => m.role === 'user')
-    const intent = classifyGate(users[0]?.content ?? '', lang)
-
-    if (intent === 'candidate') {
-      // Es un candidato → a vacantes. NUNCA se crea lead de cliente.
-      return res.json({
-        message: g.candidateMsg,
-        leadCreated: false,
-        redirect: CANDIDATE_URL,
-        redirectLabel: g.seeJobsLabel,
-      })
-    }
-
-    if (intent === 'unclear') {
-      // Escribió en vez de elegir → re-mostrar el portón con botones.
-      return res.json({
-        message: g.question,
-        leadCreated: false,
-        quickReplies: [g.optionCompany, g.optionCandidate],
-      })
-    }
-
-    // intent === 'company' → arranca el flujo real de calificación.
-    if (users.length === 1) {
       return res.json({ message: s.greeting, leadCreated: false })
     }
 
-    // Quitamos el intercambio del portón (1ª pregunta del bot + la elección del
-    // usuario) para que Gemini / el flujo determinista vean una conversación
-    // limpia que arranca en el nombre, igual que antes.
-    const flowMessages = messages.slice(2)
-
-    const lastBotMsg  = [...flowMessages].reverse().find(m => m.role === 'assistant')?.content ?? ''
-    const lastUserMsg = [...flowMessages].reverse().find(m => m.role === 'user')?.content ?? ''
+    const lastBotMsg  = [...messages].reverse().find(m => m.role === 'assistant')?.content ?? ''
+    const lastUserMsg = [...messages].reverse().find(m => m.role === 'user')?.content ?? ''
 
     // Detector temprano: si en CUALQUIER paso el visitante se delata como candidato
     // (ej. "estoy buscando trabajo" en el campo de empresa), redirigir en el acto
     // en vez de seguir pidiéndole datos hasta el final.
     if (looksLikeCandidate(lastUserMsg)) {
       return res.json({
-        message: g.candidateMsg,
+        message: s.candidateMsg,
         leadCreated: false,
         redirect: CANDIDATE_URL,
-        redirectLabel: g.seeJobsLabel,
+        redirectLabel: s.seeJobsLabel,
       })
     }
 
     if (/correo|e-?mail/i.test(lastBotMsg) && !EMAIL_REGEX.test(lastUserMsg.trim())) {
       return res.json({ message: s.invalidEmail(lastUserMsg.trim()), leadCreated: false })
     }
+
+    const flowMessages = messages
 
     const apiKey = process.env.GEMINI_CHATBOT_KEY ?? process.env.GEMINI_API_KEY
     let rawMessage: string
@@ -422,14 +368,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (leadMatch) {
       try {
         const leadData = JSON.parse(leadMatch[1]!)
-        // Red de seguridad: si pese al portón el nombre/empresa/cargo todavía
-        // huele a alguien buscando empleo, NO se manda al canal de clientes.
+        // Red de seguridad: si el nombre/empresa/cargo todavía huele a alguien
+        // buscando empleo, NO se manda al canal de clientes.
         if (looksLikeCandidate(leadData.company, leadData.role, leadData.name)) {
           return res.json({
-            message: g.candidateMsg,
+            message: s.candidateMsg,
             leadCreated: false,
             redirect: CANDIDATE_URL,
-            redirectLabel: g.seeJobsLabel,
+            redirectLabel: s.seeJobsLabel,
           })
         }
         if (leadData.email && EMAIL_REGEX.test(leadData.email)) {

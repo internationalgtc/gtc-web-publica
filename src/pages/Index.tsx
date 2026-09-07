@@ -1,252 +1,584 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { motion, useInView, useReducedMotion, animate } from 'framer-motion'
+import { ArrowRight, AlertCircle, CheckCircle, Play, X } from 'lucide-react'
 import { trackLead } from '@/lib/tracking'
 import { getUTMs, getReferrer, getLandingUrl } from '@/lib/utm'
 import { getCountry } from '@/lib/geo'
-import { ArrowRight, Zap, Brain, Handshake, Search, Users, FileCheck, Headphones, Send, CheckCircle, AlertCircle } from 'lucide-react'
-import { RevealSection } from '@/components/shared/RevealSection'
-import { useT } from '@/hooks/useT'
-import Testimonials from '@/components/Testimonials'
-import ResenasGoogle from '@/components/ResenasGoogle'
+import { useT, useLang } from '@/hooks/useT'
+import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
+import { direccion, filasOperativo, type TeamMember } from '@/data/equipo'
 import SEO, { HOME_FAQ_SCHEMA } from '@/components/shared/SEO'
 
-import l1 from '@/assets/logos/l1.png'
-import l2 from '@/assets/logos/l2.jpg'
-import l3 from '@/assets/logos/l3.webp'
-import l4 from '@/assets/logos/l4.webp'
-import l5 from '@/assets/logos/l5.png'
-import l6 from '@/assets/logos/l6.png'
-import l7 from '@/assets/logos/l7.png'
+const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
-const CLIENT_LOGOS = [
-  { src: l1, alt: 'Reformas Habikal' },
-  { src: l2, alt: 'Fricopan' },
-  { src: l3, alt: 'Moonlight' },
-  { src: l4, alt: 'Coseba Seguros' },
-  { src: l5, alt: 'PMV Factory' },
-  { src: l6, alt: 'Areacad' },
-  { src: l7, alt: 'Gabinete Studios' },
+const MARQUEE_CLIENTS = ['Reformas Habikal', 'Fricopan', 'Moonlight', 'Miramar']
+
+const AREAS = [
+  { nameKey: 'home_area_1', tagKey: 'home_area_1_tag' },
+  { nameKey: 'home_area_2', tagKey: 'home_area_2_tag' },
+  { nameKey: 'home_area_3', tagKey: 'home_area_3_tag' },
+  { nameKey: 'home_area_4', tagKey: 'home_area_4_tag' },
+  { nameKey: 'home_area_5', tagKey: 'home_area_5_tag' },
+  { nameKey: 'home_area_6', tagKey: 'home_area_6_tag' },
 ]
 
-// Datos verificados contra Nexus el 21-jul-2026: 56 clientes activos con al
-// menos un asistente trabajando y 101 asistentes activos.
-const STAT_KEYS = [
-  { value: '56', key: 'stat_empresas', color: 'text-blue-prime' },
-  { value: '101', key: 'stat_profesionales', color: 'text-blue-prime' },
-  { value: '50%', key: 'stat_ahorro', color: 'text-gold' },
+const PROCESS_STEPS = [
+  { tKey: 'home_proc_1_t', dKey: 'home_proc_1_d' },
+  { tKey: 'home_proc_2_t', dKey: 'home_proc_2_d' },
+  { tKey: 'home_proc_3_t', dKey: 'home_proc_3_d' },
+  { tKey: 'home_proc_4_t', dKey: 'home_proc_4_d' },
 ]
 
-// La grilla se ajusta a cuántos stats haya, para que no queden columnas
-// vacías si se agrega o se saca uno. Las clases van literales porque
-// Tailwind no detecta nombres construidos en runtime.
-const STAT_COLS = STAT_KEYS.length === 4 ? 'md:grid-cols-4' : 'md:grid-cols-3'
-
-const PROCESS_ICONS = [Search, Users, FileCheck, Headphones]
-const PROCESS_STEPS_META = ['01', '02', '03', '04']
-
-const ADVANTAGE_ICONS = [Zap, Brain, Handshake]
-const ADVANTAGE_KEYS = [
-  { titleKey: 'ventaja_1_titulo', descKey: 'ventaja_1_desc' },
-  { titleKey: 'ventaja_2_titulo', descKey: 'ventaja_2_desc' },
-  { titleKey: 'ventaja_3_titulo', descKey: 'ventaja_3_desc' },
+/* Videos servidos desde public/videos/ (antes Cloudinary, cuenta deshabilitada) */
+const VIDEOS_TESTIMONIO = [
+  { nombre: 'Miguel Ángel Ramírez', cargoKey: 'testi_t1_cargo', src: '/videos/testimonio-1.mp4', poster: '/videos/testimonio-1.jpg' },
+  { nombre: 'Arturo Sanz Santos', cargoKey: 'testi_t2_cargo', src: '/videos/testimonio-2.mp4', poster: '/videos/testimonio-2.jpg' },
+  { nombre: 'Alex Andreu Peinado', cargoKey: 'testi_t3_cargo', src: '/videos/testimonio-3.mp4', poster: '/videos/testimonio-3.jpg' },
+  { nombre: 'Curro Sabás', cargoKey: 'testi_t4_cargo', src: '/videos/testimonio-4.mp4', poster: '/videos/testimonio-4.jpg' },
 ]
+
+const GUARANTEES = [
+  { tKey: 'home_gar_1_t', dKey: 'home_gar_1_d' },
+  { tKey: 'home_gar_2_t', dKey: 'home_gar_2_d' },
+  { tKey: 'home_gar_3_t', dKey: 'home_gar_3_d' },
+]
+
+/* ——— Motion primitives ———
+   El contenido se renderiza visible; el estado oculto lo aplica framer-motion
+   vía estilos inline (JS). Con prefers-reduced-motion no se oculta nada. */
+
+function Reveal({ children, className, delay = 0, y = 36 }: { children: ReactNode; className?: string; delay?: number; y?: number }) {
+  const reduced = useReducedMotion()
+  return (
+    <motion.div
+      className={className}
+      initial={reduced ? false : { opacity: 0, y }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-12% 0px' }}
+      transition={{ duration: 1, ease: EASE, delay }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function RevealGroup({ children, className }: { children: ReactNode; className?: string }) {
+  const reduced = useReducedMotion()
+  return (
+    <motion.div
+      className={className}
+      initial={reduced ? false : 'hidden'}
+      whileInView="show"
+      viewport={{ once: true, margin: '-10% 0px' }}
+      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.09 } } }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function RevealItem({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <motion.div
+      className={className}
+      variants={{
+        hidden: { opacity: 0, y: 40 },
+        show: { opacity: 1, y: 0, transition: { duration: 1, ease: EASE } },
+      }}
+    >
+      {children}
+    </motion.div>
+  )
+}
+
+function CountUp({ to }: { to: number }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-8% 0px' })
+  const reduced = useReducedMotion()
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !inView || reduced) return
+    const controls = animate(0, to, {
+      duration: 1.8,
+      ease: 'easeOut',
+      onUpdate: v => {
+        el.textContent = String(Math.round(v))
+      },
+    })
+    return () => controls.stop()
+  }, [inView, to, reduced])
+
+  return <span ref={ref}>{to}</span>
+}
+
+/* Reveal enmascarado por palabra para el H1 del hero */
+function HeroTitle() {
+  const t = useT()
+  const reduced = useReducedMotion()
+  const parts = [
+    { text: t('home_hero_title_a'), em: false },
+    { text: t('home_hero_title_b'), em: true },
+  ]
+  let wordIndex = 0
+  return (
+    <h1 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(46px,7.6vw,118px)] mt-16 max-w-[12ch] [text-wrap:balance]">
+      {parts.map((part, pi) => (
+        <span key={pi}>
+          {part.text.split(' ').map((word, wi) => {
+            const delay = 0.2 + wordIndex++ * 0.055
+            return (
+              <span key={wi}>
+                <span className="inline-block overflow-hidden align-bottom pb-[0.08em] -mb-[0.08em]">
+                  <motion.span
+                    className={`inline-block ${part.em ? 'italic text-gold-deep' : ''}`}
+                    initial={reduced ? false : { y: '112%' }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 1.15, ease: EASE, delay }}
+                  >
+                    {word}
+                  </motion.span>
+                </span>{' '}
+              </span>
+            )
+          })}
+        </span>
+      ))}
+    </h1>
+  )
+}
 
 export default function HomePage() {
   const t = useT()
+  const { hash } = useLocation()
+
+  useEffect(() => {
+    if (!hash) return
+    const el = document.getElementById(hash.slice(1))
+    if (el) {
+      const timer = setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 60)
+      return () => clearTimeout(timer)
+    }
+  }, [hash])
 
   return (
     <>
       <SEO
         title="Home"
-        description="Ahorrá hasta un 52% contratando talento remoto de alto rendimiento. Conectamos PYMEs en España con Asistentes Virtuales, SDRs y perfiles administrativos top. Selección, gestión y supervisión integral."
+        description="Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño."
         path="/"
         faqSchema={HOME_FAQ_SCHEMA}
         keywords="asistentes virtuales España, talento remoto para empresas, contratar asistente virtual barato, trabajo remoto en euros, outsourcing LATAM, profesionales remotos España, reducir costes de personal, SDR remoto, Global Talent Connections"
       />
+
       {/* HERO */}
-      <section className="relative bg-navy min-h-screen flex items-center pt-32 pb-20 overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-prime/[0.08] blur-[120px] rounded-full -mr-48 -mt-48" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-deep/10 blur-[100px] rounded-full -ml-32 -mb-32" />
-
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center relative z-10">
-          <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 bg-blue-prime/10 border border-blue-prime/20 rounded-full px-4 py-2 mb-6">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              <span className="text-blue-light text-xs font-label uppercase tracking-widest font-bold">{t('hero_badge')}</span>
+      <section className="pt-[158px] relative">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+          <Reveal delay={0} y={0}>
+            <div className="ed-caps !text-[11px] flex items-baseline flex-wrap gap-[26px] py-[14px] border-y border-navy/15 text-ink-soft">
+              <span className="flex items-center gap-[9px]">
+                <span className="w-[7px] h-[7px] rounded-full bg-[#2fae6b] animate-pulse" />
+                {t('home_meta_activos')}
+              </span>
+              <span className="flex items-center">{t('home_meta_region')}</span>
+              <span className="hidden md:flex items-center ml-auto">{t('home_meta_servicio')}</span>
             </div>
-            <h1 className="text-off-white font-headline text-4xl sm:text-5xl md:text-7xl leading-[1.1] mb-6 font-bold">
-              <span className="text-coral">{t('hero_title_1')}</span>{' '}
-              {t('hero_title_2')}
-            </h1>
-            <p className="text-white/60 text-lg md:text-xl mb-8 max-w-xl font-light">
-              {t('hero_subtitle')}
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                to="/contacto"
-                className="bg-coral text-white px-8 py-5 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:bg-coral/90 transition-all duration-300 flex items-center justify-center gap-3 shadow-lg shadow-coral/20"
-              >
-                {t('hero_cta_empresa')}
-              </Link>
-              <Link
-                to="/empleos"
-                className="border border-gold text-gold px-8 py-5 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:bg-gold hover:text-navy transition-all duration-300 flex items-center justify-center gap-3"
-              >
-                {t('hero_cta_profesional')}
-              </Link>
-            </div>
-          </div>
+          </Reveal>
 
-          <div className="lg:col-span-5 hidden lg:block" />
-        </div>
+          <HeroTitle />
 
-        {/* Hero image — full bleed right, covers entire section height */}
-        <div className="absolute top-0 right-0 w-1/2 h-full hidden lg:block">
-          <img
-            alt="Remote team on video call"
-            className="w-full h-full object-cover"
-            src="https://images.unsplash.com/photo-1553877522-43269d4ea984?w=1200&q=80"
-            loading="eager"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-navy via-navy/50 to-transparent" />
-        </div>
-      </section>
-
-      {/* STATS BAR */}
-      <section className="relative z-20 -mt-12 max-w-5xl mx-auto px-6 lg:px-8">
-        <div className="bg-white rounded-xl py-10 lg:py-12 px-8 lg:px-12 shadow-2xl border border-border-soft">
-          <div className={`grid grid-cols-3 gap-8 ${STAT_COLS}`}>
-            {STAT_KEYS.map((stat, i) => (
-              <div key={stat.key} className={`text-center ${i > 0 ? 'md:border-l md:border-border-soft' : ''}`}>
-                <div className={`${stat.color} text-3xl lg:text-4xl font-headline font-bold mb-1`}>{stat.value}</div>
-                <div className="text-navy/70 text-[10px] font-label uppercase tracking-widest font-extrabold">{t(stat.key)}</div>
-              </div>
-            ))}
-          </div>
-          <div className="text-center mt-4 pt-4 border-t border-border-soft">
-            <span className="text-navy/40 text-[9px] font-label uppercase tracking-widest">{t('stat_micro')}</span>
-          </div>
-        </div>
-      </section>
-
-      {/* TESTIMONIOS */}
-      <Testimonials />
-      <ResenasGoogle />
-
-      {/* LOGO TICKER */}
-      <section className="py-16 lg:py-20 bg-off-white overflow-hidden" aria-label="Clientes">
-        <div className="text-center mb-10">
-          <span className="text-navy/70 text-xs font-label uppercase tracking-[0.3em]">{t('logos_titulo')}</span>
-        </div>
-        <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-          <div className="flex items-center gap-16 lg:gap-24 whitespace-nowrap animate-marquee">
-            {[...CLIENT_LOGOS, ...CLIENT_LOGOS, ...CLIENT_LOGOS].map((logo, i) => (
-              <img
-                key={`${logo.alt}-${i}`}
-                src={logo.src}
-                alt={logo.alt}
-                className="h-10 lg:h-14 w-auto object-contain opacity-60 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-                loading="lazy"
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CULTURA */}
-      <RevealSection className="py-24 lg:py-32 bg-cream overflow-hidden relative">
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-prime/5 blur-[100px] rounded-full -ml-48 -mb-48" />
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-center relative z-10">
-          <div className="relative order-2 lg:order-1">
-            <div className="rounded-2xl overflow-hidden shadow-2xl blue-overlay">
-              <img
-                alt="Equipo trabajando en remoto"
-                className="w-full h-[400px] lg:h-[600px] object-cover"
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=800&q=80"
-                loading="lazy"
-              />
-            </div>
-            <div className="absolute top-8 lg:top-12 -right-4 lg:-right-12 bg-white p-6 lg:p-8 shadow-xl rounded-xl max-w-xs border-l-4 border-blue-prime">
-              <p className="font-headline text-base lg:text-lg text-navy italic mb-4">
-                {t('cultura_quote')}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 mt-14 items-end">
+            <Reveal delay={0.7} y={26}>
+              <p className="text-[clamp(16px,1.4vw,19px)] text-ink-soft max-w-[52ch] leading-relaxed [text-wrap:pretty]">
+                {t('home_hero_sub')}
               </p>
-              <div className="font-label text-xs uppercase tracking-widest font-extrabold text-blue-deep">Global Talent Connections</div>
-            </div>
+            </Reveal>
+            <Reveal delay={0.82} y={26}>
+              <div className="flex gap-3.5 flex-wrap md:justify-end">
+                <a className="ed-btn ed-btn-primary" href="#contacto">
+                  {t('home_hero_cta_primary')} <ArrowRight className="w-4 h-4 arrow" />
+                </a>
+                <Link className="ed-btn ed-btn-outline" to="/empleos">
+                  {t('home_hero_cta_secondary')}
+                </Link>
+              </div>
+            </Reveal>
           </div>
 
-          <div className="order-1 lg:order-2">
-            <span className="text-blue-prime text-xs font-label uppercase tracking-widest font-extrabold mb-6 block">{t('cultura_label')}</span>
-            <h2 className="text-navy font-headline text-4xl md:text-5xl lg:text-6xl leading-tight mb-10">
-              {t('cultura_titulo_1')} <span className="text-blue-prime">{t('cultura_titulo_2')}</span>.
+          {/* Stats como fila-índice */}
+          <RevealGroup className="grid grid-cols-1 md:grid-cols-3 mt-[88px] border-t border-navy/15">
+            {[
+              { value: 55, lblKey: 'home_stat_empresas', footKey: 'home_stat_empresas_foot' },
+              { value: 93, lblKey: 'home_stat_profesionales', footKey: 'home_stat_profesionales_foot' },
+              { value: 11, lblKey: 'home_stat_areas', footKey: 'home_stat_areas_foot' },
+            ].map((stat, i) => (
+              <RevealItem
+                key={stat.lblKey}
+                className={`relative py-[30px] md:pb-24 md:pt-[30px] ${
+                  i > 0 ? 'md:border-l md:border-navy/15 md:pl-[34px]' : ''
+                } ${i < 2 ? 'border-b md:border-b-0 border-navy/15' : ''}`}
+              >
+                <div className="font-display font-light text-[clamp(44px,5vw,72px)] tracking-[-0.02em] leading-none tabular-nums">
+                  <CountUp to={stat.value} />
+                </div>
+                <div className="ed-caps !text-[11px] text-ink-soft mt-3">{t(stat.lblKey)}</div>
+                <div className="ed-caps !text-[10px] text-sand mt-6 md:mt-0 md:absolute md:bottom-[26px] md:left-0 md:pl-[inherit]">
+                  {t(stat.footKey)}
+                </div>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
+      </section>
+
+      {/* MARQUEE DE CLIENTES */}
+      <div className="ed-marquee mt-[110px]" aria-hidden="true">
+        <div className="ed-marquee-track">
+          {Array.from({ length: 6 }, (_, half) => MARQUEE_CLIENTS.map((client, i) => <span key={`${half}-${i}`}>{client}</span>))}
+        </div>
+      </div>
+
+      {/* 01 EL SERVICIO */}
+      <section id="garantias" className="py-[110px]">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+          <Reveal>
+            <div className="ed-sec-tag ed-caps">
+              <span className="idx">01</span>
+              <span className="name">{t('home_sec_servicio')}</span>
+              <span className="meta">{t('home_sec_servicio_meta')}</span>
+            </div>
+          </Reveal>
+          <Reveal className="mt-11 mb-[70px] max-w-[660px]">
+            <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(38px,5.6vw,84px)] [text-wrap:balance]">
+              {t('home_servicio_h2_a')} <em className="italic text-gold-deep">{t('home_servicio_h2_b')}</em>
             </h2>
-            <div className="space-y-6 text-navy/80 font-light leading-relaxed text-lg">
-              <p>{t('cultura_p1')}</p>
-              <p>{t('cultura_p2')}</p>
-            </div>
-            <div className="mt-12">
-              <Link to="/nosotros" className="flex items-center gap-4 group">
-                <div className="w-12 h-12 rounded-full border border-navy flex items-center justify-center group-hover:bg-blue-prime group-hover:border-blue-prime group-hover:text-white transition-all">
-                  <ArrowRight className="w-5 h-5" />
+          </Reveal>
+          <RevealGroup className="grid grid-cols-1 md:grid-cols-3 border-t border-navy/15">
+            {GUARANTEES.map((g, i) => (
+              <RevealItem
+                key={g.tKey}
+                className={`py-11 pb-[60px] md:pr-10 transition-colors duration-300 hover:bg-cream-2 ${
+                  i > 0 ? 'md:border-l md:border-navy/15 md:pl-10' : ''
+                } ${i < GUARANTEES.length - 1 ? 'border-b md:border-b-0 border-navy/15' : ''}`}
+              >
+                <div className="font-display font-light text-[clamp(52px,5.6vw,84px)] tracking-[-0.02em] leading-none text-navy tabular-nums">
+                  0<span className="italic text-coral">{i + 1}</span>
                 </div>
-                <span className="font-label text-sm uppercase tracking-widest font-extrabold text-navy group-hover:text-blue-prime transition-colors">
-                  {t('cultura_cta')}
-                </span>
-              </Link>
+                <h3 className="font-headline font-bold text-[13px] tracking-[0.14em] uppercase mt-[26px] mb-3">{t(g.tKey)}</h3>
+                <p className="text-[14.5px] text-ink-soft leading-relaxed">{t(g.dKey)}</p>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
+      </section>
+
+      {/* 02 PROCESO */}
+      <section id="proceso" className="ed-on-dark py-[110px] bg-gradient-to-b from-navy to-navy-deep text-cream">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+          <Reveal>
+            <div className="ed-sec-tag ed-caps">
+              <span className="idx">02</span>
+              <span className="name">{t('home_sec_proceso')}</span>
+              <span className="meta">{t('home_sec_proceso_meta')}</span>
             </div>
-          </div>
+          </Reveal>
+          <Reveal className="mt-11 mb-[70px] max-w-[920px]">
+            <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(38px,5.6vw,84px)] text-cream [text-wrap:balance]">
+              {t('home_proceso_h2_a')} <em className="italic text-gold">{t('home_proceso_h2_b')}</em>
+            </h2>
+          </Reveal>
+          <RevealGroup>
+            {PROCESS_STEPS.map((step, i) => (
+              <RevealItem key={step.tKey}>
+                <a className="ed-prow" href="#contacto">
+                  <span className="idx">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="font-display font-normal text-[clamp(22px,2.4vw,32px)] tracking-[-0.01em]">{t(step.tKey)}</h3>
+                  <p className="desc text-[14.5px] text-cream/60 max-w-[46ch] leading-relaxed">{t(step.dKey)}</p>
+                  <span className="arr">→</span>
+                </a>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+          <Reveal>
+            <div className="inline-block mt-14 bg-coral text-white rounded-xl px-[26px] py-4 -rotate-2 shadow-[0_20px_44px_-16px_rgba(255,90,57,0.55)]">
+              <div className="font-display italic text-[34px] leading-none">High Tech</div>
+              <div className="ed-caps !text-[9.5px] !tracking-[0.18em] mt-1.5 opacity-90">High Touch</div>
+            </div>
+          </Reveal>
         </div>
-      </RevealSection>
+      </section>
 
-      {/* VENTAJAS */}
-      <RevealSection className="py-24 lg:py-32 bg-off-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-blue-prime/5 blur-[150px] rounded-full" />
-        <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-          <div className="max-w-2xl mb-16 lg:mb-20">
-            <span className="text-blue-prime text-xs font-label uppercase tracking-widest font-extrabold mb-6 block">{t('ventajas_label')}</span>
-            <h2 className="text-navy font-headline text-4xl lg:text-5xl leading-tight">{t('ventajas_titulo')}</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {ADVANTAGE_KEYS.map((adv, i) => {
-              const Icon = ADVANTAGE_ICONS[i]
-              const anchors = ['<5%', '15d', '€0']
-              return (
-                <div
-                  key={adv.titleKey}
-                  className="bg-white p-8 lg:p-10 rounded-xl border border-border-soft hover:shadow-xl hover:border-blue-prime/20 transition-all group"
-                >
-                  <div className="flex items-center justify-between mb-6">
-                    <div className="w-14 h-14 rounded-full bg-blue-prime/10 flex items-center justify-center group-hover:bg-blue-prime group-hover:scale-110 transition-all">
-                      <Icon className="w-6 h-6 text-blue-prime group-hover:text-white transition-colors" />
-                    </div>
-                    <span className="text-coral font-headline font-bold text-2xl">{anchors[i]}</span>
-                  </div>
-                  <h3 className="text-navy font-headline font-bold text-2xl mb-4">{t(adv.titleKey)}</h3>
-                  <p className="text-dark-gray font-light leading-relaxed">{t(adv.descKey)}</p>
-                </div>
-              )
-            })}
-          </div>
-
-          <div className="mt-12 text-center">
-            <a href="#proceso" className="inline-flex items-center gap-3 text-blue-prime font-label font-bold text-sm uppercase tracking-widest hover:gap-4 transition-all">
-              {t('ventajas_cta')}
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
+      {/* 03 ÁREAS */}
+      <section id="areas" className="py-[110px]">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+          <Reveal>
+            <div className="ed-sec-tag ed-caps">
+              <span className="idx">03</span>
+              <span className="name">{t('home_sec_areas')}</span>
+              <span className="meta">{t('home_sec_areas_meta')}</span>
+            </div>
+          </Reveal>
+          <Reveal className="mt-11 mb-[70px] max-w-[660px]">
+            <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(38px,5.6vw,84px)] [text-wrap:balance]">
+              {t('home_areas_h2_a')} <em className="italic text-gold-deep">{t('home_areas_h2_b')}</em>
+            </h2>
+          </Reveal>
+          <RevealGroup>
+            {AREAS.map((area, i) => (
+              <RevealItem key={area.nameKey}>
+                <a className="ed-area-row" href="#contacto">
+                  <span className="font-display italic text-sm text-sand">/ {String(i + 1).padStart(2, '0')}</span>
+                  <span className="name font-display font-normal text-[clamp(24px,3vw,40px)] tracking-[-0.01em]">{t(area.nameKey)}</span>
+                  <span className="tag ed-caps !text-[11px] text-sand">{t(area.tagKey)}</span>
+                  <span className="font-display text-[22px] text-coral">→</span>
+                </a>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+          <Reveal>
+            <p className="mt-[26px] text-xs text-sand">{t('home_areas_note')}</p>
+          </Reveal>
         </div>
-      </RevealSection>
+      </section>
 
-      {/* PROCESO */}
-      <ProcessSection t={t} />
-
-      {/* CONTACTO INLINE */}
-      <ContactSection />
+      <EquipoSection />
+      <TestimoniosSection />
+      <ContactoSection />
     </>
   )
 }
 
-function ContactSection() {
+/* ——— 04 EQUIPO ———
+   El roster vive en src/data/equipo.ts (fuente única; validado contra GAM).
+   Misma gente que la página /nosotros, en el lenguaje editorial de la home. */
+function MiembroCard({ m, lang }: { m: TeamMember; lang: 'es' | 'en' }) {
+  return (
+    <div className="group">
+      <div className="aspect-[3/4] overflow-hidden bg-navy-deep">
+        {m.foto ? (
+          <img
+            src={m.foto}
+            alt={m.nombre}
+            loading="lazy"
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="w-full h-full grid place-items-center font-display italic text-3xl text-cream/60">
+            {m.nombre.split(' ').map(p => p[0]).slice(0, 2).join('')}
+          </div>
+        )}
+      </div>
+      <div className="mt-3 font-display text-[17px] leading-snug">{m.nombre}</div>
+      <div className="ed-caps !text-[9.5px] text-sand mt-1.5">{lang === 'en' ? m.rolEn : m.rol}</div>
+    </div>
+  )
+}
+
+function EquipoSection() {
+  const t = useT()
+  const lang = useLang()
+
+  return (
+    <section id="equipo" className="py-[110px]">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+        <Reveal>
+          <div className="ed-sec-tag ed-caps">
+            <span className="idx">04</span>
+            <span className="name">{t('home_sec_equipo')}</span>
+            <span className="meta">{t('home_sec_equipo_meta')}</span>
+          </div>
+        </Reveal>
+        <Reveal className="mt-11 mb-[70px] max-w-[700px]">
+          <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(38px,5.6vw,84px)] [text-wrap:balance]">
+            {t('home_equipo_h2_a')} <em className="italic text-gold-deep">{t('home_equipo_h2_b')}</em>
+          </h2>
+        </Reveal>
+
+        <Reveal>
+          <div className="ed-caps !text-[11px] text-ink-soft pt-[14px] border-t border-navy/15">
+            {t('home_equipo_dir')}
+          </div>
+        </Reveal>
+        <RevealGroup className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12 mt-8">
+          {direccion.map(m => (
+            <RevealItem key={m.id}>
+              <MiembroCard m={m} lang={lang} />
+            </RevealItem>
+          ))}
+        </RevealGroup>
+
+        <Reveal>
+          <div className="ed-caps !text-[11px] text-ink-soft mt-[84px] pt-[14px] border-t border-navy/15">
+            {t('home_equipo_staff')}
+          </div>
+        </Reveal>
+        <RevealGroup className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12 mt-8">
+          {filasOperativo.flat().map(m => (
+            <RevealItem key={m.id}>
+              <MiembroCard m={m} lang={lang} />
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </div>
+    </section>
+  )
+}
+
+/* ——— 05 TESTIMONIOS ———
+   Las citas salen de src/data/resenasGoogle.ts (fuente única de reseñas). */
+function TestimoniosSection() {
+  const t = useT()
+  const lang = useLang()
+  const [videoAbierto, setVideoAbierto] = useState<(typeof VIDEOS_TESTIMONIO)[number] | null>(null)
+  const smallReviews = ['Curro Sabán', 'Karelis Rojas Contreras']
+    .map(autor => RESENAS_GOOGLE.find(r => r.autor === autor))
+    .filter((r): r is (typeof RESENAS_GOOGLE)[number] => Boolean(r && r.texto))
+
+  return (
+    <section className="py-[110px] bg-cream-2">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+        <Reveal>
+          <div className="ed-sec-tag ed-caps">
+            <span className="idx">05</span>
+            <span className="name">{t('home_sec_testimonios')}</span>
+            <span className="meta">{t('home_sec_testimonios_meta')}</span>
+          </div>
+        </Reveal>
+
+        <Reveal>
+          <p className="font-display font-light text-[clamp(30px,4.4vw,58px)] leading-[1.15] tracking-[-0.01em] max-w-[22ch] mt-11">
+            {t('home_testi_big_1')} <em className="italic text-gold-deep whitespace-nowrap">{t('home_testi_big_em')}</em> {t('home_testi_big_2')}
+          </p>
+        </Reveal>
+
+        <Reveal>
+          <div className="flex items-center gap-4 mt-9">
+            <div className="w-[46px] h-[46px] rounded-full grid place-items-center font-display italic text-lg bg-navy text-cream">S</div>
+            <div>
+              <div className="font-headline font-bold text-xs tracking-[0.12em] uppercase">Sergio Varo</div>
+              <div className="text-xs text-sand">{t('home_testi_verificada')}</div>
+            </div>
+            <div className="text-gold-deep tracking-[3px] text-[15px] ml-auto">★★★★★</div>
+          </div>
+        </Reveal>
+
+        <RevealGroup className="grid grid-cols-1 md:grid-cols-2 mt-[84px] border-t border-navy/15">
+          {smallReviews.map((review, i) => (
+            <RevealItem
+              key={review.autor}
+              className={`py-9 md:pb-10 ${i === 0 ? 'md:border-r md:border-navy/15 md:pr-10' : 'md:pl-10'} ${
+                i === 0 ? 'border-b md:border-b-0 border-navy/15' : ''
+              }`}
+            >
+              <div className="text-gold-deep tracking-[3px] text-[15px]">★★★★★</div>
+              <p className="font-display italic text-[19px] leading-[1.4] text-ink mt-3.5">
+                "{review.texto ? review.texto[lang] : ''}"
+              </p>
+              <div className="mt-5 text-xs text-sand">
+                <b className="text-ink-soft font-headline text-[11px] tracking-[0.1em] uppercase">{review.autor}</b> · {t('home_testi_en_google')}
+              </div>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+
+        <Reveal>
+          <div className="mt-11 pt-[18px] border-t border-navy/15 flex gap-3.5 items-baseline text-xs text-sand flex-wrap">
+            <b className="font-display text-xl text-ink font-normal">{RESUMEN_GOOGLE.rating.toFixed(1)}</b>
+            <span className="text-gold-deep tracking-[3px]">★★★★★</span>
+            <span>
+              {RESUMEN_GOOGLE.total} {t('home_testi_google_line')}
+            </span>
+          </div>
+        </Reveal>
+
+        {/* Clientes en video */}
+        <Reveal>
+          <div className="ed-caps !text-[11px] text-ink-soft mt-[96px] pt-[14px] border-t border-navy/15">
+            {t('home_videos_label')}
+          </div>
+        </Reveal>
+        <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+          {VIDEOS_TESTIMONIO.map(video => (
+            <RevealItem key={video.src}>
+              <button onClick={() => setVideoAbierto(video)} className="group block w-full text-left">
+                <div className="relative aspect-video rounded-xl overflow-hidden bg-navy">
+                  <img
+                    src={video.poster}
+                    alt={video.nombre}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.04]"
+                  />
+                  <div className="absolute inset-0 bg-navy/25 group-hover:bg-navy/10 transition-colors duration-300" />
+                  <div className="absolute inset-0 grid place-items-center">
+                    <span className="w-12 h-12 rounded-full bg-coral text-white grid place-items-center shadow-[0_14px_30px_-10px_rgba(255,90,57,0.6)] transition-transform duration-300 group-hover:scale-110">
+                      <Play className="w-5 h-5 ml-0.5" fill="currentColor" />
+                    </span>
+                  </div>
+                </div>
+                <div className="mt-3 font-display text-[17px] leading-snug">{video.nombre}</div>
+                <div className="ed-caps !text-[9.5px] text-sand mt-1.5">{t(video.cargoKey)}</div>
+              </button>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </div>
+
+      <VideoTestimonioModal video={videoAbierto} onClose={() => setVideoAbierto(null)} />
+    </section>
+  )
+}
+
+function VideoTestimonioModal({ video, onClose }: { video: (typeof VIDEOS_TESTIMONIO)[number] | null; onClose: () => void }) {
+  const t = useT()
+
+  useEffect(() => {
+    if (!video) return
+    document.body.style.overflow = 'hidden'
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKey)
+    }
+  }, [video, onClose])
+
+  if (!video) return null
+
+  return (
+    <div
+      className="fixed inset-0 z-[60] bg-navy-deep/95 backdrop-blur-sm flex items-center justify-center p-4"
+      role="dialog"
+      aria-modal="true"
+      onClick={onClose}
+    >
+      <div className="w-full max-w-4xl" onClick={e => e.stopPropagation()}>
+        <div className="aspect-video w-full rounded-xl overflow-hidden bg-navy">
+          <video src={video.src} controls autoPlay className="w-full h-full" />
+        </div>
+        <div className="mt-4 flex items-start justify-between gap-4">
+          <div>
+            <p className="font-display text-cream text-xl">{video.nombre}</p>
+            <p className="ed-caps !text-[10px] text-coral mt-1.5">{t(video.cargoKey)}</p>
+          </div>
+          <button
+            onClick={onClose}
+            aria-label={t('home_videos_cerrar')}
+            className="text-cream/70 hover:text-coral transition-colors shrink-0"
+          >
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ——— 06 CONTACTO ———
+   Misma lógica de envío que la home anterior (Nexus + UTM/referrer/geo). */
+function ContactoSection() {
   const t = useT()
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
   const [form, setForm] = useState({ company_name: '', contact_name: '', contact_email: '', contact_phone: '', description: '' })
@@ -279,189 +611,145 @@ function ContactSection() {
     }
   }
 
-  return (
-    <section className="py-24 lg:py-32 bg-navy relative overflow-hidden">
-      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-prime/[0.06] blur-[120px] rounded-full" />
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center relative z-10">
-        <div>
-          <span className="text-blue-light text-xs font-label uppercase tracking-widest font-extrabold mb-6 block">{t('contacto_label')}</span>
-          <h2 className="text-white font-headline font-bold text-4xl lg:text-5xl leading-tight mb-6">
-            {t('contacto_titulo_1')} <span className="text-gold">{t('contacto_titulo_2')}</span>.
-          </h2>
-          <p className="text-white/60 text-lg mb-10">
-            {t('contacto_subtitle')}
-          </p>
-          <div className="space-y-5">
-            <div className="flex items-center gap-4">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <span className="text-white/80">{t('contacto_respuesta')}</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <span className="text-white/80">{t('contacto_candidatos')}</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <CheckCircle className="w-6 h-6 text-green-400 flex-shrink-0" />
-              <span className="text-white/80">{t('contacto_reemplazo')}</span>
-            </div>
-          </div>
-        </div>
+  const CHECKS = ['home_check_1', 'home_check_2', 'home_check_3']
+  const ROMANS = ['i.', 'ii.', 'iii.']
 
-        <div className="glass-card p-8 lg:p-10 rounded-xl border border-white/10">
-          {status === 'success' ? (
-            <div className="text-center py-12">
-              <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-6" />
-              <h3 className="font-headline font-bold text-2xl text-white mb-3">{t('contacto_enviado_titulo')}</h3>
-              <p className="text-white/60">{t('contacto_enviado_desc')}</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <input
-                  value={form.company_name}
-                  onChange={e => setForm(f => ({ ...f, company_name: e.target.value }))}
-                  placeholder={t('contacto_empresa')}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
-                />
-                <input
-                  value={form.contact_name}
-                  onChange={e => setForm(f => ({ ...f, contact_name: e.target.value }))}
-                  placeholder={t('contacto_nombre')}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
-                />
+  return (
+    <section id="contacto" className="ed-on-dark py-[110px] bg-gradient-to-b from-navy to-navy-deep text-cream">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+        <Reveal>
+          <div className="ed-sec-tag ed-caps">
+            <span className="idx">06</span>
+            <span className="name">{t('contacto_label')}</span>
+            <span className="meta">{t('home_sec_contacto_meta')}</span>
+          </div>
+        </Reveal>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-20 mt-11">
+          <div>
+            <Reveal>
+              <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(34px,4.2vw,62px)] text-cream [text-wrap:balance]">
+                {t('home_contacto_h2_a')} <em className="italic text-gold">{t('home_contacto_h2_b')}</em>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <p className="text-[clamp(16px,1.4vw,19px)] text-cream/70 max-w-[52ch] leading-relaxed mt-[22px]">
+                {t('home_contacto_lead')}
+              </p>
+            </Reveal>
+            <RevealGroup className="mt-11">
+              {CHECKS.map((key, i) => (
+                <RevealItem key={key}>
+                  <div className="flex gap-4 items-center text-cream/75 text-[15px] py-4 border-t border-cream/[0.18]">
+                    <span className="font-display italic text-coral text-[15px] w-[26px]">{ROMANS[i]}</span>
+                    {t(key)}
+                  </div>
+                </RevealItem>
+              ))}
+            </RevealGroup>
+          </div>
+
+          <Reveal delay={0.15}>
+            {status === 'success' ? (
+              <div className="text-center py-12">
+                <CheckCircle className="w-16 h-16 text-[#2fae6b] mx-auto mb-6" />
+                <h3 className="font-display text-3xl text-cream mb-3">{t('contacto_enviado_titulo')}</h3>
+                <p className="text-cream/60">{t('contacto_enviado_desc')}</p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <input
-                  value={form.contact_email}
-                  onChange={e => setForm(f => ({ ...f, contact_email: e.target.value }))}
-                  type="email"
-                  placeholder={t('contacto_email')}
-                  required
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
-                />
-                <input
-                  value={form.contact_phone}
-                  onChange={e => setForm(f => ({ ...f, contact_phone: e.target.value }))}
-                  type="tel"
-                  placeholder={t('contacto_telefono')}
-                  className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
-                />
-              </div>
-              <select
-                value={form.description}
-                onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                className="w-full px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all duration-300"
-              >
-                <option value="" disabled className="text-navy">{t('contacto_perfil')}</option>
-                <option value="Administrativo" className="text-navy">{t('serv_admin')}</option>
-                <option value="Marketing Digital" className="text-navy">{t('serv_marketing')}</option>
-                <option value="Financiero / Contable" className="text-navy">{t('serv_finanzas')}</option>
-                <option value="Desarrollo Web" className="text-navy">{t('serv_dev')}</option>
-                <option value="Diseno Grafico" className="text-navy">{t('serv_diseno')}</option>
-                <option value="Atencion al Cliente" className="text-navy">{t('serv_atencion')}</option>
-                <option value="RRHH / Reclutamiento" className="text-navy">{t('contacto_perfil_admin')}</option>
-                <option value="Otro" className="text-navy">{t('contacto_perfil_otro')}</option>
-              </select>
-              {status === 'error' && (
-                <div className="flex items-center gap-3 text-red-400 bg-red-500/10 p-3 rounded-lg text-sm">
-                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                  {t('contacto_error')}
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[34px]">
+                  <div className="ed-field">
+                    <label htmlFor="home-empresa">{t('home_form_empresa')}</label>
+                    <input
+                      id="home-empresa"
+                      value={form.company_name}
+                      onChange={e => setForm(f => ({ ...f, company_name: e.target.value }))}
+                      placeholder={t('home_form_empresa_ph')}
+                      autoComplete="organization"
+                      required
+                    />
+                  </div>
+                  <div className="ed-field">
+                    <label htmlFor="home-nombre">{t('home_form_nombre')}</label>
+                    <input
+                      id="home-nombre"
+                      value={form.contact_name}
+                      onChange={e => setForm(f => ({ ...f, contact_name: e.target.value }))}
+                      placeholder={t('home_form_nombre_ph')}
+                      autoComplete="name"
+                      required
+                    />
+                  </div>
+                  <div className="ed-field">
+                    <label htmlFor="home-email">Email</label>
+                    <input
+                      id="home-email"
+                      type="email"
+                      value={form.contact_email}
+                      onChange={e => setForm(f => ({ ...f, contact_email: e.target.value }))}
+                      placeholder={t('home_form_email_ph')}
+                      autoComplete="email"
+                      spellCheck={false}
+                      required
+                    />
+                  </div>
+                  <div className="ed-field">
+                    <label htmlFor="home-telefono">{t('home_form_telefono')}</label>
+                    <input
+                      id="home-telefono"
+                      type="tel"
+                      value={form.contact_phone}
+                      onChange={e => setForm(f => ({ ...f, contact_phone: e.target.value }))}
+                      placeholder={t('home_form_telefono_ph')}
+                      autoComplete="tel"
+                    />
+                  </div>
                 </div>
-              )}
-              <button
-                type="submit"
-                disabled={status === 'loading'}
-                className="w-full bg-coral text-white py-4 rounded-md font-label font-bold text-sm tracking-widest uppercase hover:bg-coral/90 transition-all flex items-center justify-center gap-3 shadow-lg shadow-coral/20 disabled:opacity-50"
-              >
-                {status === 'loading' ? (
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                ) : (
-                  <>
-                    {t('contacto_cta')}
-                    <Send className="w-4 h-4" />
-                  </>
+                <div className="ed-field">
+                  <label htmlFor="home-perfil">{t('home_form_perfil')}</label>
+                  <select
+                    id="home-perfil"
+                    value={form.description}
+                    onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
+                  >
+                    <option value="">{t('home_form_perfil_ph')}</option>
+                    <option value="Administrativo">{t('serv_admin')}</option>
+                    <option value="Marketing Digital">{t('serv_marketing')}</option>
+                    <option value="Financiero / Contable">{t('serv_finanzas')}</option>
+                    <option value="Ventas">{t('home_form_ventas')}</option>
+                    <option value="Desarrollo Web / Full Stack">{t('home_form_dev')}</option>
+                    <option value="Automatización e IA">{t('serv_ia')}</option>
+                    <option value="Diseño Gráfico">{t('serv_diseno')}</option>
+                    <option value="Atención al Cliente">{t('serv_atencion')}</option>
+                    <option value="Otro">{t('home_form_otro')}</option>
+                  </select>
+                </div>
+                {status === 'error' && (
+                  <div className="flex items-center gap-3 text-red-300 bg-red-500/10 p-3 rounded-lg text-sm mt-6">
+                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                    {t('contacto_error')}
+                  </div>
                 )}
-              </button>
-            </form>
-          )}
+                <button
+                  type="submit"
+                  disabled={status === 'loading'}
+                  className="ed-btn ed-btn-primary w-full justify-center mt-[38px] disabled:opacity-50"
+                >
+                  {status === 'loading' ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      {t('home_form_cta')}
+                      <ArrowRight className="w-4 h-4 arrow" />
+                    </>
+                  )}
+                </button>
+              </form>
+            )}
+          </Reveal>
         </div>
       </div>
     </section>
-  )
-}
-
-const PROCESS_IMAGES = [
-  'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=800&q=80',
-  'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&q=80',
-  'https://images.unsplash.com/photo-1600880292089-90a7e086ee0c?w=800&q=80',
-  'https://images.unsplash.com/photo-1553877522-43269d4ea984?w=800&q=80',
-]
-
-function ProcessSection({ t }: { t: (key: string) => string }) {
-  const [active, setActive] = useState(0)
-
-  return (
-    <RevealSection id="proceso" className="py-24 lg:py-32 bg-navy relative overflow-hidden">
-      <div className="absolute top-0 left-1/3 w-[500px] h-[500px] bg-blue-prime/[0.06] blur-[120px] rounded-full" />
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-        {/* Imagen interactiva */}
-        <div className="relative">
-          <div className="rounded-2xl overflow-hidden shadow-2xl">
-            <img
-              src={PROCESS_IMAGES[active]}
-              alt={`Paso ${active + 1}`}
-              className="w-full h-[300px] lg:h-[600px] object-cover transition-all duration-500"
-              loading="lazy"
-            />
-          </div>
-          <div className="absolute -bottom-6 -right-6 bg-coral rounded-xl p-6 shadow-2xl">
-            <div className="text-white font-headline font-bold text-3xl">15</div>
-            <div className="text-white/80 text-xs font-label uppercase tracking-widest">{t('proceso_dias')}</div>
-          </div>
-        </div>
-
-        {/* Pasos clickeables */}
-        <div>
-          <span className="text-blue-light text-xs font-label uppercase tracking-widest font-extrabold mb-6 block">{t('proceso_label')}</span>
-          <h2 className="text-white font-headline font-bold text-4xl lg:text-5xl leading-tight mb-12">
-            {t('proceso_titulo')}
-          </h2>
-
-          <div className="space-y-4">
-            {PROCESS_STEPS_META.map((step, i) => {
-              const Icon = PROCESS_ICONS[i]
-              const n = i + 1
-              const isActive = active === i
-              return (
-                <button
-                  key={step}
-                  onClick={() => setActive(i)}
-                  className={`w-full flex gap-6 items-start text-left p-5 rounded-xl transition-all ${
-                    isActive ? 'glass-card border border-coral/30' : 'hover:bg-white/5 border border-transparent'
-                  }`}
-                >
-                  <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center transition-all ${
-                    isActive ? 'bg-coral/20 border border-coral/30' : 'bg-white/5'
-                  }`}>
-                    <Icon className={`w-5 h-5 transition-colors ${isActive ? 'text-coral' : 'text-white/40'}`} />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-3 mb-1">
-                      <span className={`font-headline font-bold text-sm ${isActive ? 'text-coral' : 'text-white/20'}`}>{step}</span>
-                      <h3 className={`font-headline font-bold text-lg ${isActive ? 'text-white' : 'text-white/60'}`}>{t(`proceso_${n}_titulo`)}</h3>
-                    </div>
-                    {isActive && (
-                      <p className="text-white/50 leading-relaxed text-sm mt-1">{t(`proceso_${n}_desc`)}</p>
-                    )}
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      </div>
-    </RevealSection>
   )
 }

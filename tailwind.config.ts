@@ -7,18 +7,31 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Brand palette — Manual de Marca GTC (Abr 2026)
+        // Brand palette — Sistema editorial GTC (Sep 2026)
         navy: {
           DEFAULT: '#062E55',
           soft: '#0a2444',
+          deep: '#041E3A',
         },
         gold: '#F59E0B',
-        coral: '#FF6B47',
+        'gold-deep': '#C98A2B',
+        coral: {
+          DEFAULT: '#FF5A39',
+          hover: '#E8482A',
+        },
         'blue-prime': '#2280AD',
         'blue-deep': '#1a6590',
         'blue-light': '#4AADDB',
-        cream: '#F0EDE8',
+        cream: {
+          DEFAULT: '#F6F3EC',
+          2: '#EFEAE0',
+        },
         'off-white': '#F7F7F7',
+        ink: {
+          DEFAULT: '#0E2A47',
+          soft: '#48596D',
+        },
+        sand: '#8A948F',
         'dark-gray': '#37516b',
         'border-soft': '#d9e2ec',
         // shadcn/ui semantic tokens
@@ -57,6 +70,7 @@ export default {
         },
       },
       fontFamily: {
+        display: ['Fraunces', 'Georgia', 'serif'],
         headline: ['Montserrat', 'sans-serif'],
         subtitle: ['Poppins', 'sans-serif'],
         body: ['Lato', 'sans-serif'],

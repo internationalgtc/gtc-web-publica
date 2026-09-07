@@ -448,6 +448,8 @@ const T: Record<string, Record<string, string>> = {
   emp_subtitle_tpl: { es: 'vacantes activas en modalidad 100% remoto. Encuentra tu próxima oportunidad profesional.', en: 'active jobs in 100% remote mode. Find your next professional opportunity.' },
   emp_ph_buscar: { es: 'Buscar por título o área...', en: 'Search by title or area...' },
   emp_todos: { es: 'Todas las áreas', en: 'All areas' },
+  emp_activas_meta: { es: 'vacantes activas', en: 'open positions' },
+  emp_vacio: { es: 'No hay vacantes con esos filtros — prueba con otra área.', en: 'No positions match those filters — try another area.' },
 
   // ── DETALLES EMPLEO ──
   det_not_found: { es: 'Vacante no encontrada', en: 'Job not found' },

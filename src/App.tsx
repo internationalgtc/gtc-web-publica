@@ -10,6 +10,7 @@ import { ScrollToTop } from '@/components/shared/ScrollToTop'
 // Variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos):
 // la home ES el portal de vacantes. Sin páginas de clientes ni ChatWidget
 // (ese chatbot captura leads de empresas, no aplica acá).
+const HomeCandidatos = lazy(() => import('@/pages/HomeCandidatos'))
 const Empleos = lazy(() => import('@/pages/Empleos'))
 const DetallesDeEmpleo = lazy(() => import('@/pages/DetallesDeEmpleo'))
 const Beneficios = lazy(() => import('@/pages/Beneficios'))
@@ -33,7 +34,7 @@ export default function App() {
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<Empleos />} />
+            <Route path="/" element={<HomeCandidatos />} />
             <Route path="/empleos" element={<Empleos />} />
             <Route path="/empleos/:id" element={<DetallesDeEmpleo />} />
             <Route path="/beneficios" element={<Beneficios />} />

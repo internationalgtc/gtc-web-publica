@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Menu, X, Globe } from 'lucide-react'
+import { Menu, X, ArrowRight, Globe } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { useT } from '@/hooks/useT'
 import logoDark from '@/assets/logos/logo-gtc-negro.png'
@@ -8,7 +8,7 @@ import logoDark from '@/assets/logos/logo-gtc-negro.png'
 // Variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos): la home ES el
 // portal de vacantes. No hay secciones de clientes ni chatbot de captación.
 const NAV_LINKS = [
-  { key: 'empleos_label', to: '/' },
+  { key: 'empleos_label', to: '/empleos' },
   { key: 'beneficios_label', to: '/beneficios' },
 ]
 
@@ -52,6 +52,13 @@ export function Header() {
             <Globe className="w-4 h-4" />
             <span className="font-bold">{currentLang}</span>
           </button>
+          <Link
+            to="/empleos"
+            className="hidden lg:inline-flex ed-btn ed-btn-primary !px-6 !py-3"
+          >
+            {t('cand_cta_primary')}
+            <ArrowRight className="w-4 h-4 arrow" />
+          </Link>
 
           <button
             className="md:hidden text-ink border border-navy/15 rounded-[10px] w-11 h-11 grid place-items-center"
@@ -77,6 +84,13 @@ export function Header() {
                 {t(link.key)}
               </Link>
             ))}
+            <Link
+              to="/empleos"
+              onClick={() => setMenuOpen(false)}
+              className="ed-btn ed-btn-primary justify-center mt-2 !py-3.5"
+            >
+              {t('cand_cta_primary')}
+            </Link>
           </div>
         </div>
       )}

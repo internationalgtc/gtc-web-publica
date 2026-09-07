@@ -432,7 +432,7 @@ const T: Record<string, Record<string, string>> = {
   pp_4_t: { es: 'Base legal', en: 'Legal Basis' },
   pp_4_d: { es: 'Consentimiento del interesado (al enviar formularios), interés legítimo (análisis de uso), y ejecución contractual (gestión de servicios contratados).', en: 'Data subject consent (when submitting forms), legitimate interest (usage analysis), and contractual performance (management of contracted services).' },
   pp_5_t: { es: 'Cookies y tecnologías de seguimiento', en: 'Cookies and Tracking Technologies' },
-  pp_5_d: { es: 'Utilizamos Google Analytics 4 (G-J6SJCJ1PK7), Google Ads (AW-18022609299), Meta Pixel, LinkedIn Insight Tag y Vercel Analytics para analizar el tráfico y medir la efectividad de nuestras campañas publicitarias.', en: 'We use Google Analytics 4 (G-J6SJCJ1PK7), Google Ads (AW-18022609299), Meta Pixel, LinkedIn Insight Tag and Vercel Analytics to analyze traffic and measure the effectiveness of our advertising campaigns.' },
+  pp_5_d: { es: 'Utilizamos Google Analytics 4 (G-J6SJCJ1PK7), Google Ads (AW-18022609299, AW-18434607978), Meta Pixel, LinkedIn Insight Tag y Vercel Analytics para analizar el tráfico y medir la efectividad de nuestras campañas publicitarias.', en: 'We use Google Analytics 4 (G-J6SJCJ1PK7), Google Ads (AW-18022609299, AW-18434607978), Meta Pixel, LinkedIn Insight Tag and Vercel Analytics to analyze traffic and measure the effectiveness of our advertising campaigns.' },
   pp_6_t: { es: 'Compartición de datos', en: 'Data Sharing' },
   pp_6_d: { es: 'Compartimos datos con: Google (analytics y publicidad), Meta (publicidad), LinkedIn (publicidad), equipos internos de GTC (ventas y RRHH), y cuando sea requerido por ley.', en: 'We share data with: Google (analytics and advertising), Meta (advertising), LinkedIn (advertising), GTC internal teams (sales and HR), and when required by law.' },
   pp_7_t: { es: 'Derechos del usuario (GDPR)', en: 'User Rights (GDPR)' },
@@ -469,6 +469,16 @@ const T: Record<string, Record<string, string>> = {
   testi_t3_cargo: { es: 'CEO en PMV Factory', en: 'CEO at PMV Factory' },
   testi_t4_texto: { es: 'Estamos muy satisfechos con la calidad de los asistentes y la facilidad de contratación que ofrece Global Talent Connections.', en: 'We are very satisfied with the quality of the assistants and how easy hiring is with Global Talent Connections.' },
   testi_t4_cargo: { es: 'CEO en Coseba, Seguros Paco Saban', en: 'CEO at Coseba, Seguros Paco Saban' },
+  // Precio y presupuesto en formularios (sep-2026)
+  hero_precio: { es: 'Desde 1.200 €/mes · Sin permanencia · Reemplazo garantizado', en: 'From €1,200/month · No lock-in · Guaranteed replacement' },
+  form_presupuesto: { es: 'Presupuesto mensual', en: 'Monthly budget' },
+  form_presupuesto_ph: { es: 'Seleccionar…', en: 'Select…' },
+  form_presupuesto_hint: { es: 'Nuestros perfiles empiezan en 1.200 €/mes', en: 'Our profiles start at €1,200/month' },
+  form_presupuesto_1: { es: 'Menos de 1.200 €', en: 'Under €1,200' },
+  form_presupuesto_2: { es: '1.200 – 2.000 €', en: '€1,200 – 2,000' },
+  form_presupuesto_3: { es: 'Más de 2.000 €', en: 'Over €2,000' },
+  contacto_whatsapp: { es: 'WhatsApp', en: 'WhatsApp' },
+  contacto_whatsapp_cta: { es: 'Escríbenos por WhatsApp', en: 'Message us on WhatsApp' },
 }
 
 export function t(key: string, lang: string): string {

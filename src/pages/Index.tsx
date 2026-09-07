@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion, useInView, useReducedMotion, animate } from 'framer-motion'
 import { ArrowRight, AlertCircle, CheckCircle, Play, X } from 'lucide-react'
 import { trackLead } from '@/lib/tracking'
+import { BUDGET_MIN, withBudget } from '@/lib/budget'
 import { getUTMs, getReferrer, getLandingUrl } from '@/lib/utm'
 import { getCountry } from '@/lib/geo'
 import { useT, useLang } from '@/hooks/useT'
@@ -205,6 +206,10 @@ export default function HomePage() {
               </div>
             </Reveal>
           </div>
+
+          <Reveal delay={0.92} y={16}>
+            <p className="ed-caps !text-[11px] text-ink-soft mt-8">{t('hero_precio')}</p>
+          </Reveal>
 
           {/* Stats como fila-índice */}
           <RevealGroup className="grid grid-cols-1 md:grid-cols-3 mt-[88px] border-t border-navy/15">
@@ -581,13 +586,13 @@ function VideoTestimonioModal({ video, onClose }: { video: (typeof VIDEOS_TESTIM
 function ContactoSection() {
   const t = useT()
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [form, setForm] = useState({ company_name: '', contact_name: '', contact_email: '', contact_phone: '', description: '' })
+  const [form, setForm] = useState({ company_name: '', contact_name: '', contact_email: '', contact_phone: '', description: '', budget: '' })
 
   const API_URL = 'https://www.globaltalentconnections.online/api/leads/public'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.company_name || !form.contact_name || !form.contact_email) return
+    if (!form.company_name || !form.contact_name || !form.contact_email || !form.contact_phone || !form.budget) return
     setStatus('loading')
     try {
       const res = await fetch(API_URL, {
@@ -595,7 +600,9 @@ function ContactoSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...form,
-          source: 'mockup_web',
+          description: withBudget(form.description, form.budget),
+          budget_option: BUDGET_MIN[form.budget],
+          source: 'web_formulario',
           ...getUTMs(),
           referrer: getReferrer(),
           country: getCountry(),
@@ -605,7 +612,7 @@ function ContactoSection() {
       if (!res.ok) throw new Error()
       setStatus('success')
       trackLead('home_form')
-      setForm({ company_name: '', contact_name: '', contact_email: '', contact_phone: '', description: '' })
+      setForm({ company_name: '', contact_name: '', contact_email: '', contact_phone: '', description: '', budget: '' })
     } catch {
       setStatus('error')
     }
@@ -703,6 +710,7 @@ function ContactoSection() {
                       onChange={e => setForm(f => ({ ...f, contact_phone: e.target.value }))}
                       placeholder={t('home_form_telefono_ph')}
                       autoComplete="tel"
+                      required
                     />
                   </div>
                 </div>
@@ -724,6 +732,21 @@ function ContactoSection() {
                     <option value="Atención al Cliente">{t('serv_atencion')}</option>
                     <option value="Otro">{t('home_form_otro')}</option>
                   </select>
+                </div>
+                <div className="ed-field">
+                  <label htmlFor="home-presupuesto">{t('form_presupuesto')}</label>
+                  <select
+                    id="home-presupuesto"
+                    value={form.budget}
+                    onChange={e => setForm(f => ({ ...f, budget: e.target.value }))}
+                    required
+                  >
+                    <option value="">{t('form_presupuesto_ph')}</option>
+                    <option value="menos_1200">{t('form_presupuesto_1')}</option>
+                    <option value="1200_2000">{t('form_presupuesto_2')}</option>
+                    <option value="mas_2000">{t('form_presupuesto_3')}</option>
+                  </select>
+                  <p className="text-cream/50 text-xs mt-2">{t('form_presupuesto_hint')}</p>
                 </div>
                 {status === 'error' && (
                   <div className="flex items-center gap-3 text-red-300 bg-red-500/10 p-3 rounded-lg text-sm mt-6">

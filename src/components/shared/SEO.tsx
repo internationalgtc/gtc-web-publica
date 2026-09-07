@@ -45,7 +45,7 @@ const LOCAL_BUSINESS_SCHEMA = {
   image: `${BASE_URL}/og-image.png`,
   description:
     'Conectamos empresas españolas con profesionales remotos de alto rendimiento en Latinoamérica. Asistentes virtuales, SDRs y perfiles administrativos con ahorro de hasta el 52%.',
-  telephone: '+34623257706',
+  telephone: '+34689539896',
   email: 'info@globaltalent-connections.com',
   priceRange: '€€',
   currenciesAccepted: 'EUR',

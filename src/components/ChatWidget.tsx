@@ -254,7 +254,7 @@ export default function ChatWidget() {
                 disabled={isTyping || finished}
                 placeholder={finished
                   ? (lang === 'en' ? 'Inquiry registered! Goodbye 👋' : '¡Consulta registrada! Hasta pronto 👋')
-                  : (lang === 'en' ? 'Type your message…' : 'Escribí tu mensaje…')
+                  : (lang === 'en' ? 'Type your message…' : 'Escribe tu mensaje…')
                 }
                 className="flex-1 bg-off-white border border-gray-200 rounded-full px-4 py-2 text-sm font-body text-navy placeholder:text-dark-gray/60 focus:outline-none focus:border-blue-prime transition-colors disabled:opacity-50"
               />

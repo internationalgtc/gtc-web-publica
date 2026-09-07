@@ -1,6 +1,6 @@
 import { ConversationFlow } from "@/types/chat";
 
-export const WHATSAPP_LINK = "https://wa.me/34622850423";
+export const WHATSAPP_LINK = "https://wa.me/34689539896";
 export const CONTACT_LINK = "/contacto";
 export const JOBS_LINK = "/empleos";
 export const WEBSITE_LINK = "/";

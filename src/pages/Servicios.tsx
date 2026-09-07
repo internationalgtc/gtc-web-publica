@@ -75,7 +75,7 @@ export default function ServiciosPage() {
     <>
       <SEO
         title="Servicios de Talento Remoto"
-        description="Asistentes virtuales y profesionales remotos para marketing, administración, diseño, desarrollo, ventas, RRHH y más. Perfiles desde €600/mes."
+        description="Asistentes virtuales y profesionales remotos para marketing, administración, diseño, desarrollo, ventas, RRHH y más. Perfiles desde 1.200 €/mes."
         path="/servicios"
         faqSchema={SERVICIOS_FAQ_SCHEMA}
         keywords="servicios asistente virtual, asistente virtual marketing, asistente administrativo remoto, SDR remoto, diseñador gráfico remoto, desarrollador remoto, atención cliente remoto, RRHH remoto, contratar profesional remoto España"
@@ -91,6 +91,7 @@ export default function ServiciosPage() {
           <p className="text-white/60 text-lg max-w-2xl">
             {t('servicios_subtitle')}
           </p>
+          <p className="text-gold font-label text-xs uppercase tracking-widest font-bold mt-6">{t('hero_precio')}</p>
         </div>
       </section>
 

@@ -12,6 +12,8 @@ export function trackLead(source: string) {
   // form_submit nativo / JoinChat / clic-a-teléfono), así que disparamos la
   // conversión directo acá. Antes iba sin label → Ads no la contaba.
   window.gtag?.('event', 'conversion', { send_to: 'AW-18022609299/e2oZCKrri5McEJPj7JFD', transport_type: 'beacon' })
+  // Cuenta nueva de Google Ads (721-349-3676, sep-2026): misma conversión, etiqueta propia.
+  window.gtag?.('event', 'conversion', { send_to: 'AW-18434607978/rA4zCLraxvAcEOqWp9ZE', transport_type: 'beacon' })
   // Meta Pixel
   window.fbq?.('track', 'Lead', { content_name: source })
 }

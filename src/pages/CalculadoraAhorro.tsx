@@ -83,7 +83,7 @@ export default function CalculadoraAhorro() {
     <>
       <SEO
         title="Calculadora de ahorro: cuánto cuesta contratar talento remoto"
-        description="Calculá en segundos cuánto ahorra tu empresa contratando un asistente virtual o profesional remoto con GTC frente a una contratación local en España: hasta un 52% menos en costos."
+        description="Calcula en segundos cuánto ahorra tu empresa contratando un asistente virtual o profesional remoto con GTC frente a una contratación local en España: hasta un 52% menos en costos."
         path="/calculadora-ahorro"
       />
       {/* HERO */}

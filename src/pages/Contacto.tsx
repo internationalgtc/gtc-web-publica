@@ -5,7 +5,9 @@ import { getUTMs, getReferrer, getLandingUrl } from '@/lib/utm'
 import { getCountry } from '@/lib/geo'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Send, CheckCircle, AlertCircle } from 'lucide-react'
+import { Send, CheckCircle, AlertCircle, MessageCircle } from 'lucide-react'
+import { BUDGET_MIN, withBudget } from '@/lib/budget'
+import { WHATSAPP_LINK } from '@/data/chatbotData'
 import { RevealSection } from '@/components/shared/RevealSection'
 import SEO from '@/components/shared/SEO'
 import { useT } from '@/hooks/useT'
@@ -27,9 +29,10 @@ const formSchema = z.object({
   company_name: z.string().min(2, 'Required'),
   contact_name: z.string().min(2, 'Required'),
   contact_email: z.string().email('Invalid email'),
-  contact_phone: z.string().optional(),
+  contact_phone: z.string().min(6, 'Required'),
   company_size: z.string().optional(),
   assistant_type: z.string().min(1, 'Required'),
+  budget: z.string().min(1, 'Required'),
   description: z.string().optional(),
 })
 
@@ -43,7 +46,7 @@ export default function ContactoPage() {
     resolver: zodResolver(formSchema),
   })
 
-  const onSubmit = async (data: FormData) => {
+  const onSubmit = async ({ budget, ...data }: FormData) => {
     setStatus('loading')
     try {
       const res = await fetch(API_URL, {
@@ -51,10 +54,12 @@ export default function ContactoPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...data,
+          description: withBudget(data.description, budget),
+          budget_option: BUDGET_MIN[budget],
           ...getUTMs(),
           referrer: getReferrer(),
           country: getCountry(),
-          source: 'web_form',
+          source: 'web_formulario',
           landing_url: getLandingUrl(),
         }),
       })
@@ -72,7 +77,7 @@ export default function ContactoPage() {
     <>
       <SEO
         title="Contacto"
-        description="Solicitá tu asesoría gratuita. Te contactamos en menos de 24h para ayudarte a contratar talento remoto de alto rendimiento desde €600/mes."
+        description="Solicita tu asesoría gratuita. Te contactamos en menos de 24h para ayudarte a contratar talento remoto de alto rendimiento desde 1.200 €/mes."
         path="/contacto"
         keywords="contacto Global Talent Connections, contratar asistente virtual, asesoría talento remoto gratis, teléfono Global Talent, solicitar asistente virtual España"
         breadcrumbs={[{ name: 'Contacto', url: '/contacto' }]}
@@ -110,6 +115,15 @@ export default function ContactoPage() {
                 <div>
                   <p className="font-label text-xs uppercase tracking-widest text-navy/60 font-bold mb-1">Teléfono</p>
                   <a href="tel:+34623257706" className="text-navy font-medium hover:text-blue-prime transition-colors">+34 623 257 706</a>
+                </div>
+              </li>
+              <li className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-lg bg-blue-prime/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <MessageCircle className="w-5 h-5 text-blue-prime" />
+                </div>
+                <div>
+                  <p className="font-label text-xs uppercase tracking-widest text-navy/60 font-bold mb-1">{t('contacto_whatsapp')}</p>
+                  <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="text-navy font-medium hover:text-blue-prime transition-colors">{t('contacto_whatsapp_cta')}</a>
                 </div>
               </li>
               <li className="flex items-start gap-4">
@@ -226,7 +240,7 @@ export default function ContactoPage() {
 
                 <div>
                   <label className="block font-label text-xs uppercase tracking-widest text-navy/70 font-bold mb-2">
-                    {t('contacto_telefono')}
+                    {t('contacto_telefono')} *
                   </label>
                   <input
                     {...register('contact_phone')}
@@ -234,6 +248,7 @@ export default function ContactoPage() {
                     className="w-full px-4 py-3 rounded-lg border border-border-soft bg-white text-navy placeholder:text-navy/40 focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
                     placeholder={t('ct_ph_telefono')}
                   />
+                  {errors.contact_phone && <p className="text-red-500 text-xs mt-1">{errors.contact_phone.message}</p>}
                 </div>
               </div>
 
@@ -268,6 +283,23 @@ export default function ContactoPage() {
                   </select>
                   {errors.assistant_type && <p className="text-red-500 text-xs mt-1">{errors.assistant_type.message}</p>}
                 </div>
+              </div>
+
+              <div>
+                <label className="block font-label text-xs uppercase tracking-widest text-navy/70 font-bold mb-2">
+                  {t('form_presupuesto')} *
+                </label>
+                <select
+                  {...register('budget')}
+                  className="w-full px-4 py-3 rounded-lg border border-border-soft bg-white text-navy focus:ring-2 focus:ring-blue-prime focus:border-blue-prime outline-none transition-all"
+                >
+                  <option value="">{t('form_presupuesto_ph')}</option>
+                  <option value="menos_1200">{t('form_presupuesto_1')}</option>
+                  <option value="1200_2000">{t('form_presupuesto_2')}</option>
+                  <option value="mas_2000">{t('form_presupuesto_3')}</option>
+                </select>
+                <p className="text-navy/50 text-xs mt-1">{t('form_presupuesto_hint')}</p>
+                {errors.budget && <p className="text-red-500 text-xs mt-1">{errors.budget.message}</p>}
               </div>
 
               <div>

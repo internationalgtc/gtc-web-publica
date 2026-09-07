@@ -114,7 +114,7 @@ export default function ContactoPage() {
                 </div>
                 <div>
                   <p className="font-label text-xs uppercase tracking-widest text-navy/60 font-bold mb-1">Teléfono</p>
-                  <a href="tel:+34623257706" className="text-navy font-medium hover:text-blue-prime transition-colors">+34 623 257 706</a>
+                  <a href="tel:+34689539896" className="text-navy font-medium hover:text-blue-prime transition-colors">+34 689 53 98 96</a>
                 </div>
               </li>
               <li className="flex items-start gap-4">

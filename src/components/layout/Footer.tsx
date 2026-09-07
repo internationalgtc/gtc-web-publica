@@ -20,7 +20,6 @@ export function Footer() {
             <ul className="space-y-3">
               <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/nosotros">{t('footer_sobre')}</Link></li>
               <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/servicios">{t('servicios_label')}</Link></li>
-              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/empleos">{t('empleos_label')}</Link></li>
             </ul>
           </div>
 

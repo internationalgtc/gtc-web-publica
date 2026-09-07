@@ -199,7 +199,7 @@ export default function HomePage() {
                 <a className="ed-btn ed-btn-primary" href="#contacto">
                   {t('home_hero_cta_primary')} <ArrowRight className="w-4 h-4 arrow" />
                 </a>
-                <Link className="ed-btn ed-btn-outline" to="/empleos">
+                <Link className="ed-btn ed-btn-outline" to="/calculadora-ahorro">
                   {t('home_hero_cta_secondary')}
                 </Link>
               </div>

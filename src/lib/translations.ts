@@ -243,7 +243,7 @@ const T: Record<string, Record<string, string>> = {
   home_hero_title_b: { es: 'respaldo de principio a fin.', en: 'support from start to finish.' },
   home_hero_sub: { es: 'Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño.', en: 'We connect companies with professionals from Latin America. We select the profile, handle the hiring and support their performance.' },
   home_hero_cta_primary: { es: 'Cuéntanos qué perfil necesitas', en: 'Tell us what profile you need' },
-  home_hero_cta_secondary: { es: 'Ver oportunidades', en: 'See opportunities' },
+  home_hero_cta_secondary: { es: 'Calcular tu ahorro', en: 'Calculate your savings' },
   home_stat_empresas: { es: 'Empresas activas', en: 'Active companies' },
   home_stat_empresas_foot: { es: 'Con profesionales trabajando', en: 'With professionals working' },
   home_stat_profesionales: { es: 'Profesionales activos', en: 'Active professionals' },

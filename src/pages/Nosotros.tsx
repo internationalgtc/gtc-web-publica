@@ -208,9 +208,6 @@ export default function NosotrosPage() {
             <Link to="/contacto" className="px-10 lg:px-12 py-4 bg-blue-prime text-white font-bold rounded-md hover:bg-blue-deep hover:scale-95 transition-all">
               {t('nosotros_soy_empresa')}
             </Link>
-            <Link to="/empleos" className="px-10 lg:px-12 py-4 bg-gold text-navy font-bold rounded-md hover:scale-95 transition-all shadow-lg shadow-gold/20">
-              {t('nosotros_soy_profesional')}
-            </Link>
           </div>
         </div>
       </section>

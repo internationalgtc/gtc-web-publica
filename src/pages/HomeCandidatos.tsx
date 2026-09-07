@@ -87,6 +87,30 @@ const STATS = [
   { n: '11', lKey: 'home_stat_areas', fKey: 'home_stat_areas_foot' },
 ]
 
+/* Fondo animado del hero: video en loop con velo cream para que el texto
+   siga legible. Respeta prefers-reduced-motion (queda el poster estático). */
+function HeroBackground() {
+  const reduced = useReducedMotion()
+  if (reduced) return null
+  return (
+    <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <video
+        className="w-full h-full object-cover opacity-40"
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+      >
+        <source src="/videos/hero-candidatos.webm" type="video/webm" />
+        <source src="/videos/hero-candidatos.mp4" type="video/mp4" />
+      </video>
+      {/* Velo para legibilidad: fuerte arriba (texto), se disipa abajo */}
+      <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/60 to-cream" />
+    </div>
+  )
+}
+
 export default function HomeCandidatos() {
   const t = useT()
   useLang()
@@ -103,8 +127,12 @@ export default function HomeCandidatos() {
       />
 
       {/* HERO */}
-      <section className="pt-[158px] relative">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+      <section className="pt-[158px] relative overflow-hidden">
+        {/* Fondo con movimiento (Higgsfield): cae en /public/videos/hero-candidatos.*.
+            Si el archivo no existe todavía, el video 404ea en silencio y queda
+            el cream editorial — la página nunca se rompe por el fondo. */}
+        <HeroBackground />
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 relative">
           <Reveal delay={0} y={0}>
             <div className="ed-caps !text-[11px] flex items-baseline flex-wrap gap-[26px] py-[14px] border-y border-navy/15 text-ink-soft">
               <span className="flex items-center gap-[9px]">

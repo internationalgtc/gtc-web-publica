@@ -2,32 +2,26 @@ import { Link } from 'react-router-dom'
 import logoWhite from '@/assets/logos/logo-gtc-blanco.png'
 import { useT } from '@/hooks/useT'
 
+// Variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos): footer reducido
+// a lo que le sirve a quien busca empleo. Sin enlaces a páginas de clientes.
 export function Footer() {
   const t = useT()
   return (
     <footer className="bg-navy-deep text-cream pt-20 overflow-hidden">
       <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-11 pb-[70px]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr] gap-11 pb-[70px]">
           <div className="sm:col-span-2 md:col-span-1">
             <img src={logoWhite} alt="Global Talent Connections" className="h-[26px] w-auto mb-[18px]" loading="lazy" />
             <p className="text-[13.5px] text-cream/50 max-w-[28ch] leading-relaxed">
-              {t('footer_desc')}
+              {t('beneficios_subtitle')}
             </p>
           </div>
 
           <div>
             <h5 className="ed-caps !text-[10px] text-cream/40 mb-5">{t('footer_empresa')}</h5>
             <ul className="space-y-3">
-              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/nosotros">{t('footer_sobre')}</Link></li>
-              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/servicios">{t('servicios_label')}</Link></li>
-            </ul>
-          </div>
-
-          <div>
-            <h5 className="ed-caps !text-[10px] text-cream/40 mb-5">{t('footer_recursos')}</h5>
-            <ul className="space-y-3">
-              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/blog">{t('blog_label')}</Link></li>
-              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/calculadora-ahorro">{t('footer_calculadora')}</Link></li>
+              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/">{t('empleos_label')}</Link></li>
+              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/beneficios">{t('beneficios_label')}</Link></li>
             </ul>
           </div>
 

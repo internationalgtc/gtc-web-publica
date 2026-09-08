@@ -40,6 +40,9 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@prerenderer/renderer-jsdom": "^1.1.9",
+    "@prerenderer/renderer-puppeteer": "^1.2.4",
+    "@prerenderer/rollup-plugin": "^0.3.12",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vercel/node": "^5.8.1",

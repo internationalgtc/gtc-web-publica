@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom'
 import { motion, useReducedMotion, useScroll, useTransform, useInView, animate, AnimatePresence } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
-import { urlPostulacion } from '@/lib/nexus'
 import SEO from '@/components/shared/SEO'
 
 // Portada de la variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos).
@@ -202,7 +201,7 @@ function CountUp({ to }: { to: number }) {
 
 export default function HomeCandidatos() {
   const t = useT()
-  const lang = useLang()
+  useLang()
   // Acordeón del proceso: tocar un paso despliega su texto (no redirige).
   const [pasoAbierto, setPasoAbierto] = useState<number | null>(0)
 
@@ -442,15 +441,13 @@ export default function HomeCandidatos() {
               <Link className="ed-btn ed-btn-primary !px-10 !py-4" to="/empleos">
                 {t('cand_cta_primary')} <ArrowRight className="w-4 h-4 arrow" />
               </Link>
-              <a
+              <Link
                 className="ed-btn ed-btn-outline !px-10 !py-4 !text-cream"
                 style={{ boxShadow: 'inset 0 0 0 1.5px rgba(246,243,236,.3)' }}
-                href={urlPostulacion(undefined, lang)}
-                target="_blank"
-                rel="noopener noreferrer"
+                to="/areas"
               >
                 {t('cand_cta_general')}
-              </a>
+              </Link>
             </div>
             <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/40 mt-6">{t('cand_general_nota')}</p>
           </Reveal>

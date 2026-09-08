@@ -547,6 +547,14 @@ const T: Record<string, Record<string, string>> = {
   emp_sin_abiertas: { es: 'Ahora mismo no hay búsquedas abiertas con esos filtros.', en: 'No open searches match those filters right now.' },
   cand_cta_general: { es: 'Dejar mi CV', en: 'Leave my CV' },
   cand_general_nota: { es: 'Sin búsqueda concreta: entras a la base por tu área.', en: 'No specific search: you enter the database by your area.' },
+
+  // --- Página de áreas generales (/areas), separada de la bolsa (8-sep-2026) ---
+  areas_label: { es: 'Postúlate por área', en: 'Apply by area' },
+  areas_titulo_1: { es: 'Deja tu CV en', en: 'Leave your CV in' },
+  areas_titulo_2: { es: 'tu área', en: 'your area' },
+  areas_intro: { es: 'Si ninguna búsqueda abierta encaja contigo, elige tu área. Tu CV queda en nuestra base y se evalúa para cada búsqueda nueva de esa área.', en: 'If no open search fits you, pick your area. Your CV stays in our database and is reviewed for every new search in that area.' },
+  areas_sin_area: { es: '¿Ninguna te representa? Postúlate igual y nosotros te ubicamos.', en: 'None of them fits? Apply anyway and we will place you.' },
+  emp_cta_areas: { es: '¿No ves tu búsqueda? Deja tu CV por área y te tenemos en cuenta.', en: "Don't see your search? Leave your CV by area and we will keep you in mind." },
 }
 
 export function t(key: string, lang: string): string {

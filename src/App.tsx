@@ -13,6 +13,7 @@ import { ScrollToTop } from '@/components/shared/ScrollToTop'
 const HomeCandidatos = lazy(() => import('@/pages/HomeCandidatos'))
 const Empleos = lazy(() => import('@/pages/Empleos'))
 const DetallesDeEmpleo = lazy(() => import('@/pages/DetallesDeEmpleo'))
+const Areas = lazy(() => import('@/pages/Areas'))
 const PoliticaPrivacidad = lazy(() => import('@/pages/PoliticaPrivacidad'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 
@@ -36,6 +37,7 @@ export default function App() {
             <Route path="/" element={<HomeCandidatos />} />
             <Route path="/empleos" element={<Empleos />} />
             <Route path="/empleos/:id" element={<DetallesDeEmpleo />} />
+            <Route path="/areas" element={<Areas />} />
             {/* «Únete al equipo» y «Oportunidades» eran la misma cosa con dos nombres:
                 la página se retiró y los enlaces viejos caen en la bolsa de empleos. */}
             <Route path="/beneficios" element={<Navigate to="/empleos" replace />} />

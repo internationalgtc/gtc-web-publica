@@ -50,10 +50,14 @@ const RUTAS_PRERENDER = [
   '/servicios',
   '/contacto',
   '/nosotros',
-  '/beneficios',
-  '/empleos',
   '/blog',
   '/politica-de-privacidad',
+  // Retiradas el 8-sep-2026: el portal de candidatos es otro dominio. Se
+  // prerenderizan A PROPÓSITO para que el HTML que Google recibe en esas
+  // direcciones (que tiene indexadas) traiga el 404 y el `noindex` sin
+  // depender de que ejecute JavaScript. No redirigen: no existen.
+  '/empleos',
+  '/beneficios',
 ]
 
 export default defineConfig({

@@ -430,8 +430,8 @@ const T: Record<string, Record<string, string>> = {
   form_presupuesto_ph: { es: 'Seleccionar…', en: 'Select…' },
   form_presupuesto_hint: { es: 'Nuestros perfiles empiezan en 1.200 €/mes', en: 'Our profiles start at €1,200/month' },
   form_presupuesto_1: { es: 'Menos de 1.200 €', en: 'Under €1,200' },
-  form_presupuesto_2: { es: '1.200 – 2.000 €', en: '€1,200 – 2,000' },
-  form_presupuesto_3: { es: 'Más de 2.000 €', en: 'Over €2,000' },
+  form_presupuesto_2: { es: '1.200 € a 1.800 €', en: '€1,200 to €1,800' },
+  form_presupuesto_3: { es: '+ 2.000 €', en: '€2,000+' },
   contacto_whatsapp: { es: 'WhatsApp', en: 'WhatsApp' },
   contacto_whatsapp_cta: { es: 'Escríbenos por WhatsApp', en: 'Message us on WhatsApp' },
   // Calculadora interactiva (sep-2026)

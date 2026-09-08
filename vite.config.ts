@@ -1,7 +1,40 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react-swc'
 import path from 'path'
+import fs from 'fs'
+import os from 'os'
+import { createRequire } from 'module'
 import prerender from '@prerenderer/rollup-plugin'
+
+// 🔴 El prerender necesita un Chromium REAL y solo se activa si está instalado
+// en la máquina que compila.
+//
+// Por qué: en el build remoto de Vercel, puppeteer se queda descargando Chromium
+// y el deploy se cuelga — medido el 8-sep-2026: 14 min en estado UNKNOWN, sin
+// logs, cuando un build normal de esta web tarda 18 s. Con esta guarda, un build
+// sin Chromium NO falla: publica la SPA de siempre, exactamente como hasta hoy.
+//
+// ⇒ Para que el HTML prerenderizado llegue a producción hay que compilar EN LOCAL
+//   y subir el resultado ya compilado:  npm run deploy:prod
+// 🔑 NO usar `puppeteer.executablePath()`: en puppeteer 24 devuelve una Promise,
+// y `vite.config` tiene que decidir de forma SÍNCRONA si añade el plugin. Se
+// mira directamente la caché de navegadores, que es donde puppeteer los instala.
+function hayChromium(): boolean {
+  if (process.env.PRERENDER === '0') return false
+  try {
+    const require = createRequire(import.meta.url)
+    require.resolve('puppeteer')
+    const cache = process.env.PUPPETEER_CACHE_DIR || path.join(os.homedir(), '.cache', 'puppeteer')
+    return fs.existsSync(path.join(cache, 'chrome'))
+  } catch {
+    return false
+  }
+}
+
+const PRERENDER_ACTIVO = hayChromium()
+if (!PRERENDER_ACTIVO) {
+  console.warn('[prerender] Chromium no disponible: se compila la SPA sin HTML prerenderizado.')
+}
 
 // Rutas que se guardan como HTML ya renderizado. Son las que reciben tráfico
 // PAGADO o de buscador: el rastreador tiene que ver el contenido sin ejecutar
@@ -26,6 +59,7 @@ const RUTAS_PRERENDER = [
 export default defineConfig({
   plugins: [
     react(),
+    ...(PRERENDER_ACTIVO ? [
     // Antes, TODA ruta devolvía el mismo index.html de 6 KB con un <div id="root">
     // vacío: el contenido lo pintaba React en el navegador. Google Ads puntúa la
     // «experiencia de la página de destino» comparándola con los demás anunciantes
@@ -52,6 +86,7 @@ export default defineConfig({
           .replace(/https?:\/\/127\.0\.0\.1(:\d+)?/g, 'https://globaltalent-connections.com')
       },
     }),
+    ] : []),
   ],
   resolve: {
     alias: {

@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:sin-prerender": "PRERENDER=0 vite build",
+    "deploy:prod": "npm run build && vercel deploy --prebuilt --prod --yes"
   },
   "repository": {
     "type": "git",

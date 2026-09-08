@@ -109,7 +109,8 @@ function HeroBackground() {
           playsInline
           preload="metadata"
         >
-          <source src="/videos/hero-candidatos.webm" type="video/webm" />
+          {/* Solo mp4: no hay .webm en el repo y el rewrite de la SPA le devolvía
+              index.html con 200 al pedirlo (Safari se quedaba mudo en ese source). */}
           <source src="/videos/hero-candidatos.mp4" type="video/mp4" />
         </video>
       </motion.div>

@@ -1,39 +1,55 @@
-import { RevealSection } from '@/components/shared/RevealSection'
 import { useT } from '@/hooks/useT'
+import { Reveal } from '@/components/shared/EditorialReveal'
 
 const SECTIONS = Array.from({ length: 13 }, (_, i) => ({
   tk: `pp_${i + 1}_t`,
   dk: `pp_${i + 1}_d`,
 }))
 
+const pad = (n: number) => String(n).padStart(2, '0')
+
+// Política de privacidad en el sistema editorial (misma cara que el resto del portal).
 export default function PoliticaPrivacidad() {
   const t = useT()
 
   return (
     <>
-      <section className="bg-navy pt-32 pb-20 relative overflow-hidden">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8 relative z-10">
-          <span className="text-blue-light text-xs font-label uppercase tracking-widest font-bold mb-4 block">{t('privacidad_label')}</span>
-          <h1 className="font-headline font-bold text-4xl md:text-5xl text-white mb-6">{t('privacidad_titulo')}</h1>
-          <p className="text-white/60">{t('privacidad_actualizacion')}</p>
+      <section className="pt-[158px] pb-[64px]">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+          <Reveal y={0}>
+            <div className="ed-sec-tag ed-caps">
+              <span className="idx">✳</span>
+              <span className="name">{t('privacidad_label')}</span>
+              <span className="meta">{t('privacidad_actualizacion')}</span>
+            </div>
+          </Reveal>
+          <Reveal className="mt-11 max-w-[16ch]">
+            <h1 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(40px,6.4vw,96px)] [text-wrap:balance]">
+              {t('privacidad_titulo')}
+            </h1>
+          </Reveal>
         </div>
       </section>
 
-      <RevealSection className="py-20 lg:py-28 bg-off-white">
-        <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          <div className="bg-white rounded-2xl p-8 lg:p-14 border border-border-soft space-y-10">
+      <section className="pb-[130px]">
+        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+          <div className="border-t border-navy/15">
             {SECTIONS.map((s, i) => (
-              <div key={s.tk}>
-                <h2 className="font-headline font-bold text-xl text-navy mb-3 flex items-center gap-3">
-                  <span className="text-blue-prime/40 font-label text-sm">{String(i + 1).padStart(2, '0')}</span>
-                  {t(s.tk)}
-                </h2>
-                <p className="text-dark-gray leading-relaxed">{t(s.dk)}</p>
-              </div>
+              <Reveal key={s.tk}>
+                <article className="grid grid-cols-1 md:grid-cols-[96px_1fr] gap-x-8 gap-y-3 py-10 border-b border-navy/15">
+                  <div className="font-display font-light text-[clamp(32px,3.4vw,48px)] leading-none text-navy tabular-nums">
+                    {pad(i + 1).slice(0, 1)}<span className="italic text-coral">{pad(i + 1).slice(1)}</span>
+                  </div>
+                  <div>
+                    <h2 className="font-display text-[clamp(20px,1.8vw,26px)] text-ink leading-snug">{t(s.tk)}</h2>
+                    <p className="text-[15.5px] text-ink-soft leading-relaxed mt-3 max-w-[70ch]">{t(s.dk)}</p>
+                  </div>
+                </article>
+              </Reveal>
             ))}
           </div>
         </div>
-      </RevealSection>
+      </section>
     </>
   )
 }

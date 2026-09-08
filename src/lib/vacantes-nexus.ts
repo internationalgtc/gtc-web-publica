@@ -94,12 +94,13 @@ function aJob(v: VacanteNexus): Job {
   // Hay ficha local: se conserva su contenido rico y Nexus solo aporta que
   // esta abierta. El id local mantiene andando /empleos/:id y la version en ingles.
   if (local) {
-    return { ...local, active: true, department: departamento }
+    return { ...local, active: true, department: departamento, esPerfilGeneral: v.is_evergreen }
   }
 
   return {
     id: v.public_slug || v.id,
     active: true,
+    esPerfilGeneral: v.is_evergreen,
     title: v.title,
     department: departamento,
     location: v.location || 'Remoto',

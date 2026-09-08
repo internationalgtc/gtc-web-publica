@@ -537,6 +537,16 @@ const T: Record<string, Record<string, string>> = {
   det_area: { es: 'Área', en: 'Area' },
   det_ubicacion: { es: 'Ubicación', en: 'Location' },
   det_jornada: { es: 'Jornada', en: 'Schedule' },
+
+  // --- Bolsa: búsquedas abiertas vs. perfiles generales (8-sep-2026) ---
+  emp_grupo_abiertas: { es: 'Búsquedas abiertas', en: 'Open searches' },
+  emp_grupo_abiertas_meta: { es: 'con cliente esperando', en: 'with a client waiting' },
+  emp_grupo_generales: { es: 'Áreas generales', en: 'General areas' },
+  emp_grupo_generales_meta: { es: 'deja tu CV en nuestra base', en: 'leave your CV in our database' },
+  emp_generales_intro: { es: 'Si ninguna búsqueda encaja, postúlate a tu área: tu CV queda en nuestra base y se evalúa para cada búsqueda nueva de esa área.', en: 'If no search fits, apply to your area: your CV stays in our database and is reviewed for every new search in that area.' },
+  emp_sin_abiertas: { es: 'Ahora mismo no hay búsquedas abiertas con esos filtros.', en: 'No open searches match those filters right now.' },
+  cand_cta_general: { es: 'Dejar mi CV', en: 'Leave my CV' },
+  cand_general_nota: { es: 'Sin búsqueda concreta: entras a la base por tu área.', en: 'No specific search: you enter the database by your area.' },
 }
 
 export function t(key: string, lang: string): string {

@@ -8,12 +8,12 @@ import { useT, useLang } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
 import { buildJobPostingSchema } from '@/lib/jobPosting'
 import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
+import { urlPostulacion } from '@/lib/nexus'
 
 // Detalle de una vacante — variante candidatos, sistema editorial (mismo
 // lenguaje que la portada y la bolsa: hairlines, Fraunces, índices coral).
 // El botón «Postularme» abre el formulario de Nexus con el puesto preseleccionado.
 
-const NEXUS_URL = 'https://www.globaltalentconnections.online'
 const PASOS = ['cand_proc_1_t', 'cand_proc_2_t', 'cand_proc_3_t', 'cand_proc_4_t']
 
 const pad = (n: number) => String(n).padStart(2, '0')
@@ -97,7 +97,7 @@ export default function DetallesDeEmpleoPage() {
     )
   }
 
-  const applyUrl = `${NEXUS_URL}/postular-express?puesto=${encodeURIComponent(job.title)}${lang === 'en' ? '&lang=en' : ''}`
+  const applyUrl = urlPostulacion(job.title, lang)
   const en = lang === 'en' && JOBS_EN[job.id] ? JOBS_EN[job.id] : null
   const descripcion = en?.description || job.description
   const responsibilities = en?.responsibilities || job.responsibilities

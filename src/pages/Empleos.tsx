@@ -1,64 +1,24 @@
-import { useState, useMemo, useEffect, type ReactNode } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import { motion, useReducedMotion } from 'framer-motion'
-import { Search } from 'lucide-react'
+import { Search, ArrowRight } from 'lucide-react'
 import { JOBS, DEPARTMENTS, JOBS_EN, DEPT_EN, LOCATION_EN } from '@/data/jobs'
 import { traerVacantes } from '@/lib/vacantes-nexus'
 import type { Job } from '@/data/jobs'
-import { useLang } from '@/hooks/useT'
-import { useT } from '@/hooks/useT'
+import { useLang, useT } from '@/hooks/useT'
+import { urlPostulacion } from '@/lib/nexus'
 import SEO from '@/components/shared/SEO'
+import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
 
-// Bolsa de empleos — variante candidatos, sistema editorial (mismo lenguaje
-// que la portada: hairlines, Fraunces, filas-índice con hover navy).
-// Las vacantes se publican y se dan de baja SOLAS desde Nexus (la gestora
-// cura el título público; el trigger las cierra cuando la búsqueda avanza).
+// Bolsa de empleos — variante candidatos, sistema editorial.
+//
+// 8-sep-2026: la lista mezclaba dos cosas distintas y el candidato no podía
+// distinguirlas. Ahora van separadas:
+//   · BÚSQUEDAS ABIERTAS — un cliente está esperando a alguien hoy.
+//   · ÁREAS GENERALES    — sin cliente detrás; dejas el CV y entras al banco.
+// Medido en Nexus: 9 de cada 10 postulaciones ya iban a un área general sin que
+// la web lo dijera en ninguna parte.
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
-
-function Reveal({ children, className, delay = 0, y = 36 }: { children: ReactNode; className?: string; delay?: number; y?: number }) {
-  const reduced = useReducedMotion()
-  return (
-    <motion.div
-      className={className}
-      initial={reduced ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-12% 0px' }}
-      transition={{ duration: 1, ease: EASE, delay }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function RevealGroup({ children, className }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion()
-  return (
-    <motion.div
-      className={className}
-      initial={reduced ? false : 'hidden'}
-      whileInView="show"
-      viewport={{ once: true, margin: '-10% 0px' }}
-      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function RevealItem({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <motion.div
-      className={className}
-      variants={{
-        hidden: { opacity: 0, y: 40 },
-        show: { opacity: 1, y: 0, transition: { duration: 1, ease: EASE } },
-      }}
-    >
-      {children}
-    </motion.div>
-  )
-}
+const pad = (n: number) => String(n).padStart(2, '0')
 
 export default function EmpleosPage() {
   const t = useT()
@@ -75,11 +35,17 @@ export default function EmpleosPage() {
   // lead avanza o muere. `JOBS` queda como estado inicial y como reserva: si
   // Nexus no responde, la pagina muestra lo de siempre en lugar de vaciarse.
   const [activeJobs, setActiveJobs] = useState<Job[]>(() => JOBS.filter(j => j.active))
+  // La reserva local no sabe qué puesto tiene cliente detrás: separar en dos
+  // bloques con esos datos diría «con cliente esperando» de todo el archivo.
+  // Mientras se muestra la reserva, la lista va entera y sin esa promesa.
+  const [usandoReserva, setUsandoReserva] = useState(true)
 
   useEffect(() => {
     const ctrl = new AbortController()
-    traerVacantes(ctrl.signal).then(({ jobs }) => {
-      if (!ctrl.signal.aborted) setActiveJobs(jobs)
+    traerVacantes(ctrl.signal).then(({ jobs, usandoReserva: reserva }) => {
+      if (ctrl.signal.aborted) return
+      setActiveJobs(jobs)
+      setUsandoReserva(reserva)
     })
     return () => ctrl.abort()
   }, [])
@@ -92,13 +58,37 @@ export default function EmpleosPage() {
     })
   }, [activeJobs, search, dept])
 
+  const abiertas = filtered.filter(j => !j.esPerfilGeneral)
+  const generales = filtered.filter(j => j.esPerfilGeneral)
+
   const deptLabel = (d: string) => (lang === 'en' && DEPT_EN[d] ? DEPT_EN[d] : d)
+  const titulo = (j: Job) => (lang === 'en' && JOBS_EN[j.id] ? JOBS_EN[j.id].title : j.title)
+  const lugar = (l: string) => (lang === 'en' && LOCATION_EN[l] ? LOCATION_EN[l] : l)
+
+  const filas = (lista: Job[]) => (
+    <RevealGroup>
+      {lista.map((job, i) => (
+        <RevealItem key={job.id}>
+          <Link className="ed-area-row" to={`/empleos/${job.id}`}>
+            <span className="font-display italic text-sm text-sand">/ {pad(i + 1)}</span>
+            <span className="name font-display font-normal text-[clamp(22px,2.6vw,36px)] tracking-[-0.01em]">
+              {titulo(job)}
+            </span>
+            <span className="tag ed-caps !text-[11px] text-sand">
+              {deptLabel(job.department)} · {lugar(job.location)}
+            </span>
+            <span className="font-display text-[22px] text-coral">→</span>
+          </Link>
+        </RevealItem>
+      ))}
+    </RevealGroup>
+  )
 
   return (
     <>
       <SEO
         title="Trabajo remoto — Empleos abiertos en Latinoamérica"
-        description="Trabajo remoto desde casa: vacantes abiertas en marketing, ventas, administración, desarrollo, diseño, finanzas y más. Empleos 100% remotos para Argentina, Chile, Colombia, México, Perú y toda Latinoamérica. Postulate hoy."
+        description="Trabajo remoto desde casa: vacantes abiertas en marketing, ventas, administración, desarrollo, diseño, finanzas y más. Empleos 100% remotos para Argentina, Chile, Colombia, México, Perú y toda Latinoamérica. Postúlate hoy."
         path="/empleos"
       />
 
@@ -160,7 +150,7 @@ export default function EmpleosPage() {
         </div>
       </section>
 
-      {/* LISTADO — filas-índice editoriales */}
+      {/* LISTADO */}
       <section className="pb-[130px]">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
           {filtered.length === 0 ? (
@@ -169,24 +159,62 @@ export default function EmpleosPage() {
                 {t('emp_vacio')}
               </p>
             </Reveal>
+          ) : usandoReserva ? (
+            filas(filtered)
           ) : (
-            <RevealGroup>
-              {filtered.map((job, i) => (
-                <RevealItem key={job.id}>
-                  <Link className="ed-area-row" to={`/empleos/${job.id}`}>
-                    <span className="font-display italic text-sm text-sand">/ {String(i + 1).padStart(2, '0')}</span>
-                    <span className="name font-display font-normal text-[clamp(22px,2.6vw,36px)] tracking-[-0.01em]">
-                      {lang === 'en' && JOBS_EN[job.id] ? JOBS_EN[job.id].title : job.title}
-                    </span>
-                    <span className="tag ed-caps !text-[11px] text-sand">
-                      {deptLabel(job.department)} · {lang === 'en' && LOCATION_EN[job.location] ? LOCATION_EN[job.location] : job.location}
-                    </span>
-                    <span className="font-display text-[22px] text-coral">→</span>
-                  </Link>
-                </RevealItem>
-              ))}
-            </RevealGroup>
+            <>
+              {/* BÚSQUEDAS ABIERTAS — hay un cliente esperando */}
+              <Reveal>
+                <div className="ed-sec-tag ed-caps">
+                  <span className="idx">01</span>
+                  <span className="name">{t('emp_grupo_abiertas')}</span>
+                  <span className="meta">
+                    {abiertas.length > 0 ? `${abiertas.length} · ${t('emp_grupo_abiertas_meta')}` : ''}
+                  </span>
+                </div>
+              </Reveal>
+              <div className="mt-8 mb-[90px]">
+                {abiertas.length > 0 ? (
+                  filas(abiertas)
+                ) : (
+                  <Reveal>
+                    <p className="font-display italic text-[clamp(20px,2vw,28px)] text-sand py-10">{t('emp_sin_abiertas')}</p>
+                  </Reveal>
+                )}
+              </div>
+
+              {/* ÁREAS GENERALES — sin cliente detrás: entras al banco de talento */}
+              {generales.length > 0 && (
+                <>
+                  <Reveal>
+                    <div className="ed-sec-tag ed-caps">
+                      <span className="idx">02</span>
+                      <span className="name">{t('emp_grupo_generales')}</span>
+                      <span className="meta">{generales.length} · {t('emp_grupo_generales_meta')}</span>
+                    </div>
+                  </Reveal>
+                  <Reveal delay={0.08}>
+                    <p className="text-[15.5px] text-ink-soft leading-relaxed max-w-[62ch] mt-7 mb-9">
+                      {t('emp_generales_intro')}
+                    </p>
+                  </Reveal>
+                  {filas(generales)}
+                </>
+              )}
+            </>
           )}
+
+          {/* POSTULACIÓN GENERAL — la salida para quien no encuentra su búsqueda */}
+          <Reveal>
+            <div className="mt-[90px] pt-9 border-t border-navy/15 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+              <p className="font-display text-[clamp(20px,2.2vw,30px)] leading-snug max-w-[30ch]">
+                {t('cand_general_nota')}
+              </p>
+              <a className="ed-btn ed-btn-primary shrink-0" href={urlPostulacion(undefined, lang)} target="_blank" rel="noopener noreferrer">
+                {t('cand_cta_general')} <ArrowRight className="w-4 h-4 arrow" />
+              </a>
+            </div>
+          </Reveal>
         </div>
       </section>
     </>

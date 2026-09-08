@@ -33,6 +33,9 @@ export interface Job {
   description: string;
   responsibilities: Responsibility[];
   requirements: string[];
+  /** Perfil general (sin cliente detrás): se postula para entrar al banco de
+   *  talento, no a una búsqueda abierta. Lo marca Nexus (`is_evergreen`). */
+  esPerfilGeneral?: boolean;
   /** @deprecated No se usa — el botón "Aplicar" apunta a Nexus /postular-express */
   url?: string;
 

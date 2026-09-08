@@ -1,7 +1,6 @@
 const T: Record<string, Record<string, string>> = {
   // ── NAV ──
   nav_servicios: { es: 'Servicios', en: 'Services' },
-  nav_empleos: { es: 'Empleos', en: 'Jobs' },
   nav_nosotros: { es: 'Nosotros', en: 'About Us' },
   nav_blog: { es: 'Blog', en: 'Blog' },
   nav_contacto: { es: 'Contacto', en: 'Contact' },
@@ -191,22 +190,8 @@ const T: Record<string, Record<string, string>> = {
   blog_mas_articulos: { es: 'Más artículos', en: 'More articles' },
 
   // ── EMPLEOS ──
-  empleos_label: { es: 'Oportunidades', en: 'Opportunities' },
-  empleos_titulo_1: { es: 'Trabaja con empresas', en: 'Work with' },
-  empleos_titulo_2: { es: 'internacionales', en: 'international companies' },
 
   // ── BENEFICIOS ──
-  beneficios_label: { es: 'Únete al equipo', en: 'Join the team' },
-  beneficios_titulo_1: { es: 'Tu carrera', en: 'Your' },
-  beneficios_titulo_2: { es: 'internacional', en: 'international' },
-  beneficios_titulo_3: { es: 'empieza aquí.', en: 'career starts here.' },
-  beneficios_subtitle: { es: 'Trabaja con empresas de España y Miami desde tu casa. Salario en euros, formación continua y un equipo que te respalda.', en: 'Work with companies from Spain and Miami from home. Salary in euros, continuous training and a team that supports you.' },
-  beneficios_ver_vacantes: { es: 'Ver vacantes', en: 'View jobs' },
-  beneficios_seccion_label: { es: 'Beneficios', en: 'Benefits' },
-  beneficios_seccion_titulo: { es: '¿Por qué trabajar con nosotros?', en: 'Why work with us?' },
-  beneficios_cta_titulo: { es: '¿Listo para dar el salto?', en: 'Ready to take the leap?' },
-  beneficios_cta_desc: { es: 'Explora nuestras vacantes activas y postula en menos de 5 minutos.', en: 'Explore our active jobs and apply in less than 5 minutes.' },
-  beneficios_cta: { es: 'Ver vacantes disponibles', en: 'View available jobs' },
 
   // ── CALCULADORA ──
   calc_label: { es: 'Calculadora de ahorro', en: 'Savings Calculator' },
@@ -338,27 +323,6 @@ const T: Record<string, Record<string, string>> = {
   not_found_cta: { es: 'Volver al inicio', en: 'Back to home' },
 
   // ── BENEFICIOS CARDS ──
-  ben_1_t: { es: 'Crecimiento profesional', en: 'Professional growth' },
-  ben_1_d: { es: 'Trabaja con empresas europeas y estadounidenses. Desarrolla habilidades internacionales desde tu casa.', en: 'Work with European and American companies. Develop international skills from home.' },
-  ben_2_t: { es: 'Salario en euros', en: 'Salary in euros' },
-  ben_2_d: { es: 'Recibe un salario competitivo en euros o dólares, muy por encima del promedio local de tu país.', en: 'Receive a competitive salary in euros or dollars, well above your local average.' },
-  ben_3_t: { es: 'Cultura inclusiva', en: 'Inclusive culture' },
-  ben_3_d: { es: 'Formas parte de un equipo diverso con compañeros de toda Latinoamérica y Europa.', en: 'Be part of a diverse team with colleagues from across Latin America and Europe.' },
-  ben_4_t: { es: 'Reconocimiento', en: 'Recognition' },
-  ben_4_d: { es: 'Sistema de evaluación continuo donde tu rendimiento se reconoce y se recompensa.', en: 'Continuous evaluation system where your performance is recognized and rewarded.' },
-  ben_5_t: { es: 'Formación continua', en: 'Continuous training' },
-  ben_5_d: { es: 'Acceso a Nexus Academy con cursos, workshops y recursos para tu desarrollo.', en: 'Access to Nexus Academy with courses, workshops and resources for your development.' },
-  ben_6_t: { es: 'Estabilidad', en: 'Stability' },
-  ben_6_d: { es: 'Contrato formal, supervisión profesional y continuidad. No eres freelancer, eres parte de un equipo.', en: "Formal contract, professional supervision and continuity. You're not a freelancer, you're part of a team." },
-  ben_proc_label: { es: 'Proceso', en: 'Process' },
-  ben_proc_titulo: { es: '3 pasos para empezar', en: '3 steps to get started' },
-  ben_proc_1_t: { es: 'Postula', en: 'Apply' },
-  ben_proc_1_d: { es: 'Envía tu CV a través de nuestro portal de empleos. Es rápido y simple.', en: 'Send your CV through our jobs portal. Quick and simple.' },
-  ben_proc_2_t: { es: 'Evaluación', en: 'Evaluation' },
-  ben_proc_2_d: { es: 'Analizamos tu perfil con IA + entrevista humana. Pruebas técnicas según tu especialidad.', en: 'We analyze your profile with AI + human interview. Technical tests based on your specialty.' },
-  ben_proc_3_t: { es: 'Match', en: 'Match' },
-  ben_proc_3_d: { es: 'Te conectamos con la empresa que mejor se adapta a tu perfil y tus expectativas.', en: 'We connect you with the company that best fits your profile and expectations.' },
-  ben_activos: { es: 'profesionales activos', en: 'active professionals' },
 
   // ── BLOG POST ──
   blog_not_found: { es: 'Artículo no encontrado', en: 'Article not found' },
@@ -399,15 +363,6 @@ const T: Record<string, Record<string, string>> = {
   emp_todos: { es: 'Todas las áreas', en: 'All areas' },
 
   // ── DETALLES EMPLEO ──
-  det_not_found: { es: 'Vacante no encontrada', en: 'Job not found' },
-  det_volver: { es: 'Volver a empleos', en: 'Back to jobs' },
-  det_postular: { es: 'Postularme', en: 'Apply now' },
-  det_descripcion: { es: 'Descripción', en: 'Description' },
-  det_responsabilidades: { es: 'Responsabilidades', en: 'Responsibilities' },
-  det_requisitos: { es: 'Requisitos', en: 'Requirements' },
-  det_beneficios: { es: 'Beneficios', en: 'Benefits' },
-  det_experiencia: { es: 'Experiencia requerida', en: 'Required experience' },
-  det_formacion: { es: 'Formación', en: 'Education' },
 
   // ── NOSOTROS EXTRA ──
   nos_v1_t: { es: 'Transparencia Total', en: 'Full Transparency' },

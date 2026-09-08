@@ -7,9 +7,10 @@ interface SEOProps {
   image?: string
   type?: string
   faqSchema?: object
-  jobPostingSchema?: object
   keywords?: string
   breadcrumbs?: Array<{ name: string; url: string }>
+  /** Pide a los buscadores que NO la indexen (404 y páginas retiradas). */
+  noIndex?: boolean
 
 }
 
@@ -183,9 +184,9 @@ export default function SEO({
   image = DEFAULT_IMAGE,
   type = 'website',
   faqSchema,
-  jobPostingSchema,
   keywords,
   breadcrumbs,
+  noIndex,
 }: SEOProps) {
   const fullTitle = title === 'Home'
     ? 'Global Talent Connections | Asistentes Virtuales y Talento Remoto para Empresas'
@@ -210,6 +211,7 @@ export default function SEO({
     <Helmet>
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
+      {noIndex && <meta name="robots" content="noindex, follow" />}
       <meta name="keywords" content={keywords ?? DEFAULT_KEYWORDS} />
       <link rel="canonical" href={url} />
 
@@ -246,11 +248,6 @@ export default function SEO({
       {faqSchema && (
         <script type="application/ld+json">
           {JSON.stringify(faqSchema)}
-        </script>
-      )}
-      {jobPostingSchema && (
-        <script type="application/ld+json">
-          {JSON.stringify(jobPostingSchema)}
         </script>
       )}
       {breadcrumbSchema && (

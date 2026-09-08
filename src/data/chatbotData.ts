@@ -2,7 +2,8 @@ import { ConversationFlow } from "@/types/chat";
 
 export const WHATSAPP_LINK = "https://wa.me/34689539896";
 export const CONTACT_LINK = "/contacto";
-export const JOBS_LINK = "/empleos";
+// El portal de candidatos es OTRO dominio: esta web no tiene vacantes.
+export const JOBS_LINK = "https://empleos.globaltalent-connections.com/empleos";
 export const WEBSITE_LINK = "/";
 
 export const conversationFlow: ConversationFlow = {

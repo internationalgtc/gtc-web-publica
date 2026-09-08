@@ -67,7 +67,8 @@ const STRINGS = {
     invalidBudget:  () => `Ese no parece un email válido. Por favor ingresá tu dirección de correo (ejemplo: nombre@empresa.com).`,
     confirmation:   (name: string) => `¡Perfecto, ${name}! Su consulta ha quedado registrada ✅ Un asesor de GTC se pondrá en contacto a la brevedad.`,
     // El chatbot de la web de clientes NO ofrece empleo; si alguien se delata
-    // como candidato, se lo redirige a /empleos sin más conversación.
+    // como candidato, se lo manda al PORTAL de candidatos (otro dominio) sin
+    // más conversación: esta web es solo de empresas.
     candidateMsg:     '¡Genial! En GTC ayudamos a empresas a contratar talento remoto, así que del otro lado de la mesa estás vos 🙌 Mirá nuestras vacantes abiertas y postulate desde ahí 👇',
     seeJobsLabel:     'Ver vacantes abiertas',
   },
@@ -110,7 +111,7 @@ const STRINGS = {
 
 // Página de vacantes — adonde mandamos a los candidatos que se delatan
 // (NO se crea lead de cliente; el chatbot nunca les ofrece empleo)
-const CANDIDATE_URL = '/empleos'
+const CANDIDATE_URL = 'https://empleos.globaltalent-connections.com/empleos'
 
 // Frases que delatan a alguien buscando trabajo (no una empresa que quiere contratar)
 const CANDIDATE_PATTERNS = /busco\s+(empleo|trabajo|laburo)|buscando\s+(empleo|trabajo)|necesito\s+(empleo|trabajo)|empleo\s+remoto|quiero\s+trabajar|postul|enviar\s+(mi\s+)?cv|mi\s+(cv|curriculum|currículum)|hoja\s+de\s+vida|looking\s+for\s+(a\s+)?(job|work|employment)|need\s+(a\s+)?job|job\s*seeker|hire\s+me|apply\s+for/i

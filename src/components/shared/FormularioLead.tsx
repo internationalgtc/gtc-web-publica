@@ -2,6 +2,7 @@ import { useState, type FormEvent, type ReactNode } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { useT } from '@/hooks/useT'
 import { enviarLead, type OrigenFormulario } from '@/lib/enviar-lead'
+import { useCompanyFormTracking } from '@/lib/form-tracking'
 
 // El formulario de empresas del sitio. UNO solo, en el sistema editorial y
 // sobre navy, igual en las cuatro páginas: quien lo vio en la home lo reconoce
@@ -67,6 +68,7 @@ interface Props {
 
 export function FormularioLead({ formulario, cta, pedirTamano = false, contexto, mensajeInicial, onExito, exitoExtra, perfilFijo }: Props) {
   const t = useT()
+  const { trackComplete } = useCompanyFormTracking(formulario)
   const [form, setForm] = useState({ ...VACIO, description: mensajeInicial || '', assistant_type: perfilFijo || '' })
   const [estado, setEstado] = useState<'idle' | 'enviando' | 'ok' | 'error'>('idle')
   const set = (campo: keyof typeof VACIO) => (e: { target: { value: string } }) =>
@@ -85,6 +87,7 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
         { ...form, description: [contexto, form.description].filter(Boolean).join('\n\n') },
         formulario,
       )
+      trackComplete()
       setEstado('ok')
       onExito?.()
     } catch {

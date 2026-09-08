@@ -1,15 +1,12 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion, useInView, useReducedMotion, animate } from 'framer-motion'
-import { ArrowRight, AlertCircle, CheckCircle, Play, X } from 'lucide-react'
-import { trackLead } from '@/lib/tracking'
-import { BUDGET_MIN, withBudget } from '@/lib/budget'
-import { getUTMs, getReferrer, getLandingUrl } from '@/lib/utm'
-import { getCountry } from '@/lib/geo'
+import { ArrowRight, Play, X } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
 import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
 import { direccion, filasOperativo, type TeamMember } from '@/data/equipo'
 import SEO, { HOME_FAQ_SCHEMA } from '@/components/shared/SEO'
+import { FormularioLead } from '@/components/shared/FormularioLead'
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
@@ -585,39 +582,6 @@ function VideoTestimonioModal({ video, onClose }: { video: (typeof VIDEOS_TESTIM
    Misma lógica de envío que la home anterior (Nexus + UTM/referrer/geo). */
 function ContactoSection() {
   const t = useT()
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const [form, setForm] = useState({ company_name: '', contact_name: '', contact_email: '', contact_phone: '', description: '', budget: '' })
-
-  const API_URL = 'https://www.globaltalentconnections.online/api/leads/public'
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!form.company_name || !form.contact_name || !form.contact_email || !form.contact_phone || !form.budget) return
-    setStatus('loading')
-    try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...form,
-          description: withBudget(form.description, form.budget),
-          budget_option: BUDGET_MIN[form.budget],
-          source: 'web_formulario',
-          ...getUTMs(),
-          referrer: getReferrer(),
-          country: getCountry(),
-          landing_url: getLandingUrl(),
-        }),
-      })
-      if (!res.ok) throw new Error()
-      setStatus('success')
-      trackLead('home_form')
-      setForm({ company_name: '', contact_name: '', contact_email: '', contact_phone: '', description: '', budget: '' })
-    } catch {
-      setStatus('error')
-    }
-  }
-
   const CHECKS = ['home_check_1', 'home_check_2', 'home_check_3']
   const ROMANS = ['i.', 'ii.', 'iii.']
 
@@ -657,119 +621,7 @@ function ContactoSection() {
           </div>
 
           <Reveal delay={0.15}>
-            {status === 'success' ? (
-              <div className="text-center py-12">
-                <CheckCircle className="w-16 h-16 text-[#2fae6b] mx-auto mb-6" />
-                <h3 className="font-display text-3xl text-cream mb-3">{t('contacto_enviado_titulo')}</h3>
-                <p className="text-cream/60">{t('contacto_enviado_desc')}</p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit}>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[34px]">
-                  <div className="ed-field">
-                    <label htmlFor="home-empresa">{t('home_form_empresa')}</label>
-                    <input
-                      id="home-empresa"
-                      value={form.company_name}
-                      onChange={e => setForm(f => ({ ...f, company_name: e.target.value }))}
-                      placeholder={t('home_form_empresa_ph')}
-                      autoComplete="organization"
-                      required
-                    />
-                  </div>
-                  <div className="ed-field">
-                    <label htmlFor="home-nombre">{t('home_form_nombre')}</label>
-                    <input
-                      id="home-nombre"
-                      value={form.contact_name}
-                      onChange={e => setForm(f => ({ ...f, contact_name: e.target.value }))}
-                      placeholder={t('home_form_nombre_ph')}
-                      autoComplete="name"
-                      required
-                    />
-                  </div>
-                  <div className="ed-field">
-                    <label htmlFor="home-email">Email</label>
-                    <input
-                      id="home-email"
-                      type="email"
-                      value={form.contact_email}
-                      onChange={e => setForm(f => ({ ...f, contact_email: e.target.value }))}
-                      placeholder={t('home_form_email_ph')}
-                      autoComplete="email"
-                      spellCheck={false}
-                      required
-                    />
-                  </div>
-                  <div className="ed-field">
-                    <label htmlFor="home-telefono">{t('home_form_telefono')}</label>
-                    <input
-                      id="home-telefono"
-                      type="tel"
-                      value={form.contact_phone}
-                      onChange={e => setForm(f => ({ ...f, contact_phone: e.target.value }))}
-                      placeholder={t('home_form_telefono_ph')}
-                      autoComplete="tel"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="ed-field">
-                  <label htmlFor="home-perfil">{t('home_form_perfil')}</label>
-                  <select
-                    id="home-perfil"
-                    value={form.description}
-                    onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
-                  >
-                    <option value="">{t('home_form_perfil_ph')}</option>
-                    <option value="Administrativo">{t('serv_admin')}</option>
-                    <option value="Marketing Digital">{t('serv_marketing')}</option>
-                    <option value="Financiero / Contable">{t('serv_finanzas')}</option>
-                    <option value="Ventas">{t('home_form_ventas')}</option>
-                    <option value="Desarrollo Web / Full Stack">{t('home_form_dev')}</option>
-                    <option value="Automatización e IA">{t('serv_ia')}</option>
-                    <option value="Diseño Gráfico">{t('serv_diseno')}</option>
-                    <option value="Atención al Cliente">{t('serv_atencion')}</option>
-                    <option value="Otro">{t('home_form_otro')}</option>
-                  </select>
-                </div>
-                <div className="ed-field">
-                  <label htmlFor="home-presupuesto">{t('form_presupuesto')}</label>
-                  <select
-                    id="home-presupuesto"
-                    value={form.budget}
-                    onChange={e => setForm(f => ({ ...f, budget: e.target.value }))}
-                    required
-                  >
-                    <option value="">{t('form_presupuesto_ph')}</option>
-                    <option value="menos_1200">{t('form_presupuesto_1')}</option>
-                    <option value="1200_2000">{t('form_presupuesto_2')}</option>
-                    <option value="mas_2000">{t('form_presupuesto_3')}</option>
-                  </select>
-                  <p className="text-cream/50 text-xs mt-2">{t('form_presupuesto_hint')}</p>
-                </div>
-                {status === 'error' && (
-                  <div className="flex items-center gap-3 text-red-300 bg-red-500/10 p-3 rounded-lg text-sm mt-6">
-                    <AlertCircle className="w-4 h-4 flex-shrink-0" />
-                    {t('contacto_error')}
-                  </div>
-                )}
-                <button
-                  type="submit"
-                  disabled={status === 'loading'}
-                  className="ed-btn ed-btn-primary w-full justify-center mt-[38px] disabled:opacity-50"
-                >
-                  {status === 'loading' ? (
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      {t('home_form_cta')}
-                      <ArrowRight className="w-4 h-4 arrow" />
-                    </>
-                  )}
-                </button>
-              </form>
-            )}
+            <FormularioLead formulario="home" />
           </Reveal>
         </div>
       </div>

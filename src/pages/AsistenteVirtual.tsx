@@ -1,12 +1,8 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, CheckCircle, AlertCircle, MessageCircle } from 'lucide-react'
+import { ArrowRight, MessageCircle } from 'lucide-react'
 import SEO from '@/components/shared/SEO'
+import { FormularioLead } from '@/components/shared/FormularioLead'
 import { RevealSection } from '@/components/shared/RevealSection'
-import { trackLead } from '@/lib/tracking'
-import { getUTMs, getReferrer, getLandingUrl } from '@/lib/utm'
-import { getCountry } from '@/lib/geo'
-import { BUDGET_MIN, withBudget } from '@/lib/budget'
 import { WHATSAPP_LINK } from '@/data/chatbotData'
 import { RESENAS_GOOGLE } from '@/data/resenasGoogle'
 import logoDark from '@/assets/logos/logo-gtc-negro.png'
@@ -16,12 +12,10 @@ import logoDark from '@/assets/logos/logo-gtc-negro.png'
 // de un anuncio solo pueda hacer una cosa. Copy solo en español: los anuncios
 // son para España y aquí no hay selector de idioma.
 
-const API_URL = import.meta.env.VITE_PLATFORM_API_URL || 'https://www.globaltalentconnections.online/api/leads/public'
 
 // Mismos números que la home (Index.tsx, «DATOS DE NEXUS»).
 const STATS = { empresas: 55, profesionales: 93 }
 
-const PERFILES = ['Administrativo', 'Marketing Digital', 'Financiero / Contable', 'Atención al Cliente', 'Ventas', 'Automatización e IA', 'Otro']
 
 const AREAS = [
   ['Administración', 'Operaciones y soporte'],
@@ -55,94 +49,14 @@ const RESENAS = ['Sergio Varo', 'Curro Sabán']
   .map(autor => RESENAS_GOOGLE.find(r => r.autor === autor))
   .filter((r): r is NonNullable<typeof r> => !!r && !!r.texto)
 
-const EMPTY = { company_name: '', contact_name: '', contact_email: '', contact_phone: '', assistant_type: '', budget: '' }
 
 function LeadForm() {
-  const [form, setForm] = useState(EMPTY)
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle')
-  const set = (k: keyof typeof EMPTY) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) =>
-    setForm(f => ({ ...f, [k]: e.target.value }))
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setStatus('loading')
-    try {
-      const { budget, ...data } = form
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...data,
-          description: withBudget(`Landing asistente virtual · Perfil: ${data.assistant_type}`, budget),
-          budget_option: BUDGET_MIN[budget],
-          source: 'web_formulario',
-          ...getUTMs(),
-          referrer: getReferrer(),
-          country: getCountry(),
-          landing_url: getLandingUrl(),
-        }),
-      })
-      if (!res.ok) throw new Error()
-      setStatus('success')
-      trackLead('landing_asistente_virtual')
-      setForm(EMPTY)
-    } catch {
-      setStatus('error')
-    }
-  }
-
-  if (status === 'success') {
-    return (
-      <div className="bg-navy text-cream p-8 lg:p-10 rounded-[4px] text-center">
-        <CheckCircle className="w-14 h-14 text-[#2fae6b] mx-auto mb-5" />
-        <h3 className="font-display font-light text-3xl mb-2">Recibido.</h3>
-        <p className="text-cream/65 mb-7">Te contacta una persona del equipo, no un bot. Si tienes prisa, escríbenos ahora:</p>
-        <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="ed-btn ed-btn-primary">
-          <MessageCircle className="w-4 h-4" /> WhatsApp
-        </a>
-      </div>
-    )
-  }
-
+  // Mismo formulario que el resto del sitio; lo único propio de la landing de
+  // anuncios es el texto del botón y el ancla a la que apunta el CTA de arriba.
   return (
-    <form id="solicitar" onSubmit={handleSubmit} className="bg-navy text-cream p-8 lg:p-9 rounded-[4px] scroll-mt-24">
-      <h3 className="font-display font-light text-[28px] leading-tight mb-1">Cuéntanos qué quieres delegar.</h3>
-      <p className="text-cream/60 text-sm mb-4">Te contacta una persona del equipo, no un bot.</p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
-        <div className="ed-field"><label htmlFor="av-empresa">Empresa</label><input id="av-empresa" value={form.company_name} onChange={set('company_name')} placeholder="Tu empresa" autoComplete="organization" required /></div>
-        <div className="ed-field"><label htmlFor="av-nombre">Nombre</label><input id="av-nombre" value={form.contact_name} onChange={set('contact_name')} placeholder="Tu nombre" autoComplete="name" required /></div>
-        <div className="ed-field"><label htmlFor="av-email">Email</label><input id="av-email" type="email" value={form.contact_email} onChange={set('contact_email')} placeholder="nombre@empresa.com" autoComplete="email" spellCheck={false} required /></div>
-        <div className="ed-field"><label htmlFor="av-telefono">Teléfono</label><input id="av-telefono" type="tel" value={form.contact_phone} onChange={set('contact_phone')} placeholder="+34 …" autoComplete="tel" required /></div>
-      </div>
-      <div className="ed-field">
-        <label htmlFor="av-perfil">Perfil que buscas</label>
-        <select id="av-perfil" value={form.assistant_type} onChange={set('assistant_type')} required>
-          <option value="">Seleccionar área…</option>
-          {PERFILES.map(p => <option key={p} value={p}>{p}</option>)}
-        </select>
-      </div>
-      <div className="ed-field">
-        <label htmlFor="av-presupuesto">Presupuesto mensual</label>
-        <select id="av-presupuesto" value={form.budget} onChange={set('budget')} required>
-          <option value="">Seleccionar…</option>
-          <option value="menos_1200">Menos de 1.200 €</option>
-          <option value="1200_2000">1.200 – 2.000 €</option>
-          <option value="mas_2000">Más de 2.000 €</option>
-        </select>
-      </div>
-      <p className="text-cream/50 text-xs mt-2">Nuestros perfiles empiezan en 1.200 €/mes.</p>
-      {status === 'error' && (
-        <div className="flex items-center gap-3 text-red-300 bg-red-500/10 p-3 rounded-lg text-sm mt-5">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" /> No se pudo enviar. Inténtalo de nuevo o escríbenos por WhatsApp.
-        </div>
-      )}
-      <button type="submit" disabled={status === 'loading'} className="ed-btn ed-btn-primary w-full justify-center mt-7 disabled:opacity-50">
-        {status === 'loading'
-          ? <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          : <>Quiero mi propuesta <ArrowRight className="w-4 h-4 arrow" /></>}
-      </button>
-      <p className="text-cream/45 text-xs text-center mt-4">Sin compromiso · Sin permanencia · Datos protegidos (RGPD)</p>
-    </form>
+    <div id="solicitar" className="bg-navy text-cream p-8 lg:p-9 rounded-[4px] scroll-mt-24">
+      <FormularioLead formulario="asistente-virtual" cta={'Quiero mi asistente'} contexto="Landing asistente virtual" />
+    </div>
   )
 }
 

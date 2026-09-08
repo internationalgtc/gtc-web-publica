@@ -516,6 +516,25 @@ const T: Record<string, Record<string, string>> = {
   calc_inc_2_d: { es: 'Un equipo acompaña el desempeño, los reportes y cualquier incidencia.', en: 'A team supports performance, reporting and any incident.' },
   calc_inc_3: { es: 'Reemplazo garantizado', en: 'Guaranteed replacement' },
   calc_inc_3_d: { es: 'Si el perfil no encaja, lo reemplazamos sin coste. Sin permanencia.', en: 'If the profile does not fit, we replace it at no cost. No lock-in.' },
+
+  // --- Formulario único de empresas (8-sep-2026) ---
+  form_ok_label: { es: 'Solicitud recibida', en: 'Request received' },
+  form_ok_titulo: { es: 'Gracias. Ya tenemos tu solicitud.', en: 'Thank you. We have your request.' },
+  form_ok_desc: { es: 'Una persona del equipo te escribe en menos de 48 horas con los siguientes pasos.', en: 'Someone from the team will email you within 48 hours with the next steps.' },
+  form_enviando: { es: 'Enviando…', en: 'Sending…' },
+  form_error: { es: 'No se pudo enviar. Revisa la conexión e inténtalo de nuevo.', en: 'Could not send. Check your connection and try again.' },
+  serv_atencion_alt: { es: 'Atención al Cliente', en: 'Customer Service' },
+
+  // --- Contacto editorial (8-sep-2026) ---
+  contacto_page_meta: { es: 'Respuesta en menos de 48 h', en: 'Reply within 48 h' },
+  contacto_form_label: { es: 'Cuéntanos qué necesitas', en: 'Tell us what you need' },
+  contacto_directo_label: { es: 'Hablar directo', en: 'Talk to us directly' },
+  contacto_email_label: { es: 'Email', en: 'Email' },
+  contacto_horario_label: { es: 'Horario', en: 'Hours' },
+  contacto_ubicacion_label: { es: 'Ubicación', en: 'Location' },
+  contacto_nota_respuesta: { es: 'Si prefieres, escríbenos por WhatsApp: es la vía más rápida y contesta una persona del equipo.', en: 'If you prefer, message us on WhatsApp: it is the fastest way and a real person answers.' },
+
+  calc_meta: { es: 'Cálculo en vivo · Excel incluido', en: 'Live calculation · Excel included' },
 }
 
 export function t(key: string, lang: string): string {

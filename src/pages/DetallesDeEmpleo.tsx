@@ -36,15 +36,21 @@ export default function DetallesDeEmpleoPage() {
   const [buscando, setBuscando] = useState(!staticJob)
   // El resto de vacantes vivas alimenta «Otras oportunidades» al pie.
   const [todas, setTodas] = useState<Job[]>([])
+  // Las 45 fichas locales inactivas siguen respondiendo por URL (Google las
+  // tiene indexadas). Una búsqueda que ya cerró no puede ofrecer «Postularme»:
+  // abierta = Nexus la lista hoy (o, sin Nexus, el archivo la marca activa).
+  const [abierta, setAbierta] = useState(() => staticJob?.active !== false)
 
   useEffect(() => {
     setJob(staticJob)
     setBuscando(!staticJob)
+    setAbierta(staticJob?.active !== false)
     const ctrl = new AbortController()
-    traerVacantes(ctrl.signal).then(({ jobs }) => {
+    traerVacantes(ctrl.signal).then(({ jobs, usandoReserva }) => {
       if (ctrl.signal.aborted) return
       setTodas(jobs)
       if (!staticJob) setJob(jobs.find(j => j.id === id))
+      if (!usandoReserva) setAbierta(jobs.some(j => j.id === id))
       setBuscando(false)
     })
     return () => ctrl.abort()
@@ -193,7 +199,7 @@ export default function DetallesDeEmpleoPage() {
         path={`/empleos/${job.id}`}
         type="article"
         jobPostingSchema={
-          job.active === false
+          !abierta
             ? undefined
             : buildJobPostingSchema({
                 id: job.id,
@@ -236,12 +242,21 @@ export default function DetallesDeEmpleoPage() {
               </dl>
             </Reveal>
             <Reveal delay={0.2} y={26}>
-              <div className="flex flex-col md:items-end gap-4">
-                <a className="ed-btn ed-btn-primary" href={applyUrl} target="_blank" rel="noopener noreferrer">
-                  {t('det_postular')} <ArrowRight className="w-4 h-4 arrow" />
-                </a>
-                <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-sand md:text-right">{t('det_postular_nota')}</p>
-              </div>
+              {abierta ? (
+                <div className="flex flex-col md:items-end gap-4">
+                  <a className="ed-btn ed-btn-primary" href={applyUrl} target="_blank" rel="noopener noreferrer">
+                    {t('det_postular')} <ArrowRight className="w-4 h-4 arrow" />
+                  </a>
+                  <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-sand md:text-right">{t('det_postular_nota')}</p>
+                </div>
+              ) : (
+                <div className="flex flex-col md:items-end gap-4">
+                  <Link className="ed-btn ed-btn-outline" to="/areas">
+                    {t('cand_cta_general')} <ArrowRight className="w-4 h-4 arrow" />
+                  </Link>
+                  <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-coral md:text-right">{t('det_cerrada_t')}</p>
+                </div>
+              )}
             </Reveal>
           </div>
         </div>
@@ -275,10 +290,22 @@ export default function DetallesDeEmpleoPage() {
                   <p className="text-[14.5px] text-ink-soft mt-3">
                     {area(job.department)} · {lugar(job.location)} · {t('det_remoto')}
                   </p>
-                  <a className="ed-btn ed-btn-primary w-full justify-center mt-8" href={applyUrl} target="_blank" rel="noopener noreferrer">
-                    {t('det_postular')} <ArrowRight className="w-4 h-4 arrow" />
-                  </a>
-                  <p className="text-[13.5px] text-sand leading-relaxed mt-5">{t('det_48h')}</p>
+                  {abierta ? (
+                    <>
+                      <a className="ed-btn ed-btn-primary w-full justify-center mt-8" href={applyUrl} target="_blank" rel="noopener noreferrer">
+                        {t('det_postular')} <ArrowRight className="w-4 h-4 arrow" />
+                      </a>
+                      <p className="text-[13.5px] text-sand leading-relaxed mt-5">{t('det_48h')}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className="font-display italic text-[18px] text-coral mt-6">{t('det_cerrada_t')}</p>
+                      <p className="text-[13.5px] text-sand leading-relaxed mt-3">{t('det_cerrada_p')}</p>
+                      <Link className="ed-btn ed-btn-outline w-full justify-center mt-6" to="/empleos">
+                        {t('det_ver_todas')} <ArrowRight className="w-4 h-4 arrow" />
+                      </Link>
+                    </>
+                  )}
                 </div>
                 <div className="border-t border-navy/15 mt-10 pt-7">
                   <div className="ed-caps !text-[10px] text-sand mb-5">{t('cand_sec_proceso')}</div>

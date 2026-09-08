@@ -555,6 +555,10 @@ const T: Record<string, Record<string, string>> = {
   areas_intro: { es: 'Si ninguna búsqueda abierta encaja contigo, elige tu área. Tu CV queda en nuestra base y se evalúa para cada búsqueda nueva de esa área.', en: 'If no open search fits you, pick your area. Your CV stays in our database and is reviewed for every new search in that area.' },
   areas_sin_area: { es: '¿Ninguna te representa? Postúlate igual y nosotros te ubicamos.', en: 'None of them fits? Apply anyway and we will place you.' },
   emp_cta_areas: { es: '¿No ves tu búsqueda? Deja tu CV por área y te tenemos en cuenta.', en: "Don't see your search? Leave your CV by area and we will keep you in mind." },
+
+  // --- Ficha de una búsqueda que ya cerró (8-sep-2026) ---
+  det_cerrada_t: { es: 'Esta búsqueda ya cerró.', en: 'This search has closed.' },
+  det_cerrada_p: { es: 'Mira las que siguen abiertas o deja tu CV por área para las próximas.', en: 'Browse the ones still open, or leave your CV by area for the next ones.' },
 }
 
 export function t(key: string, lang: string): string {

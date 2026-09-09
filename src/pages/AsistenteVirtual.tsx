@@ -51,11 +51,11 @@ const RESENAS = ['Sergio Varo', 'Curro Sabán']
 
 
 function LeadForm() {
-  // Mismo formulario que el resto del sitio; lo único propio de la landing de
-  // anuncios es el texto del botón y el ancla a la que apunta el CTA de arriba.
+  // La landing de anuncios elimina los campos que no hacen falta para iniciar
+  // el contacto: Ventas continúa el diagnóstico por WhatsApp.
   return (
     <div id="solicitar" className="bg-navy text-cream p-8 lg:p-9 rounded-[4px] scroll-mt-24">
-      <FormularioLead formulario="asistente-virtual" cta={'Quiero mi asistente'} contexto="Landing asistente virtual" />
+      <FormularioLead formulario="asistente-virtual" cta="Quiero recibir perfiles" contexto="Landing asistente virtual" modoCaptacion="express" />
     </div>
   )
 }

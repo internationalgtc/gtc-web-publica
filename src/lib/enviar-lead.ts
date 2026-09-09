@@ -17,7 +17,7 @@ const API_URL =
 export interface DatosLead {
   company_name: string
   contact_name: string
-  contact_email: string
+  contact_email?: string
   contact_phone: string
   /** Perfil que busca la empresa. */
   assistant_type: string
@@ -26,6 +26,8 @@ export interface DatosLead {
   /** Texto libre de la empresa. */
   description?: string
   company_size?: string
+  /** Variante breve para tráfico de anuncios: se contacta por WhatsApp. */
+  capture_mode?: 'express'
 }
 
 /** Qué formulario lo mandó. Viaja para poder medir cuál convierte. */
@@ -39,7 +41,7 @@ export async function enviarLead(datos: DatosLead, formulario: OrigenFormulario)
     body: JSON.stringify({
       company_name: datos.company_name,
       contact_name: datos.contact_name,
-      contact_email: datos.contact_email,
+      contact_email: datos.contact_email || undefined,
       contact_phone: datos.contact_phone,
       assistant_type: datos.assistant_type,
       company_size: datos.company_size || undefined,
@@ -53,6 +55,7 @@ export async function enviarLead(datos: DatosLead, formulario: OrigenFormulario)
       // campo; mientras tanto viaja en utm_content, que sí se guarda hoy, y
       // solo cuando la visita no trae uno propio de campaña.
       formulario,
+      capture_mode: datos.capture_mode,
       utm_content: utms.utm_content || `form:${formulario}`,
       referrer: getReferrer(),
       landing_url: getLandingUrl(),

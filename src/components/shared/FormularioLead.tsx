@@ -64,11 +64,14 @@ interface Props {
   exitoExtra?: ReactNode
   /** Ocultar el campo de perfil: lo fija la página (calculadora). */
   perfilFijo?: string
+  /** Formulario breve para tráfico de anuncios: contacto por WhatsApp. */
+  modoCaptacion?: 'completo' | 'express'
 }
 
-export function FormularioLead({ formulario, cta, pedirTamano = false, contexto, mensajeInicial, onExito, exitoExtra, perfilFijo }: Props) {
+export function FormularioLead({ formulario, cta, pedirTamano = false, contexto, mensajeInicial, onExito, exitoExtra, perfilFijo, modoCaptacion = 'completo' }: Props) {
   const t = useT()
   const { trackComplete } = useCompanyFormTracking(formulario)
+  const esCaptacionExpress = modoCaptacion === 'express'
   const [form, setForm] = useState({ ...VACIO, description: mensajeInicial || '', assistant_type: perfilFijo || '' })
   const [estado, setEstado] = useState<'idle' | 'enviando' | 'ok' | 'error'>('idle')
   const set = (campo: keyof typeof VACIO) => (e: { target: { value: string } }) =>
@@ -83,8 +86,18 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
     if (trampa) { setEstado('ok'); return }
     setEstado('enviando')
     try {
+      const datos = esCaptacionExpress
+        ? {
+            ...form,
+            company_name: form.contact_name,
+            contact_email: undefined,
+            budget: '',
+            capture_mode: 'express' as const,
+            description: [contexto, `Contacto y empresa: ${form.contact_name}`].filter(Boolean).join('\n\n'),
+          }
+        : { ...form, description: [contexto, form.description].filter(Boolean).join('\n\n') }
       await enviarLead(
-        { ...form, description: [contexto, form.description].filter(Boolean).join('\n\n') },
+        datos,
         formulario,
       )
       trackComplete()
@@ -114,6 +127,26 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[34px]">
+        {esCaptacionExpress ? (
+          <>
+            <div className="ed-field sm:col-span-2">
+              <label htmlFor={`${formulario}-nombre-empresa`}>Tu nombre y empresa</label>
+              <input id={`${formulario}-nombre-empresa`} value={form.contact_name} onChange={set('contact_name')} placeholder="Ej. Ana de Estudio Atlas" autoComplete="name" required />
+            </div>
+            <div className="ed-field">
+              <label htmlFor={`${formulario}-telefono`}>Tu WhatsApp</label>
+              <input id={`${formulario}-telefono`} type="tel" value={form.contact_phone} onChange={set('contact_phone')} placeholder="+34 600 000 000" autoComplete="tel" required />
+            </div>
+            <div className="ed-field">
+              <label htmlFor={`${formulario}-perfil`}>¿Qué querés delegar?</label>
+              <select id={`${formulario}-perfil`} value={form.assistant_type} onChange={set('assistant_type')} required>
+                <option value="">Elegí un área</option>
+                {PERFILES.map(p => <option key={p.valor} value={p.valor}>{t(p.clave)}</option>)}
+              </select>
+            </div>
+          </>
+        ) : (
+          <>
         <div className="ed-field">
           <label htmlFor={`${formulario}-empresa`}>{t('home_form_empresa')}</label>
           <input id={`${formulario}-empresa`} value={form.company_name} onChange={set('company_name')} placeholder={t('home_form_empresa_ph')} autoComplete="organization" required />
@@ -155,14 +188,20 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
             </select>
           </div>
         )}
+          </>
+        )}
       </div>
 
-      <div className="ed-field">
-        <label htmlFor={`${formulario}-mensaje`}>{t('contacto_page_mas')}</label>
-        <input id={`${formulario}-mensaje`} value={form.description} onChange={set('description')} placeholder={t('ct_ph_desc')} />
-      </div>
+      {!esCaptacionExpress && (
+        <div className="ed-field">
+          <label htmlFor={`${formulario}-mensaje`}>{t('contacto_page_mas')}</label>
+          <input id={`${formulario}-mensaje`} value={form.description} onChange={set('description')} placeholder={t('ct_ph_desc')} />
+        </div>
+      )}
 
-      <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/35 mt-6">{t('form_presupuesto_hint')}</p>
+      <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/35 mt-6">
+        {esCaptacionExpress ? 'Te contactamos por WhatsApp para definir el rol.' : t('form_presupuesto_hint')}
+      </p>
 
       <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-5">
         <button type="submit" className="ed-btn ed-btn-primary" disabled={estado === 'enviando'}>

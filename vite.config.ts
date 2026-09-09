@@ -20,7 +20,11 @@ import prerender from '@prerenderer/rollup-plugin'
 // y `vite.config` tiene que decidir de forma SÍNCRONA si añade el plugin. Se
 // mira directamente la caché de navegadores, que es donde puppeteer los instala.
 function hayChromium(): boolean {
-  if (process.env.PRERENDER === '0') return false
+  // El runtime de build de Vercel no incluye las librerías del sistema que
+  // necesita Chromium. Aunque encuentre una caché parcial de Puppeteer, lanzar
+  // el navegador falla y bloquea el deploy. En Vercel se publica la SPA; el
+  // prerender se conserva para builds locales que se suban precompilados.
+  if (process.env.PRERENDER === '0' || process.env.VERCEL) return false
   try {
     const require = createRequire(import.meta.url)
     require.resolve('puppeteer')

@@ -130,8 +130,8 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
         {esCaptacionExpress ? (
           <>
             <div className="ed-field sm:col-span-2">
-              <label htmlFor={`${formulario}-nombre-empresa`}>Tu nombre y empresa</label>
-              <input id={`${formulario}-nombre-empresa`} value={form.contact_name} onChange={set('contact_name')} placeholder="Ej. Ana de Estudio Atlas" autoComplete="name" required />
+              <label htmlFor={`${formulario}-empresa`}>Empresa</label>
+              <input id={`${formulario}-empresa`} value={form.contact_name} onChange={set('contact_name')} placeholder="Ej. Estudio Atlas" autoComplete="organization" required />
             </div>
             <div className="ed-field">
               <label htmlFor={`${formulario}-telefono`}>Tu WhatsApp</label>
@@ -191,6 +191,10 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
           </>
         )}
       </div>
+
+      {esCaptacionExpress && (
+        <p className="text-[13px] text-cream/60 leading-relaxed mt-2">Servicio exclusivo para empresas. No gestionamos búsquedas de empleo.</p>
+      )}
 
       {!esCaptacionExpress && (
         <div className="ed-field">

@@ -6,7 +6,11 @@
 |---|---|
 | **Dominio que sirve** | `globaltalent-connections.com` y `www.globaltalent-connections.com` |
 | **Proyecto en Vercel** | `mockup-gtc-azul` (nombre viejo, se mantiene a propósito, ver abajo) |
-| **Despliegue** | manual, `vercel --prod` desde la terminal. No hay integración con GitHub ni workflow: mergear un PR **no publica nada**. |
+| **Despliegue** | manual, **`npm run deploy:prod`** desde la terminal. No hay integración con GitHub ni workflow: mergear un PR **no publica nada**. |
+
+> ⚠️ **No desplegar con `vercel --prod` a secas.** Ese camino compila en el runtime de Vercel, donde el prerender está apagado a propósito, y publica la SPA vacía: todas las rutas quedan con el mismo HTML de 6 KB sin `<h1>`. Las landings de tráfico pagado pierden la nota de «experiencia de la página de destino» de Google Ads. `npm run deploy:prod` compila en local con Chromium y sube el resultado ya compilado.
+>
+> Requisito de la máquina que despliega: `npm install` y `npx puppeteer browsers install chrome`. Sin Chromium el build NO falla — avisa por consola y publica la SPA, que es el fallo silencioso que hay que mirar.
 | **Stack** | React + TypeScript estricto, Vite, Tailwind |
 
 ## No confundir con `gtc-academia`

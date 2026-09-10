@@ -71,4 +71,6 @@ Patrones tipográficos del sistema:
 - Proyecto Vercel: `gtc2/mockup-gtc-azul`
 - URL producción: `https://globaltalent-connections.com`
 - Antes de deployar: `npm run build` debe pasar sin errores TypeScript
-- Comando deploy: `vercel --prod --yes --scope gtc2` (con nvm node v20.20.2 activo). El webhook de Vercel NO funciona: el deploy es siempre manual por CLI.
+- Comando deploy: **`npm run deploy:prod`** (con nvm node v20.20.2 activo). El webhook de Vercel NO funciona: el deploy es siempre manual por CLI.
+- **No usar `vercel --prod` a secas**: compila en el runtime de Vercel, donde el prerender está apagado, y publica la SPA vacía (mismo HTML de 6 KB en todas las rutas, sin `<h1>`). `deploy:prod` compila en local y sube el resultado ya compilado.
+- La máquina que despliega necesita Chromium: `npx puppeteer browsers install chrome`. Si falta, el build no falla — avisa por consola y publica la SPA.

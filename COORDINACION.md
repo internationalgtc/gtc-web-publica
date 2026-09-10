@@ -15,7 +15,7 @@
 2. git commit -m "content/feat/fix: descripción breve"
 3. git push
 4. Verificar en https://github.com/internationalgtc/mockup-gtc-azul que el commit aparece
-5. Deployar manualmente: vercel --prod --yes --scope gtc2
+5. Deployar manualmente: npm run deploy:prod
 6. Verificar en https://mockup-gtc-azul.vercel.app que los cambios están visibles
 ```
 
@@ -27,7 +27,7 @@
 
 ## Estado actual del sitio (12 mayo 2026)
 
-**Deploy:** Vercel — **⚠️ MANUAL solamente** (`vercel --prod --yes --scope gtc2`)
+**Deploy:** Vercel — **⚠️ MANUAL solamente** (`npm run deploy:prod`, NO `vercel --prod` — ver README)
 **Repo:** https://github.com/internationalgtc/mockup-gtc-azul
 **Branch principal:** `main`
 

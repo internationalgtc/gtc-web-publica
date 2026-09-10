@@ -1,88 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Solo la web de EMPRESAS. Las vacantes viven en
-     empleos.globaltalent-connections.com y tienen su propio sitemap. -->
+     empleos.globaltalent-connections.com y tienen su propio sitemap.
+
+     `lastmod` es la fecha real del último cambio de cada página, sacada del
+     historial de git de su archivo. Antes decían todas 2026-06-11 aunque el
+     rediseño editorial y los cambios de conversión son de septiembre: un
+     lastmod que miente le enseña al rastreador a no volver cuando decimos que
+     algo cambió. Al tocar una página, actualizar su fecha acá. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.globaltalent-connections.com/</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/servicios</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-09-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
-<url>
+  <url>
     <loc>https://www.globaltalent-connections.com/asistente-virtual</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-09-10</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/nosotros</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-09-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/contacto</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/calculadora-ahorro</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-09-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/blog</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/blog/roi-talento-remoto</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/blog/como-conseguir-trabajo-remoto-euros</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/blog/herramientas-vacantes-internacionales</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/blog/oferta-trabajo-remoto-confiable-estafa</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://www.globaltalent-connections.com/blog/futuro-talento-remoto-2026</loc>
-    <lastmod>2026-05-25</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.globaltalent-connections.com/calculadora-ahorro</loc>
-    <lastmod>2026-06-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://www.globaltalent-connections.com/politica-de-privacidad</loc>
-    <lastmod>2026-06-11</lastmod>
+    <lastmod>2026-05-11</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>

@@ -24,7 +24,19 @@ function hayChromium(): boolean {
   // necesita Chromium. Aunque encuentre una caché parcial de Puppeteer, lanzar
   // el navegador falla y bloquea el deploy. En Vercel se publica la SPA; el
   // prerender se conserva para builds locales que se suban precompilados.
-  if (process.env.PRERENDER === '0' || process.env.VERCEL) return false
+  // `PRERENDER` manda sobre la guarda de abajo: '0' lo apaga, '1' lo enciende.
+  //
+  // El '1' existe por `npm run deploy:prod`, que es el ÚNICO camino que publica
+  // el HTML prerenderizado — y que compila con `vercel build` EN LOCAL. Resulta
+  // que `vercel build` define VERCEL=1 igual que el build remoto (verificado el
+  // 10-sep-2026: con Chromium instalado, imprimía «Chromium no disponible»), así
+  // que la guarda apagaba el prerender justo en el camino pensado para activarlo.
+  // Efecto medido: producción sirvió durante días el mismo HTML de 6 KB en todas
+  // las rutas, incluidas las de tráfico pagado.
+  //
+  // El build remoto de Vercel nunca define PRERENDER=1, así que sigue protegido.
+  if (process.env.PRERENDER === '0') return false
+  if (process.env.PRERENDER !== '1' && process.env.VERCEL) return false
   try {
     const require = createRequire(import.meta.url)
     require.resolve('puppeteer')

@@ -26,7 +26,7 @@ const PERFILES: { valor: string; clave: string }[] = [
 
 const PRESUPUESTOS = [
   { valor: 'menos_1200', clave: 'form_presupuesto_1' },
-  { valor: '1200_2000', clave: 'form_presupuesto_2' },
+  { valor: '1200_1800', clave: 'form_presupuesto_2' },
   { valor: 'mas_2000', clave: 'form_presupuesto_3' },
 ]
 

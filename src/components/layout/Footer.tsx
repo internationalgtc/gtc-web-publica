@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import logoWhite from '@/assets/logos/logo-gtc-blanco.png'
 import { useT } from '@/hooks/useT'
+import { WHATSAPP_LINK } from '@/data/chatbotData'
 import { trackContacto } from '@/lib/tracking'
 
 export function Footer() {
@@ -35,6 +36,8 @@ export function Footer() {
           <div>
             <h5 className="ed-caps !text-[10px] text-cream/40 mb-5">{t('footer_contacto')}</h5>
             <ul className="space-y-3">
+              <li><a className="text-cream/70 hover:text-coral transition-colors text-sm" href="tel:+34857640728" onClick={() => trackContacto('telefono', 'footer')}>+34 857 64 07 28</a></li>
+              <li><a className="text-cream/70 hover:text-coral transition-colors text-sm" href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" onClick={() => trackContacto('whatsapp', 'footer')}>WhatsApp · +34 689 53 98 96</a></li>
               <li><a className="text-cream/70 hover:text-coral transition-colors text-sm break-words" href="mailto:info@globaltalent-connections.com" onClick={() => trackContacto('email', 'footer')}>info@globaltalent-connections.com</a></li>
               <li><a className="text-cream/70 hover:text-coral transition-colors text-sm" href="https://linkedin.com/company/global-talent-connections-limited" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
             </ul>

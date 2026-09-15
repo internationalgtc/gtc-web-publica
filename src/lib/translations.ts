@@ -484,6 +484,7 @@ const T: Record<string, Record<string, string>> = {
   contacto_page_meta: { es: 'Respuesta en menos de 48 h', en: 'Reply within 48 h' },
   contacto_form_label: { es: 'Cuéntanos qué necesitas', en: 'Tell us what you need' },
   contacto_directo_label: { es: 'Hablar directo', en: 'Talk to us directly' },
+  contacto_telefono_label: { es: 'Teléfono', en: 'Phone' },
   contacto_email_label: { es: 'Email', en: 'Email' },
   contacto_horario_label: { es: 'Horario', en: 'Hours' },
   contacto_ubicacion_label: { es: 'Ubicación', en: 'Location' },

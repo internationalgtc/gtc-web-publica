@@ -11,6 +11,7 @@ import SEO from '@/components/shared/SEO'
 // para el mismo pedido.
 
 const CONTACTOS: { clave: string; valor: string; href?: string; canal?: CanalContacto }[] = [
+  { clave: 'contacto_telefono_label', valor: '+34 857 64 07 28', href: 'tel:+34857640728', canal: 'telefono' },
   { clave: 'contacto_whatsapp', valor: '+34 689 53 98 96', href: WHATSAPP_LINK, canal: 'whatsapp' },
   { clave: 'contacto_email_label', valor: 'info@globaltalent-connections.com', href: 'mailto:info@globaltalent-connections.com', canal: 'email' },
   { clave: 'contacto_horario_label', valor: 'Lunes a viernes · 9:00 – 18:00 (CET)' },

@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ChatMessage, ChatOption } from "@/types/chat";
 import { conversationFlow, conversationFlowEN, WHATSAPP_LINK, CONTACT_LINK, JOBS_LINK, WEBSITE_LINK, BOT_TYPING_DELAY } from "@/data/chatbotData";
+import { trackContacto } from "@/lib/tracking";
 
 export const useChatbot = () => {
   const { i18n } = useTranslation();
@@ -41,6 +42,7 @@ export const useChatbot = () => {
   const handleOptionClick = useCallback((option: ChatOption) => {
     // Handle external links
     if (option.action === "open_whatsapp") {
+      trackContacto("whatsapp", "chatbot");
       window.open(WHATSAPP_LINK, "_blank");
       return;
     }

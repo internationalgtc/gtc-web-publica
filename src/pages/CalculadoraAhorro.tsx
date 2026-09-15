@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Download, ArrowRight, MessageCircle } from 'lucide-react'
 import { WHATSAPP_LINK } from '@/data/chatbotData'
+import { trackContacto } from '@/lib/tracking'
 import { useT, useLang } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
 import { Reveal } from '@/components/shared/EditorialReveal'
@@ -258,6 +259,7 @@ export default function CalculadoraAhorro() {
                             href={WHATSAPP_LINK}
                             target="_blank"
                             rel="noopener noreferrer"
+                            onClick={() => trackContacto('whatsapp', 'calculadora')}
                             className="ed-btn ed-btn-outline !text-cream"
                             style={{ boxShadow: 'inset 0 0 0 1.5px rgba(246,243,236,.3)' }}
                           >

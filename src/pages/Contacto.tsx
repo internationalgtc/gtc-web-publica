@@ -2,6 +2,7 @@ import { Reveal } from '@/components/shared/EditorialReveal'
 import { FormularioLead } from '@/components/shared/FormularioLead'
 import { useT } from '@/hooks/useT'
 import { WHATSAPP_LINK } from '@/data/chatbotData'
+import { trackContacto, type CanalContacto } from '@/lib/tracking'
 import SEO from '@/components/shared/SEO'
 
 // Página de contacto — sistema editorial, mismo formulario que el resto del
@@ -9,9 +10,9 @@ import SEO from '@/components/shared/SEO'
 // su propia validación y el diseño anterior de tarjetas y sombras: dos caras
 // para el mismo pedido.
 
-const CONTACTOS: { clave: string; valor: string; href?: string }[] = [
-  { clave: 'contacto_whatsapp', valor: '+34 689 53 98 96', href: WHATSAPP_LINK },
-  { clave: 'contacto_email_label', valor: 'info@globaltalent-connections.com', href: 'mailto:info@globaltalent-connections.com' },
+const CONTACTOS: { clave: string; valor: string; href?: string; canal?: CanalContacto }[] = [
+  { clave: 'contacto_whatsapp', valor: '+34 689 53 98 96', href: WHATSAPP_LINK, canal: 'whatsapp' },
+  { clave: 'contacto_email_label', valor: 'info@globaltalent-connections.com', href: 'mailto:info@globaltalent-connections.com', canal: 'email' },
   { clave: 'contacto_horario_label', valor: 'Lunes a viernes · 9:00 – 18:00 (CET)' },
   { clave: 'contacto_ubicacion_label', valor: 'Alicante, España', href: 'https://www.google.com/maps/search/Global+Talent+Connections+Alicante' },
 ]
@@ -77,7 +78,7 @@ export default function Contacto() {
                     <dt className="ed-caps !text-[9.5px] !tracking-[0.16em] text-sand">{t(c.clave)}</dt>
                     <dd className="font-display text-[clamp(17px,1.5vw,20px)] text-ink mt-1.5 break-words">
                       {c.href ? (
-                        <a href={c.href} target="_blank" rel="noopener noreferrer" className="hover:text-coral transition-colors duration-300">
+                        <a href={c.href} target="_blank" rel="noopener noreferrer" onClick={() => c.canal && trackContacto(c.canal, 'contacto')} className="hover:text-coral transition-colors duration-300">
                           {c.valor}
                         </a>
                       ) : c.valor}

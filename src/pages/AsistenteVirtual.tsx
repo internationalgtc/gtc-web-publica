@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, MessageCircle } from 'lucide-react'
+import { ArrowRight, MessageCircle, Phone } from 'lucide-react'
 import SEO from '@/components/shared/SEO'
 import { FormularioLead } from '@/components/shared/FormularioLead'
 import { RevealSection } from '@/components/shared/RevealSection'
 import { WHATSAPP_LINK } from '@/data/chatbotData'
+import { trackContacto } from '@/lib/tracking'
 import { RESENAS_GOOGLE } from '@/data/resenasGoogle'
 import logoDark from '@/assets/logos/logo-gtc-negro.png'
 
@@ -74,9 +75,14 @@ export default function AsistenteVirtual() {
       <header className="border-b border-navy/15">
         <div className="max-w-[1180px] mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" aria-label="Global Talent Connections"><img src={logoDark} alt="Global Talent Connections" className="h-7 w-auto object-contain" /></Link>
-          <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" className="ed-caps !text-[11px] text-navy hover:text-coral transition-colors flex items-center gap-2">
-            <MessageCircle className="w-4 h-4" /> <span className="hidden sm:inline">WhatsApp ·</span> +34 689 53 98 96
-          </a>
+          <div className="flex items-center gap-4">
+            <a href="tel:+34857640728" onClick={() => trackContacto('telefono', 'asistente-virtual-cabecera')} className="ed-caps !text-[11px] text-navy hover:text-coral transition-colors flex items-center gap-2">
+              <Phone className="w-4 h-4" /> <span className="hidden sm:inline">+34 857 64 07 28</span>
+            </a>
+            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" onClick={() => trackContacto('whatsapp', 'asistente-virtual-cabecera')} className="ed-caps !text-[11px] text-navy hover:text-coral transition-colors flex items-center gap-2">
+              <MessageCircle className="w-4 h-4" /> <span className="hidden sm:inline">WhatsApp ·</span> +34 689 53 98 96
+            </a>
+          </div>
         </div>
       </header>
 

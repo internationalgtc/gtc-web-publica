@@ -217,6 +217,14 @@ const T: Record<string, Record<string, string>> = {
   footer_agendar: { es: 'Agendar llamada', en: 'Book a call' },
   footer_derechos: { es: '© 2026 Global Talent Connections', en: '© 2026 Global Talent Connections' },
   footer_privacidad: { es: 'Política de Privacidad', en: 'Privacy Policy' },
+  footer_cookies: { es: 'Configurar cookies', en: 'Cookie settings' },
+
+  // ── AVISO DE COOKIES ──
+  cookies_titulo: { es: 'Cookies', en: 'Cookies' },
+  cookies_texto: { es: 'Usamos cookies de Google, LinkedIn y Meta para medir las visitas y mostrar nuestros anuncios a personas interesadas. Solo se activan si las aceptas. Puedes cambiar tu elección cuando quieras desde el pie de página.', en: 'We use cookies from Google, LinkedIn and Meta to measure visits and show our ads to interested people. They are only activated if you accept them. You can change your choice at any time from the footer.' },
+  cookies_mas_info: { es: 'Más información', en: 'More information' },
+  cookies_aceptar: { es: 'Aceptar', en: 'Accept' },
+  cookies_rechazar: { es: 'Rechazar', en: 'Reject' },
 
   // ── HOME EDITORIAL (Sep 2026) ──
   home_meta_activos: CIFRAS.profesionales.texto,
@@ -367,7 +375,7 @@ const T: Record<string, Record<string, string>> = {
   // ── PRIVACIDAD ──
   privacidad_label: { es: 'Legal', en: 'Legal' },
   privacidad_titulo: { es: 'Política de Privacidad', en: 'Privacy Policy' },
-  privacidad_actualizacion: { es: 'Última actualización: Abril 2025', en: 'Last updated: April 2025' },
+  privacidad_actualizacion: { es: 'Última actualización: Septiembre 2026', en: 'Last updated: September 2026' },
 
   // ── 404 ──
   not_found_titulo: { es: 'Página no encontrada', en: 'Page not found' },
@@ -436,9 +444,9 @@ const T: Record<string, Record<string, string>> = {
   pp_3_t: { es: 'Finalidad del tratamiento', en: 'Purpose of Processing' },
   pp_3_d: { es: 'Responder a solicitudes de contacto, gestionar el proceso de contratación de asistentes, enviar comunicaciones relevantes sobre nuestros servicios, analizar el uso del sitio web para mejorar la experiencia, y cumplir con obligaciones legales.', en: 'Respond to contact requests, manage the assistant hiring process, send relevant communications about our services, analyze website usage to improve the experience, and comply with legal obligations.' },
   pp_4_t: { es: 'Base legal', en: 'Legal Basis' },
-  pp_4_d: { es: 'Consentimiento del interesado (al enviar formularios), interés legítimo (análisis de uso), y ejecución contractual (gestión de servicios contratados).', en: 'Data subject consent (when submitting forms), legitimate interest (usage analysis), and contractual performance (management of contracted services).' },
+  pp_4_d: { es: 'Consentimiento del interesado (al enviar formularios y al aceptar las cookies de medición y publicidad), interés legítimo (publicidad dirigida a quienes interactúan con nuestras páginas de Facebook e Instagram) y ejecución contractual (gestión de servicios contratados).', en: 'Data subject consent (when submitting forms and when accepting measurement and advertising cookies), legitimate interest (advertising to people who interact with our Facebook and Instagram pages) and contractual performance (management of contracted services).' },
   pp_5_t: { es: 'Cookies y tecnologías de seguimiento', en: 'Cookies and Tracking Technologies' },
-  pp_5_d: { es: 'Utilizamos Google Analytics 4 (G-J6SJCJ1PK7), Google Ads (AW-18434607978), Meta Pixel, LinkedIn Insight Tag y Vercel Analytics para analizar el tráfico y medir la efectividad de nuestras campañas publicitarias.', en: 'We use Google Analytics 4 (G-J6SJCJ1PK7), Google Ads (AW-18434607978), Meta Pixel, LinkedIn Insight Tag and Vercel Analytics to analyze traffic and measure the effectiveness of our advertising campaigns.' },
+  pp_5_d: { es: 'Con tu consentimiento, utilizamos Google Analytics 4 (G-J6SJCJ1PK7), Google Ads (AW-18434607978), Meta Pixel y LinkedIn Insight Tag para analizar el tráfico, medir nuestras campañas y mostrar anuncios a personas interesadas. No se activan hasta que aceptas en el aviso de cookies, y puedes cambiar tu elección en cualquier momento desde «Configurar cookies», en el pie de página. Vercel Analytics mide visitas de forma agregada y sin cookies. Además, mostramos anuncios en Facebook e Instagram a personas que interactuaron con nuestras páginas o vídeos en esas redes; Meta actúa como corresponsable de ese tratamiento.', en: 'With your consent, we use Google Analytics 4 (G-J6SJCJ1PK7), Google Ads (AW-18434607978), Meta Pixel and LinkedIn Insight Tag to analyze traffic, measure our campaigns and show ads to interested people. They are not activated until you accept in the cookie notice, and you can change your choice at any time from “Cookie settings” in the footer. Vercel Analytics measures visits in aggregate and without cookies. We also show ads on Facebook and Instagram to people who interacted with our pages or videos on those networks; Meta acts as joint controller for that processing.' },
   pp_6_t: { es: 'Compartición de datos', en: 'Data Sharing' },
   pp_6_d: { es: 'Compartimos datos con: Google (analytics y publicidad), Meta (publicidad), LinkedIn (publicidad), equipos internos de GTC (ventas y RRHH), y cuando sea requerido por ley.', en: 'We share data with: Google (analytics and advertising), Meta (advertising), LinkedIn (advertising), GTC internal teams (sales and HR), and when required by law.' },
   pp_7_t: { es: 'Derechos del usuario (GDPR)', en: 'User Rights (GDPR)' },

@@ -173,6 +173,8 @@ function VideoEncabezado() {
         disablePictureInPicture
         tabIndex={-1}
       />
+      {/* Velo crema de la portada (62 % → 48 % → 70 %): el video siempre suave. */}
+      <div className="absolute inset-0 ed-hero-velo-v" />
       <div className="absolute inset-x-0 bottom-0 h-[70px] bg-gradient-to-b from-cream/0 to-cream" />
     </div>
   )

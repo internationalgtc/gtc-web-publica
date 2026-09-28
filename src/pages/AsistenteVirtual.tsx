@@ -110,9 +110,11 @@ export default function AsistenteVirtual() {
                   [CIFRAS.profesionales.numero.es, CIFRAS.profesionales.sustantivo.es],
                   [`${RESUMEN_GOOGLE.rating.toFixed(1).replace('.', ',')} ★`, `${RESUMEN_GOOGLE.total} reseñas en Google`],
                 ].map(([v, l], i) => (
-                  <div key={l} className={`py-4 ${i > 0 ? 'pl-5 border-l border-navy/15' : ''}`}>
+                  <div key={l} className={`py-4 ${i > 0 ? 'pl-5 max-sm:pl-3 border-l border-navy/15' : ''}`}>
                     <div className="font-display font-light text-[30px] leading-none text-navy">{v}</div>
-                    <div className="ed-caps !text-[10px] text-sand mt-2">{l}</div>
+                    {/* En móvil «PROFESIONALES» no entraba en su columna y se pegaba a la siguiente:
+                        menos espaciado y 9px solo por debajo de 640px (medido de 360 a 1440px). */}
+                    <div className="ed-caps !text-[10px] max-sm:!text-[9px] max-sm:!tracking-[0.1em] text-sand mt-2">{l}</div>
                   </div>
                 ))}
               </div>

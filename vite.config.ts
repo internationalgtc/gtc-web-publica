@@ -76,6 +76,7 @@ const RUTAS_PRERENDER = [
   '/servicios',
   '/contacto',
   '/nosotros',
+  '/que-es-gtc',
   '/blog',
   '/politica-de-privacidad',
   // /empleos, /empleos/:id y /beneficios ya no se prerenderizan: desde el

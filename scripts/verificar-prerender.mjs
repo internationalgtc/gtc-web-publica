@@ -17,7 +17,7 @@ const blogTs = fs.readFileSync('src/data/blogPosts.ts', 'utf8')
 const BLOG = [...blogTs.matchAll(/^\s{4}id:\s*'([^']+)'/gm)].map(m => `blog/${m[1]}`)
 
 // Las rutas que reciben tráfico de buscador y de campañas. '' = la home.
-const RUTAS = ['', 'contacto', 'servicios', 'nosotros', 'asistente-virtual', 'calculadora-ahorro', 'blog', 'politica-de-privacidad', ...BLOG]
+const RUTAS = ['', 'contacto', 'servicios', 'nosotros', 'que-es-gtc', 'asistente-virtual', 'calculadora-ahorro', 'blog', 'politica-de-privacidad', ...BLOG]
 
 const errores = []
 const leer = f => (fs.existsSync(f) ? fs.readFileSync(f, 'utf8') : null)

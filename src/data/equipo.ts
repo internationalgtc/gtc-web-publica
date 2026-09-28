@@ -13,6 +13,8 @@ import fotoJavier from '@/assets/equipo/javier-2.jpg'
 import fotoRocio from '@/assets/equipo/rocio.jpg'
 import fotoGiuliana from '@/assets/equipo/giuliana.jpg'
 import fotoRomina from '@/assets/equipo/romina.jpg'
+// Foto de Matheo: su selfie con la ropa cambiada a saco y camisa (Gemini, 28-sep-2026); cara y pelo sin tocar.
+import fotoMatheo from '@/assets/equipo/matheo.jpg'
 
 export interface TeamMember {
   id: number
@@ -45,6 +47,7 @@ export const equipo: TeamMember[] = [
   { id: 12, nombre: 'Javier Martinez', foto: fotoJavier, rol: 'Developer', rolEn: 'Developer', email: 'jmartinez@globaltalent-connections.com', linkedin: 'https://www.linkedin.com/in/javierjmc/', nivel: 'operativo' },
   { id: 13, nombre: 'Fabiola Lozano', foto: fotoFabiola, rol: 'Quality Analyst', rolEn: 'Quality Analyst', email: 'flozano@globaltalent-connections.com', linkedin: 'https://www.linkedin.com/in/fabiolalozano/', nivel: 'operativo' },
   { id: 15, nombre: 'Delfina Palacio', foto: fotoDelfina, rol: 'Community Manager', rolEn: 'Community Manager', email: 'dpalacio@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
+  { id: 23, nombre: 'Matheo Telesca', foto: fotoMatheo, rol: 'Developer', rolEn: 'Developer', email: 'mtelesca@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 17, nombre: 'Rocío Rojas', foto: fotoRocio, rol: 'Quality Analyst', rolEn: 'Quality Analyst', email: 'rrojas@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
 ]
 
@@ -57,7 +60,7 @@ const porId = (ids: number[]) =>
 export const direccion = porId([18, 1, 3, 5])           // Inma · Daniel · Antonio · Ariel
 export const filasOperativo: TeamMember[][] = [
   porId([4, 9, 21, 22]),   // Pilar · Reyna · Giuliana · Romina
-  porId([12, 11, 10]),     // Javier · Nelson · Larisa (equipo de desarrollo)
+  porId([12, 11, 10, 23]), // Javier · Nelson · Larisa · Matheo (equipo de desarrollo)
   porId([6, 13, 17, 15]),  // Gladymar · Fabiola · Rocio · Delfina
 ]
 export const operativo = filasOperativo.flat()

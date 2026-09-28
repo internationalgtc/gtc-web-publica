@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 import { CIFRAS } from '@/data/cifras'
+import { TELEFONO_E164 } from '@/data/contacto'
 
 interface SEOProps {
   title: string
@@ -48,7 +49,7 @@ const LOCAL_BUSINESS_SCHEMA = {
   // Las cifras salen de src/data/cifras.ts, igual que en la home.
   description:
     `Conectamos empresas españolas con profesionales remotos de alto rendimiento en Latinoamérica: ${CIFRAS.profesionales.enFrase.es} trabajando en ${CIFRAS.empresas.enFrase.es}. Asistentes virtuales, SDRs y perfiles administrativos con ahorro de hasta el 52%.`,
-  telephone: '+34857640728',
+  telephone: TELEFONO_E164,
   email: 'info@globaltalent-connections.com',
   priceRange: '€€',
   currenciesAccepted: 'EUR',

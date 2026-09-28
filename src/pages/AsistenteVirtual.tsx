@@ -3,7 +3,7 @@ import { ArrowRight, MessageCircle, Phone } from 'lucide-react'
 import SEO from '@/components/shared/SEO'
 import { FormularioLead } from '@/components/shared/FormularioLead'
 import { RevealSection } from '@/components/shared/RevealSection'
-import { WHATSAPP_LINK } from '@/data/chatbotData'
+import { TELEFONO, TEL_LINK, WHATSAPP_LINK } from '@/data/contacto'
 import { trackContacto } from '@/lib/tracking'
 import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
 import { CIFRAS } from '@/data/cifras'
@@ -27,7 +27,7 @@ const AREAS = [
 const PASOS = [
   ['Definimos el rol contigo', 'Funciones, herramientas, horario y presupuesto. Una llamada de 20 minutos.'],
   ['Buscamos y evaluamos', 'RRHH entrevista y valida candidatos con pruebas técnicas, humanas y de encaje.'],
-  ['Eliges y empieza en 5 días', 'Recibes perfiles con evidencia. Tú decides. GTC formaliza la incorporación.'],
+  ['Eliges y empieza en 5 días hábiles', 'Recibes perfiles con evidencia. Tú decides. GTC formaliza la incorporación.'],
 ]
 
 const FAQ = [
@@ -73,11 +73,12 @@ export default function AsistenteVirtual() {
         <div className="max-w-[1180px] mx-auto px-6 h-16 flex items-center justify-between">
           <Link to="/" aria-label="Global Talent Connections"><img src={logoDark} alt="Global Talent Connections" className="h-7 w-auto object-contain" /></Link>
           <div className="flex items-center gap-4">
-            <a href="tel:+34857640728" onClick={() => trackContacto('telefono', 'asistente-virtual-cabecera')} className="ed-caps !text-[11px] text-navy hover:text-coral transition-colors flex items-center gap-2">
-              <Phone className="w-4 h-4" /> <span className="hidden sm:inline">+34 857 64 07 28</span>
+            {/* Un solo número para llamar y para WhatsApp: el icono llama, el enlace abre WhatsApp. */}
+            <a href={TEL_LINK} aria-label={`Llamar al ${TELEFONO}`} onClick={() => trackContacto('telefono', 'asistente-virtual-cabecera')} className="ed-caps !text-[11px] text-navy hover:text-coral transition-colors flex items-center gap-2">
+              <Phone className="w-4 h-4" />
             </a>
             <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" onClick={() => trackContacto('whatsapp', 'asistente-virtual-cabecera')} className="ed-caps !text-[11px] text-navy hover:text-coral transition-colors flex items-center gap-2">
-              <MessageCircle className="w-4 h-4" /> <span className="hidden sm:inline">WhatsApp ·</span> +34 689 53 98 96
+              <MessageCircle className="w-4 h-4" /> <span className="hidden sm:inline">WhatsApp ·</span> {TELEFONO}
             </a>
           </div>
         </div>

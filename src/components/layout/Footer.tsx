@@ -23,6 +23,8 @@ export function Footer() {
               <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/empleos">{t('empleos_label')}</Link></li>
               <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/#proceso">{t('nav_como_funciona')}</Link></li>
               <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/#comunidad">{t('cand_sec_comunidad')}</Link></li>
+              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/blog/herramientas-vacantes-internacionales">{t('footer_art_herramientas')}</Link></li>
+              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/blog/oferta-trabajo-remoto-confiable-estafa">{t('footer_art_estafa')}</Link></li>
             </ul>
           </div>
 

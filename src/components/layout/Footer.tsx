@@ -11,8 +11,8 @@ export function Footer() {
       <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-[1.4fr_1fr_1fr_1fr] gap-11 pb-[70px]">
           <div className="sm:col-span-2 md:col-span-1">
-            <img src={logoWhite} alt="Global Talent Connections" className="h-[26px] w-auto mb-[18px]" loading="lazy" />
-            <p className="text-[13.5px] text-cream/50 max-w-[28ch] leading-relaxed">
+            <img src={logoWhite} alt="Global Talent Connections" className="h-[34px] w-auto mb-[22px]" loading="lazy" />
+            <p className="ed-serif-it text-[22px] text-cream/85 max-w-[20ch] leading-snug">
               {t('footer_desc')}
             </p>
           </div>
@@ -50,7 +50,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-3 py-[22px] border-t border-cream/[0.18] ed-caps !text-[10px] !tracking-[0.18em] text-cream/35">
-          <p>{t('footer_derechos')}</p>
+          <p>{t('footer_derechos')} · Alicante, España</p>
           <Link className="hover:text-cream transition-colors" to="/politica-de-privacidad">
             {t('footer_privacidad')}
           </Link>

@@ -6,8 +6,8 @@
  * número a mano: si la home pudiera contestar «cuántos clientes tienen» de dos
  * maneras distintas, la web se contradice (criterio de Ariel, 28-sep-2026).
  *
- * Texto genérico a propósito («más de»), decidido por Ariel y Larisa el
- * 28-sep-2026, para que siga siendo cierto aunque haya alguna baja.
+ * Texto genérico a propósito («más de»). Ariel pidió el 28-sep-2026 subirlo a
+ * «más de 60 empresas» y «más de 100 profesionales» (antes: 50 y 90).
  * Base contada en Nexus ese día (NO se publica): 100 profesionales activos en
  * 59 empresas.
  *   profesional = asistente con estado activo y correo de asistente
@@ -19,28 +19,28 @@
 type Texto = { es: string; en: string }
 
 type Cifra = {
-  /** Lo que va en grande en una ficha de datos: «Más de 50» / «50+». */
+  /** Lo que va en grande en una ficha de datos: «Más de 60» / «60+». */
   numero: Texto
   /** Lo que va debajo del número: «empresas» / «companies». */
   sustantivo: Texto
 }
 
 const EMPRESAS: Cifra = {
-  numero: { es: 'Más de 50', en: '50+' },
+  numero: { es: 'Más de 60', en: '60+' },
   sustantivo: { es: 'empresas', en: 'companies' },
 }
 
 const PROFESIONALES: Cifra = {
-  numero: { es: 'Más de 90', en: '90+' },
+  numero: { es: 'Más de 100', en: '100+' },
   sustantivo: { es: 'profesionales', en: 'professionals' },
 }
 
-/** «Más de 50 empresas» / «50+ companies». */
+/** «Más de 60 empresas» / «60+ companies». */
 function frase(c: Cifra): Texto {
   return { es: `${c.numero.es} ${c.sustantivo.es}`, en: `${c.numero.en} ${c.sustantivo.en}` }
 }
 
-/** La misma frase para ir en mitad de una oración: «más de 50 empresas». */
+/** La misma frase para ir en mitad de una oración: «más de 60 empresas». */
 function enFrase(c: Cifra): Texto {
   const f = frase(c)
   return { es: f.es.charAt(0).toLowerCase() + f.es.slice(1), en: f.en }

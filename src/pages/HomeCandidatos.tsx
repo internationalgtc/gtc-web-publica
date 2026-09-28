@@ -190,7 +190,7 @@ export default function HomeCandidatos() {
     <>
       <SEO
         title="Trabajo remoto para Latinoamérica"
-        description="Trabaja para empresas de España y EE.UU. desde tu casa. Pago internacional puntual, formación continua y una comunidad de profesionales remotos que te respalda."
+        description="Trabaja para empresas de España y EE.UU. desde tu casa. Salario en dólares, formación continua y una comunidad de profesionales remotos que te respalda."
         path="/"
         keywords="trabajo remoto latinoamerica, empleo remoto internacional, vacantes remotas, asistente virtual, trabajo desde casa, Global Talent Connections"
       />

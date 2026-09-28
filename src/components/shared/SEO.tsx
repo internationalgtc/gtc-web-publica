@@ -51,7 +51,7 @@ const LOCAL_BUSINESS_SCHEMA = {
   // Las cifras salen de src/data/cifras.ts, igual que en la web de empresas.
   description:
     `Conectamos empresas españolas con profesionales remotos de alto rendimiento en Latinoamérica: ${CIFRAS.profesionales.enFrase.es} trabajando en ${CIFRAS.empresas.enFrase.es}. Asistentes virtuales, SDRs y perfiles administrativos con ahorro de hasta el 52%.`,
-  telephone: '+34623257706',
+  telephone: '+34689539896',
   email: 'info@globaltalent-connections.com',
   priceRange: '€€',
   currenciesAccepted: 'EUR',

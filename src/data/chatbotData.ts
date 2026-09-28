@@ -246,7 +246,7 @@ export const conversationFlowEN: ConversationFlow = {
     ],
   },
   contactar_empresa: {
-    message: "Perfect! 🎯\n\nWe'll take you to our contact form where you can leave your details and requirements.\n\nAn advisor will contact you in less than 24 hours.",
+    message: "Perfect! 🎯\n\nWe'll take you to our contact form where you can leave your details and requirements.\n\nAn advisor will contact you within 24 hours.",
     options: [
       { id: "formulario", icon: "📝", label: "Go to contact form", action: "open_contact" },
       { id: "volver", icon: "🔙", label: "Back to start", action: "initial" },

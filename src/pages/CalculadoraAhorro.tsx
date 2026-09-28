@@ -5,12 +5,12 @@ import { WHATSAPP_LINK } from '@/data/chatbotData'
 import { trackContacto } from '@/lib/tracking'
 import { useT, useLang } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
-import { Reveal } from '@/components/shared/EditorialReveal'
+import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
+import { Img3D, SecHead, SecTag, TituloEntrada, Wrap } from '@/components/shared/EditorialPiezas'
 import { FormularioLead } from '@/components/shared/FormularioLead'
 
-// Calculadora de ahorro — sistema editorial (8-sep-2026). El cálculo es el
-// mismo de siempre; lo que cambió es la piel (antes tarjetas, sombras y azul
-// antiguo) y el formulario, que ahora es el único del sitio.
+// Calculadora de ahorro — rediseño «A · Revista» (28-sep-2026), lienzo
+// A-calculadora. El cálculo es el mismo de siempre; lo que cambió es la piel.
 //
 // Supuestos = los del Excel que se descarga (hoja «Calculadora»): Seguridad
 // Social empresa 33 %, 10.200 €/año de costes indirectos (equipo 1.200, oficina
@@ -33,9 +33,24 @@ const NIVELES = [
   { key: 'calc_mid', tarifa: 1400 },
   { key: 'calc_senior', tarifa: 1650 },
 ]
+/** Tope de personas: el mismo que tenía el control deslizante. */
+const N_MAX = 10
 
 const eur = (n: number) => `${Math.round(n).toLocaleString('es-ES')} €`
 const EXCEL = '/Calculadora-de-Ahorro-Estrategico-GTC.xlsx'
+
+const INCLUYE = ['calc_inc_1', 'calc_inc_2', 'calc_inc_3']
+const PILLS = ['calc_pill_1', 'calc_pill_2', 'calc_pill_3', 'calc_pill_4']
+
+/* Estilos de los controles (lienzo A-calculadora). */
+const ETIQUETA = 'ed-label text-ink-soft'
+const AYUDA = 'text-[14px] leading-[1.45] text-ink-soft'
+const CAMPO_GRANDE =
+  'w-full min-h-[64px] ed-serif text-[30px] lg:text-[34px] text-navy tabular-nums px-4 py-2.5 rounded-[14px] border border-navy/25 bg-cream focus:outline focus:outline-2 focus:outline-navy focus:outline-offset-1'
+const opcion = (activa: boolean) =>
+  `min-h-[52px] rounded-[14px] border-[1.5px] font-label text-[15px] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-navy focus-visible:outline-offset-2 ${
+    activa ? 'bg-navy border-navy text-cream font-semibold' : 'bg-cream border-navy/20 text-navy font-medium hover:border-navy'
+  }`
 
 export default function CalculadoraAhorro() {
   const t = useT()
@@ -44,6 +59,7 @@ export default function CalculadoraAhorro() {
   const [perfil, setPerfil] = useState(0)
   const [salario, setSalario] = useState(PERFILES[0].salario)
   const [n, setN] = useState(1)
+  const [nTexto, setNTexto] = useState('1')
   const [nivel, setNivel] = useState(0)
   const [ocultos, setOcultos] = useState(true)
   const [paso, setPaso] = useState<'calc' | 'form'>('calc')
@@ -75,11 +91,18 @@ export default function CalculadoraAhorro() {
     document.body.removeChild(link)
   }
 
-  const campo = 'w-full bg-transparent border-b border-navy/20 focus:border-coral outline-none py-2.5 font-display text-[20px] text-ink transition-colors'
-  const etiqueta = 'ed-caps !text-[10px] text-ink-soft'
+  // Nº de personas: se puede borrar y reescribir; el cálculo toma el último
+  // número válido (1 a 10) y al salir del campo se muestra ese número.
+  const cambiarN = (valor: string) => {
+    const num = Math.round(Number(valor))
+    if (valor === '' || !Number.isFinite(num) || num < 1) { setNTexto(valor); return }
+    const final = Math.min(num, N_MAX)
+    setN(final)
+    setNTexto(String(final))
+  }
 
   return (
-    <>
+    <div className="bg-cream text-ink">
       <SEO
         title="Calculadora de ahorro: cuánto cuesta contratar talento remoto"
         description="Calcula en segundos cuánto ahorra tu empresa contratando un asistente virtual o profesional remoto con GTC frente a una contratación local en España."
@@ -87,247 +110,267 @@ export default function CalculadoraAhorro() {
       />
 
       {/* CABECERA */}
-      <section className="pt-[158px] pb-[64px]">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
-          <Reveal y={0}>
-            <div className="ed-sec-tag ed-caps">
-              <span className="idx">✳</span>
-              <span className="name">{t('calc_label')}</span>
-              <span className="meta hidden sm:inline">{t('calc_meta')}</span>
-            </div>
+      <section className="pt-[112px] sm:pt-[140px] lg:pt-[184px] pb-8 lg:pb-[70px]">
+        <Wrap className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-6 lg:gap-14 items-end">
+          <div className="flex flex-col gap-6 lg:gap-[30px]">
+            <Reveal y={0}>
+              <div className="ed-label flex flex-wrap gap-x-3.5 gap-y-1 text-ink-soft">
+                <span className="font-semibold text-navy">{t('calc_label')}</span>
+                <span>· {t('calc_meta')}</span>
+              </div>
+            </Reveal>
+            <TituloEntrada
+              className="ed-serif font-[320] text-navy leading-[0.98] tracking-[-0.025em] text-[clamp(44px,12vw,64px)] sm:text-[clamp(64px,10vw,88px)] lg:text-[clamp(80px,7.8vw,112px)] [text-wrap:balance]"
+              tramos={[{ texto: t('calc_titulo_1') }, { texto: `${t('calc_titulo_2')}?`, subraya: true }]}
+            />
+            <Reveal delay={0.5} y={26}>
+              <p className="max-w-[32em] text-[17px] sm:text-[19px] lg:text-[21px] leading-[1.55] text-ink-soft [text-wrap:pretty]">{t('calc_subtitle')}</p>
+            </Reveal>
+          </div>
+          <Reveal delay={0.3} y={0}>
+            <Img3D primero src="/img/3d/ahorro.webp" className="ed-3d w-full h-[200px] sm:h-[300px] lg:h-[380px] object-cover" />
           </Reveal>
-          <Reveal className="mt-11 max-w-[16ch]">
-            <h1 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(40px,6.4vw,96px)] [text-wrap:balance]">
-              {t('calc_titulo_1')} <em className="italic text-gold-deep">{t('calc_titulo_2')}</em>?
-            </h1>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="text-[clamp(16px,1.5vw,20px)] text-ink-soft max-w-[54ch] leading-relaxed mt-7">{t('calc_subtitle')}</p>
-          </Reveal>
-        </div>
+        </Wrap>
       </section>
 
       {/* CALCULADORA */}
-      <section className="pb-[130px]">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-12 border-t border-navy/15 pt-10">
-            {/* Controles */}
-            <Reveal>
-              <div className="ed-caps !text-[10px] text-sand">01 · {t('calc_tus_datos')}</div>
+      <section id="coste" className="pt-4 lg:pt-[30px] pb-20 lg:pb-[110px]">
+        <Wrap>
+          <Reveal>
+            <div className="grid grid-cols-1 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] rounded-[28px] lg:rounded-[36px] overflow-hidden shadow-[0_50px_90px_-60px_rgba(6,46,85,0.55)]">
+              {/* 01 · Tus datos */}
+              <div className="bg-white p-5 sm:p-10 lg:p-[52px] flex flex-col gap-7">
+                <div className="ed-label text-ink-soft">
+                  <span className="font-semibold text-navy">01</span> · {t('calc_tus_datos')}
+                </div>
 
-              <div className="mt-8 grid gap-1.5">
-                <label className={etiqueta} htmlFor="calc-perfil">{t('calc_perfil')}</label>
-                <select
-                  id="calc-perfil"
-                  className={campo}
-                  value={perfil}
-                  onChange={e => { const i = Number(e.target.value); setPerfil(i); setSalario(PERFILES[i].salario) }}
-                >
-                  {PERFILES.map((p, i) => <option key={p.key} value={i}>{t(p.labelKey)}</option>)}
-                </select>
-                <p className="text-xs text-sand mt-1">{t('calc_perfil_hint')}</p>
-              </div>
+                <fieldset className="flex flex-col gap-3">
+                  <legend className={`${ETIQUETA} mb-3`}>{t('calc_perfil')}</legend>
+                  <div className="grid grid-cols-1 min-[380px]:grid-cols-2 gap-2.5">
+                    {PERFILES.map((p, i) => (
+                      <button
+                        key={p.key}
+                        type="button"
+                        aria-pressed={perfil === i}
+                        onClick={() => { setPerfil(i); setSalario(PERFILES[i].salario) }}
+                        className={`${opcion(perfil === i)} text-left px-4 py-3`}
+                      >
+                        {t(p.labelKey)}
+                      </button>
+                    ))}
+                  </div>
+                  <p className={AYUDA}>{t('calc_perfil_hint')}</p>
+                </fieldset>
 
-              <div className="mt-8 grid gap-1.5">
-                <label className={etiqueta} htmlFor="calc-salario">{t('calc_salario')}</label>
-                <input
-                  id="calc-salario"
-                  type="number"
-                  min={0}
-                  step={500}
-                  className={campo}
-                  value={salario}
-                  onChange={e => setSalario(Number(e.target.value))}
-                />
-                <p className="text-xs text-sand mt-1">{t('calc_salario_hint')}</p>
-              </div>
-
-              <div className="mt-8 grid gap-3">
-                <label className={etiqueta} htmlFor="calc-n">{t('calc_personas')}</label>
-                <div className="flex items-center gap-5">
+                <div className="flex flex-col gap-2">
+                  <label className={ETIQUETA} htmlFor="calc-salario">{t('calc_salario')}</label>
                   <input
-                    id="calc-n"
-                    type="range"
-                    min={1}
-                    max={10}
-                    value={n}
-                    onChange={e => setN(Number(e.target.value))}
-                    className="flex-1 accent-coral"
+                    id="calc-salario"
+                    type="number"
+                    inputMode="numeric"
+                    min={0}
+                    step={500}
+                    className={CAMPO_GRANDE}
+                    value={salario}
+                    onChange={e => setSalario(Number(e.target.value))}
                   />
-                  <span className="font-display text-[32px] text-navy tabular-nums w-[2ch] text-right">{n}</span>
+                  <p className={AYUDA}>{t('calc_salario_hint')}</p>
                 </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] gap-6 sm:gap-[18px]">
+                  <div className="flex flex-col gap-2">
+                    <label className={ETIQUETA} htmlFor="calc-n">{t('calc_personas')}</label>
+                    <input
+                      id="calc-n"
+                      type="number"
+                      inputMode="numeric"
+                      min={1}
+                      max={N_MAX}
+                      step={1}
+                      className={CAMPO_GRANDE}
+                      value={nTexto}
+                      onChange={e => cambiarN(e.target.value)}
+                      onBlur={() => setNTexto(String(n))}
+                    />
+                  </div>
+                  <fieldset className="flex flex-col gap-2">
+                    <legend className={`${ETIQUETA} mb-2`}>{t('calc_nivel')}</legend>
+                    <div className="grid grid-cols-3 gap-2">
+                      {NIVELES.map((nv, i) => (
+                        <button key={nv.key} type="button" aria-pressed={nivel === i} onClick={() => setNivel(i)} className={`${opcion(nivel === i)} min-h-[64px]`}>
+                          {t(nv.key)}
+                        </button>
+                      ))}
+                    </div>
+                    <p className={AYUDA}>{t('calc_nivel_hint')}</p>
+                  </fieldset>
+                </div>
+
+                <label className="flex gap-3.5 items-start min-h-[44px] text-[16px] leading-[1.45] text-navy cursor-pointer">
+                  <input type="checkbox" checked={ocultos} onChange={e => setOcultos(e.target.checked)} className="w-[22px] h-[22px] mt-px shrink-0 accent-navy" />
+                  {t('calc_ocultos')}
+                </label>
               </div>
 
-              <div className="mt-8 grid gap-3">
-                <span className={etiqueta}>{t('calc_nivel')}</span>
-                <div className="flex gap-2.5 flex-wrap">
-                  {NIVELES.map((nv, i) => (
-                    <button
-                      key={nv.key}
-                      type="button"
-                      onClick={() => setNivel(i)}
-                      className={`ed-caps !text-[10px] px-4 py-2.5 rounded-full border transition-colors duration-300 ${
-                        nivel === i ? 'bg-navy text-cream border-navy' : 'border-navy/20 text-ink-soft hover:border-navy'
-                      }`}
-                    >
-                      {t(nv.key)}
-                    </button>
-                  ))}
+              {/* 02 · Tu resultado */}
+              <div className="bg-navy text-cream p-5 sm:p-10 lg:p-[52px] flex flex-col gap-6 lg:gap-[26px]">
+                <div className="ed-label text-cream/70">
+                  <span className="font-semibold text-gold">02</span> · {t('calc_resultado')}
                 </div>
-                <p className="text-xs text-sand">{t('calc_nivel_hint')}</p>
-              </div>
 
-              <label className="mt-8 flex items-start gap-3 text-[14.5px] text-ink-soft leading-relaxed cursor-pointer">
-                <input type="checkbox" checked={ocultos} onChange={e => setOcultos(e.target.checked)} className="mt-1 accent-coral w-4 h-4" />
-                {t('calc_ocultos')}
-              </label>
-            </Reveal>
-
-            {/* Resultado */}
-            <Reveal delay={0.1}>
-              <div className="ed-on-dark bg-gradient-to-b from-navy to-navy-deep text-cream p-8 lg:p-10">
-                <div className="ed-caps !text-[10px] text-cream/40">02 · {t('calc_resultado')}</div>
-                <dl className="mt-8">
+                <dl className="flex flex-col border-t border-cream/20">
                   <Fila k={t('calc_r_salario')} s={n > 1 ? `${n} ${t('calc_personas').toLowerCase()}` : undefined} v={eur(r.sal)} />
-                  <Fila k={t('calc_r_ss')} s="~33 %" v={eur(r.ss)} />
+                  <Fila k={t('calc_r_ss')} extra="~33 %" v={eur(r.ss)} />
                   {ocultos && <Fila k={t('calc_r_ocultos')} s={t('calc_r_ocultos_d')} v={eur(r.oc)} />}
-                  <Fila k={t('calc_r_es')} v={eur(r.es)} grande />
-                  <Fila
-                    k={t('calc_r_gtc')}
-                    s={`${r.tarifa.toLocaleString('es-ES')} €/${lang === 'en' ? 'month' : 'mes'} × 12 + ${t('calc_r_software')}`}
-                    v={eur(r.gtc)}
-                    grande
-                    oro
-                  />
                 </dl>
 
-                <div className="grid grid-cols-2 gap-8 mt-9 pt-8 border-t border-cream/[0.18]">
-                  <div>
-                    <div className="font-display font-light text-[clamp(38px,4.4vw,56px)] leading-none text-coral tabular-nums">{r.pct} %</div>
-                    <div className="ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/45 mt-3">{t('calc_menos_coste')}</div>
+                <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="bg-cream/[0.08] rounded-[20px] p-5 lg:p-[22px] flex flex-col gap-1.5">
+                    <dt className="text-[18px] lg:text-[22px] text-cream/85">{t('calc_r_es')}</dt>
+                    <dd className="ed-serif font-[320] leading-none tabular-nums whitespace-nowrap text-[clamp(38px,4.2vw,52px)] xl:text-[clamp(38px,3.5vw,52px)]">{eur(r.es)}</dd>
                   </div>
-                  <div>
-                    <div className="font-display font-light text-[clamp(30px,3.6vw,44px)] leading-none text-coral tabular-nums">{eur(r.ahorro)}</div>
-                    <div className="ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/45 mt-3">{t('calc_ahorro_anual')}</div>
+                  <div className="bg-cream text-navy rounded-[20px] p-5 lg:p-[22px] flex flex-col gap-1.5">
+                    <dt className="text-[18px] lg:text-[22px] text-ink-soft">{t('calc_r_gtc')}</dt>
+                    <dd className="ed-serif font-[320] leading-none tabular-nums whitespace-nowrap text-[clamp(38px,4.2vw,52px)] xl:text-[clamp(38px,3.5vw,52px)]">{eur(r.gtc)}</dd>
+                    <dd className="text-[15px] text-ink-soft">
+                      {`${r.tarifa.toLocaleString('es-ES')} €/${lang === 'en' ? 'month' : 'mes'} × 12 + ${t('calc_r_software')}`}
+                    </dd>
                   </div>
-                </div>
+                </dl>
 
-                <p className="text-[14.5px] text-cream/70 leading-relaxed mt-8">{frase}</p>
+                <dl className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-6 items-end pt-1.5">
+                  <div className="flex flex-col gap-1 min-w-0">
+                    <dt className="text-[18px] lg:text-[22px] text-cream/85">{t('calc_menos_coste')}</dt>
+                    <dd className="order-first ed-serif font-[280] text-gold leading-[0.85] tracking-[-0.04em] tabular-nums whitespace-nowrap text-[clamp(84px,24vw,120px)] sm:text-[clamp(84px,11vw,120px)] xl:text-[clamp(84px,8vw,120px)]">
+                      {r.pct} %
+                    </dd>
+                  </div>
+                  <div className="flex flex-col gap-1 min-w-0">
+                    <dt className="text-[18px] lg:text-[22px] text-cream/85">{t('calc_ahorro_anual')}</dt>
+                    <dd className="order-first ed-serif font-[280] text-gold leading-[0.9] tracking-[-0.03em] tabular-nums whitespace-nowrap text-[clamp(52px,15vw,88px)] sm:text-[clamp(52px,7.4vw,88px)] xl:text-[clamp(52px,5.4vw,88px)]">
+                      {eur(r.ahorro)}
+                    </dd>
+                  </div>
+                </dl>
+
+                <p className="text-[16px] lg:text-[18px] leading-[1.55] text-cream/85" aria-live="polite">{frase}</p>
 
                 {paso === 'calc' && (
-                  <div className="mt-9">
+                  <div className="flex flex-col gap-4">
                     <button
                       type="button"
-                      className="ed-btn ed-btn-primary w-full justify-center"
+                      className="ed-pill w-full bg-coral text-navy hover:bg-coral-hover hover:text-navy focus-visible:outline-gold text-[17px] min-h-[60px]"
                       onClick={() => {
                         setPaso('form')
                         setTimeout(() => document.getElementById('calc-form')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60)
                       }}
                     >
-                      {t('calc_cta_propuesta')} <ArrowRight className="w-4 h-4 arrow" />
+                      {t('calc_cta_propuesta')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
                     </button>
-                    <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/35 text-center mt-4">{t('calc_cta_note')}</p>
+                    <p className="text-center text-[15px] leading-[1.45] text-cream/75">{t('calc_cta_note')}</p>
                   </div>
                 )}
               </div>
-            </Reveal>
-          </div>
+            </div>
+          </Reveal>
 
           {/* PEDIR LA PROPUESTA — mismo formulario que el resto del sitio */}
           {paso === 'form' && (
-            <div id="calc-form" className="mt-[70px] scroll-mt-28">
+            <div id="calc-form" className="mt-12 lg:mt-[70px] scroll-mt-28">
               <Reveal>
-                <div className="ed-on-dark bg-gradient-to-b from-navy to-navy-deep text-cream p-8 lg:p-11">
-                  <div className="ed-sec-tag ed-caps">
-                    <span className="idx">03</span>
-                    <span className="name">{t('calc_paso2_titulo')}</span>
+                <div className="ed-form-blanca bg-white text-ink border border-navy/10 rounded-[24px] lg:rounded-[30px] p-5 sm:p-8 lg:p-12 shadow-[0_40px_80px_-52px_rgba(6,46,85,0.45)] grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.55fr)] gap-8 lg:gap-[72px]">
+                  <div className="flex flex-col gap-5">
+                    <h2 className="ed-serif font-[320] text-navy leading-[1.05] tracking-[-0.02em] text-[clamp(30px,3.4vw,46px)] [text-wrap:balance]">
+                      {t('calc_paso2_titulo')}
+                    </h2>
+                    <p className="text-[16px] lg:text-[18px] leading-[1.55] text-ink-soft">{t('calc_paso2_sub')}</p>
                   </div>
-                  <p className="text-[15px] text-cream/60 leading-relaxed max-w-[52ch] mt-6">{t('calc_paso2_sub')}</p>
-                  <div className="mt-8">
+                  <div>
                     <FormularioLead
                       formulario="calculadora"
+                      tono="claro"
                       cta={t('calc_enviar')}
                       perfilFijo={PERFILES[perfil].key}
                       contexto={resumen}
                       onExito={descargarExcel}
                       exitoExtra={
                         <div className="flex flex-col sm:flex-row gap-3">
-                          <a href={EXCEL} download className="ed-btn ed-btn-primary">
-                            <Download className="h-4 w-4" /> {t('calc_descargar_btn')}
+                          <a href={EXCEL} download className="ed-pill bg-coral text-navy hover:bg-coral-hover hover:text-navy">
+                            <Download className="h-[18px] w-[18px]" aria-hidden="true" /> {t('calc_descargar_btn')}
                           </a>
                           <a
                             href={WHATSAPP_LINK}
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={() => trackContacto('whatsapp', 'calculadora')}
-                            className="ed-btn ed-btn-outline !text-cream"
-                            style={{ boxShadow: 'inset 0 0 0 1.5px rgba(246,243,236,.3)' }}
+                            className="ed-pill ed-pill-line"
                           >
-                            <MessageCircle className="h-4 w-4" /> {t('calc_whatsapp')}
+                            <MessageCircle className="h-[18px] w-[18px]" aria-hidden="true" /> {t('calc_whatsapp')}
                           </a>
                         </div>
                       }
                     />
+                    <p className="text-[13.5px] text-ink-soft mt-6">
+                      {t('calc_privacidad')}{' '}
+                      <Link to="/politica-de-privacidad" className="text-navy underline underline-offset-2 hover:text-navy-deep">
+                        {t('footer_privacidad')}
+                      </Link>
+                    </p>
                   </div>
-                  <p className="text-xs text-cream/35 mt-7">
-                    {t('calc_privacidad')}{' '}
-                    <Link to="/politica-de-privacidad" className="text-cream/60 hover:text-coral transition-colors">
-                      {t('footer_privacidad')}
-                    </Link>
-                  </p>
                 </div>
               </Reveal>
             </div>
           )}
-
-          {/* QUÉ INCLUYE */}
-          <div className="mt-[110px]">
-            <Reveal>
-              <div className="ed-sec-tag ed-caps">
-                <span className="idx">✳</span>
-                <span className="name">{t('calc_incluye_titulo')}</span>
-              </div>
-            </Reveal>
-            <Reveal>
-              <div className="grid grid-cols-1 md:grid-cols-3 border-t border-navy/15 mt-8">
-                {[1, 2, 3].map((i, idx) => (
-                  <div
-                    key={i}
-                    className={`py-10 md:pr-10 ${idx > 0 ? 'md:border-l md:border-navy/15 md:pl-10' : ''} ${idx < 2 ? 'border-b md:border-b-0 border-navy/15' : ''}`}
-                  >
-                    <div className="font-display font-light text-[clamp(34px,3.6vw,48px)] leading-none text-navy tabular-nums">
-                      0<span className="italic text-coral">{i}</span>
-                    </div>
-                    <h3 className="font-display text-[clamp(18px,1.7vw,22px)] text-ink mt-6 mb-3">{t(`calc_inc_${i}`)}</h3>
-                    <p className="text-[14.5px] text-ink-soft leading-relaxed">{t(`calc_inc_${i}_d`)}</p>
-                  </div>
-                ))}
-              </div>
-            </Reveal>
-            <Reveal>
-              <div className="flex flex-wrap gap-2.5 mt-9">
-                {['calc_pill_1', 'calc_pill_2', 'calc_pill_3', 'calc_pill_4'].map(key => (
-                  <span key={key} className="ed-caps !text-[10px] px-4 py-2.5 rounded-full border border-navy/20 text-ink-soft">
-                    {t(key)}
-                  </span>
-                ))}
-              </div>
-            </Reveal>
-          </div>
-        </div>
+        </Wrap>
       </section>
-    </>
+
+      {/* 03 · QUÉ INCLUYE EL PRECIO */}
+      <section id="incluye" className="bg-cream-2 py-20 lg:pt-[110px] lg:pb-[100px]">
+        <Wrap className="flex flex-col gap-12 lg:gap-16">
+          <SecHead tag={<SecTag n="03" name={t('calc_incluye_meta')} />}>
+            <h2 className="ed-serif font-[320] text-navy leading-[1.02] tracking-[-0.02em] text-[clamp(38px,5.6vw,80px)] [text-wrap:balance]">
+              {t('calc_incluye_h2_a')} <span className="ed-serif-it">{t('calc_incluye_h2_b')}</span>
+            </h2>
+          </SecHead>
+          <RevealGroup className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-7 lg:gap-9">
+            {INCLUYE.map((key, i) => (
+              <RevealItem key={key}>
+                <article className="flex flex-col gap-4 lg:gap-[18px] border-t-[1.5px] border-navy pt-6 lg:pt-7">
+                  <div className="flex gap-3.5 items-baseline">
+                    <span className="ed-serif text-lg text-ink-soft">0{i + 1}/</span>
+                    <h3 className="ed-serif font-[330] text-navy leading-[1.1] text-[clamp(26px,2.5vw,36px)]">{t(key)}</h3>
+                  </div>
+                  <p className="text-[16px] lg:text-[18px] leading-[1.6] text-ink-soft">{t(`${key}_d`)}</p>
+                </article>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+          <Reveal>
+            <ul className="flex flex-wrap gap-3 border-t border-navy/20 pt-8 lg:pt-[34px]">
+              {PILLS.map(key => (
+                <li key={key} className="inline-flex items-center min-h-[48px] px-[22px] rounded-full border-[1.5px] border-navy font-label font-semibold text-[15px] lg:text-[16px] text-navy">
+                  {t(key)}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+        </Wrap>
+      </section>
+    </div>
   )
 }
 
-function Fila({ k, s, v, grande, oro }: { k: string; s?: string; v: string; grande?: boolean; oro?: boolean }) {
+function Fila({ k, s, extra, v }: { k: string; s?: string; extra?: string; v: string }) {
   return (
-    <div className="flex justify-between items-baseline gap-6 py-4 border-b border-cream/[0.18]">
-      <dt className={grande ? 'text-cream text-[15px]' : 'text-cream/60 text-[14px]'}>
-        {k}
-        {s && <span className="block text-xs text-cream/35 mt-1">{s}</span>}
+    <div className="flex justify-between items-baseline gap-5 py-4 border-b border-cream/20">
+      <dt className="flex flex-col gap-0.5 min-w-0">
+        <span className="text-[17px] lg:text-[22px] text-cream/85">
+          {k}
+          {extra && <span className="text-cream/60"> {extra}</span>}
+        </span>
+        {s && <span className="text-[14px] lg:text-[15px] text-cream/60">{s}</span>}
       </dt>
-      <dd className={`font-display whitespace-nowrap tabular-nums ${grande ? 'text-[26px]' : 'text-[19px]'} ${oro ? 'text-gold' : 'text-cream'}`}>{v}</dd>
+      <dd className="ed-serif text-[22px] lg:text-[30px] tabular-nums whitespace-nowrap">{v}</dd>
     </div>
   )
 }

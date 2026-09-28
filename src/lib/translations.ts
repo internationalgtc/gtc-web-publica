@@ -537,7 +537,6 @@ const T: Record<string, Record<string, string>> = {
   contacto_email_label: { es: 'Email', en: 'Email' },
   contacto_horario_label: { es: 'Horario', en: 'Hours' },
   contacto_ubicacion_label: { es: 'Ubicación', en: 'Location' },
-  contacto_nota_respuesta: { es: 'Si prefieres, escríbenos por WhatsApp: es la vía más rápida y contesta una persona del equipo.', en: 'If you prefer, message us on WhatsApp: it is the fastest way and a real person answers.' },
 
   calc_meta: { es: 'Cálculo en vivo · Excel incluido', en: 'Live calculation · Excel included' },
 
@@ -554,6 +553,17 @@ const T: Record<string, Record<string, string>> = {
   que_es_meta: { es: 'En una frase', en: 'In one sentence' },
   que_es_h2_a: { es: 'Seis datos,', en: 'Six facts,' },
   que_es_h2_b: { es: 'una sola historia.', en: 'one single story.' },
+
+  // --- Rediseño «A · Revista»: Contacto y Calculadora (28-sep-2026) ---
+  // Textos nuevos del diseño aprobado: a confirmar por Larisa.
+  contacto_h2_a: { es: 'Cuéntanos qué quieres', en: 'Tell us what you want to' },
+  contacto_h2_b: { es: 'delegar.', en: 'delegate.' },
+  contacto_directo_h2_a: { es: 'Si prefieres,', en: 'If you prefer,' },
+  contacto_directo_h2_b: { es: 'escríbenos por WhatsApp.', en: 'message us on WhatsApp.' },
+  contacto_directo_p: { es: 'Es la vía más rápida y contesta una persona del equipo.', en: 'It is the fastest way and a real person answers.' },
+  calc_incluye_meta: { es: 'Una sola factura mensual', en: 'A single monthly invoice' },
+  calc_incluye_h2_a: { es: 'Qué incluye', en: 'What the price' },
+  calc_incluye_h2_b: { es: 'el precio.', en: 'includes.' },
 }
 
 export function t(key: string, lang: string): string {

@@ -623,6 +623,28 @@
     outline-offset: 1px;
   }
 
+  /* FormularioLead (tono="claro") en tarjeta blanca: /contacto y el paso 2 de
+     la calculadora (lienzo A-contacto). Campos crema y botón navy a lo ancho.
+     Solo estilos: los campos, la validación y el envío son los mismos. */
+  .ed-form-blanca .ed-form-claro .ed-field input,
+  .ed-form-blanca .ed-form-claro .ed-field select {
+    @apply bg-cream;
+  }
+  .ed-form-blanca button[type='submit'] {
+    @apply bg-navy text-cream min-h-[56px] font-label font-semibold text-[17px] normal-case;
+    letter-spacing: normal !important;
+    box-shadow: none;
+  }
+  .ed-form-blanca button[type='submit']:hover {
+    @apply bg-navy-deep;
+    transform: none;
+    box-shadow: none;
+  }
+  .ed-form-blanca button[type='submit']:focus-visible {
+    outline: 2px solid theme('colors.navy.DEFAULT');
+    outline-offset: 3px;
+  }
+
   /* FormularioLead dentro de la tarjeta navy de /asistente-virtual (lienzo
      A-anuncio-movil): campos crema apilados, botón coral a lo ancho y los dos
      avisos debajo del botón. Solo estilos: los campos, la validación, el envío

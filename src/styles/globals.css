@@ -622,6 +622,95 @@
     outline: 2px solid theme('colors.navy.DEFAULT');
     outline-offset: 1px;
   }
+
+  /* FormularioLead dentro de la tarjeta navy de /asistente-virtual (lienzo
+     A-anuncio-movil): campos crema apilados, botón coral a lo ancho y los dos
+     avisos debajo del botón. Solo estilos: los campos, la validación, el envío
+     a Nexus y las conversiones son los mismos. */
+  .ed-form-anuncio form {
+    display: flex;
+    flex-direction: column;
+  }
+  /* La grilla de campos es el segundo hijo del formulario (el primero es la
+     trampa para robots). No se nombra la clase `grid` en el selector: .ed-field
+     hace @apply grid y Tailwind mezclaría las dos reglas. */
+  .ed-form-anuncio form > div:nth-child(2) {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 12px;
+  }
+  /* «Empresa» ocupa dos columnas desde sm: sin esto la grilla crea una
+     segunda columna implícita y los otros dos campos quedan en fila. */
+  .ed-form-anuncio form > div:nth-child(2) > div {
+    grid-column: 1 / -1;
+  }
+  .ed-form-anuncio .ed-field {
+    @apply gap-1.5 py-0 border-b-0;
+  }
+  .ed-form-anuncio .ed-field label {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: rgb(246 243 236 / 0.75);
+  }
+  .ed-form-anuncio .ed-field input,
+  .ed-form-anuncio .ed-field select {
+    @apply bg-cream text-ink rounded-xl min-h-[50px];
+    font-family: 'Lato', system-ui, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    padding: 13px 14px;
+  }
+  .ed-form-anuncio .ed-field select {
+    background-image: linear-gradient(45deg, transparent 50%, theme('colors.navy.DEFAULT') 50%), linear-gradient(135deg, theme('colors.navy.DEFAULT') 50%, transparent 50%);
+    background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 40px;
+  }
+  .ed-form-anuncio .ed-field input::placeholder {
+    color: theme('colors.sand');
+    font-style: normal;
+  }
+  .ed-form-anuncio .ed-field input:focus,
+  .ed-form-anuncio .ed-field select:focus {
+    outline: 2px solid theme('colors.gold');
+    outline-offset: 2px;
+  }
+  /* El bloque del botón sube antes que los avisos (en el DOM siguen delante:
+     un lector de pantalla los lee antes de llegar al botón). */
+  .ed-form-anuncio form > div:last-child {
+    order: 1;
+    margin-top: 18px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  /* Como en el diseño: «Te contactamos por WhatsApp…» y después «Servicio
+     exclusivo para empresas…». */
+  .ed-form-anuncio form > p {
+    order: 3;
+    margin-top: 2px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: rgb(246 243 236 / 0.75);
+  }
+  .ed-form-anuncio form > p.ed-caps {
+    order: 2;
+    margin-top: 14px;
+    font-family: 'Lato', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 12.5px !important;
+    letter-spacing: normal !important;
+    text-transform: none;
+  }
+  .ed-form-anuncio button[type='submit'] {
+    @apply w-full justify-center min-h-[54px] font-label font-semibold text-base normal-case tracking-normal;
+  }
+  .ed-form-anuncio button[type='submit']:focus-visible {
+    outline: 2px solid theme('colors.gold');
+    outline-offset: 3px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

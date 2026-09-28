@@ -7,6 +7,7 @@ import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
 import { direccion, filasOperativo, type TeamMember } from '@/data/equipo'
 import SEO from '@/components/shared/SEO'
 import { CIFRAS } from '@/data/cifras'
+import { PREGUNTAS_HOME, esquemaPreguntas } from '@/data/preguntasFrecuentes'
 import { FormularioLead } from '@/components/shared/FormularioLead'
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
@@ -148,6 +149,7 @@ export default function HomePage() {
         description="Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño."
         path="/"
         keywords="asistentes virtuales España, talento remoto para empresas, contratar asistente virtual barato, outsourcing LATAM, profesionales remotos España, reducir costes de personal, SDR remoto, Global Talent Connections"
+        faqSchema={esquemaPreguntas(PREGUNTAS_HOME, lang)}
       />
 
       {/* HERO */}
@@ -328,6 +330,7 @@ export default function HomePage() {
 
       <EquipoSection />
       <TestimoniosSection />
+      <PreguntasSection />
       <ContactoSection />
     </>
   )
@@ -560,7 +563,40 @@ function VideoTestimonioModal({ video, onClose }: { video: (typeof VIDEOS_TESTIM
   )
 }
 
-/* ——— 06 CONTACTO ———
+/* ——— 06 PREGUNTAS FRECUENTES ———
+   Salen de src/data/preguntasFrecuentes.ts, igual que los datos estructurados
+   de esta página: Google y las IA leen exactamente lo que se ve. */
+function PreguntasSection() {
+  const t = useT()
+  const lang = useLang()
+
+  return (
+    <section id="preguntas" className="py-[110px]">
+      <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
+        <Reveal>
+          <div className="ed-sec-tag ed-caps">
+            <span className="idx">06</span>
+            <span className="name">{t('home_sec_preguntas')}</span>
+            <span className="meta">{t('home_sec_preguntas_meta')}</span>
+          </div>
+        </Reveal>
+        <div className="mt-11 max-w-[900px]">
+          {PREGUNTAS_HOME.map(({ pregunta, respuesta }, i) => (
+            <details key={pregunta.es} open={i === 0} className="border-t border-navy/15 py-6 group">
+              <summary className="font-display text-[clamp(20px,2vw,26px)] cursor-pointer list-none flex justify-between items-center gap-4">
+                {pregunta[lang]}
+                <span className="text-coral text-xl group-open:rotate-45 transition-transform" aria-hidden="true">+</span>
+              </summary>
+              <p className="text-ink-soft mt-3 max-w-[70ch] leading-relaxed">{respuesta[lang]}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ——— 07 CONTACTO ———
    Misma lógica de envío que la home anterior (Nexus + UTM/referrer/geo). */
 function ContactoSection() {
   const t = useT()
@@ -572,7 +608,7 @@ function ContactoSection() {
       <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
         <Reveal>
           <div className="ed-sec-tag ed-caps">
-            <span className="idx">06</span>
+            <span className="idx">07</span>
             <span className="name">{t('contacto_label')}</span>
             <span className="meta">{t('home_sec_contacto_meta')}</span>
           </div>

@@ -147,7 +147,7 @@ export default function HomePage() {
         title="Home"
         description="Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño."
         path="/"
-        keywords="asistentes virtuales España, talento remoto para empresas, contratar asistente virtual barato, trabajo remoto en euros, outsourcing LATAM, profesionales remotos España, reducir costes de personal, SDR remoto, Global Talent Connections"
+        keywords="asistentes virtuales España, talento remoto para empresas, contratar asistente virtual barato, outsourcing LATAM, profesionales remotos España, reducir costes de personal, SDR remoto, Global Talent Connections"
       />
 
       {/* HERO */}

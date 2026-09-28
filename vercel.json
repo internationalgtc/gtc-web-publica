@@ -1,5 +1,10 @@
 {
+  "redirects": [
+    { "source": "/blog/herramientas-vacantes-internacionales", "destination": "https://empleos.globaltalent-connections.com/blog/herramientas-vacantes-internacionales", "permanent": true },
+    { "source": "/blog/oferta-trabajo-remoto-confiable-estafa", "destination": "https://empleos.globaltalent-connections.com/blog/oferta-trabajo-remoto-confiable-estafa", "permanent": true },
+    { "source": "/blog/como-conseguir-trabajo-remoto-euros", "destination": "https://empleos.globaltalent-connections.com/", "permanent": true }
+  ],
   "rewrites": [
-    { "source": "/((?!.*\\.xlsx$).*)", "destination": "/index.html" }
+    { "source": "/((?!.*\\.xlsx$).*)", "destination": "/spa.html" }
   ]
 }

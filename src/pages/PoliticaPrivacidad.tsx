@@ -1,4 +1,5 @@
 import { RevealSection } from '@/components/shared/RevealSection'
+import SEO from '@/components/shared/SEO'
 import { useT } from '@/hooks/useT'
 
 const SECTIONS = Array.from({ length: 13 }, (_, i) => ({
@@ -11,6 +12,11 @@ export default function PoliticaPrivacidad() {
 
   return (
     <>
+      <SEO
+        title={t('privacidad_titulo')}
+        description="Qué datos personales recoge Global Talent Connections a través de esta web, para qué los usa, cuánto tiempo los conserva y cómo ejercer tus derechos."
+        path="/politica-de-privacidad"
+      />
       <section className="bg-navy pt-32 pb-20 relative overflow-hidden">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 relative z-10">
           <span className="text-blue-light text-xs font-label uppercase tracking-widest font-bold mb-4 block">{t('privacidad_label')}</span>

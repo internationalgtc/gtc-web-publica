@@ -100,7 +100,7 @@ export default function BlogPage() {
     <div className="bg-cream text-ink">
       <SEO
         title="Blog"
-        description="Insights, casos de éxito y guías sobre talento remoto, gestión de equipos y crecimiento empresarial con asistentes virtuales."
+        description="Insights y casos de éxito sobre talento remoto, gestión de equipos y crecimiento empresarial con asistentes virtuales."
         path="/blog"
       />
       <Encabezado />

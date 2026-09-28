@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 import { ArrowRight, BriefcaseBusiness } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
@@ -9,6 +10,11 @@ export default function ChatWidget() {
   const lang = i18n.language === 'en' ? 'en' : 'es'
   const [isOpen, setIsOpen] = useState(false)
   const [showBadge, setShowBadge] = useState(true)
+  // /asistente-virtual tiene una barra fija abajo (65px, solo por debajo de lg) con el
+  // botón «Solicitar»: el chat, a 24px del borde, lo tapaba. Ahí sube por encima de la
+  // barra; en el resto de páginas y desde lg queda exactamente donde estaba.
+  const { pathname } = useLocation()
+  const sobreBarraMovil = pathname.replace(/\/+$/, '') === '/asistente-virtual'
 
   useEffect(() => {
     const closeWithEscape = (event: KeyboardEvent) => {
@@ -29,7 +35,7 @@ export default function ChatWidget() {
         role="dialog"
         aria-modal="true"
         aria-labelledby="gtc-help-title"
-        className={`fixed z-[100] bottom-[84px] right-4 left-4 overflow-hidden rounded-2xl border border-navy/10 bg-cream shadow-2xl sm:left-auto sm:right-6 sm:w-[420px]
+        className={`fixed z-[100] ${sobreBarraMovil ? 'bottom-[152px] lg:bottom-[84px]' : 'bottom-[84px]'} right-4 left-4 overflow-hidden rounded-2xl border border-navy/10 bg-cream shadow-2xl sm:left-auto sm:right-6 sm:w-[420px]
           transition-all duration-200 ease-out
           ${isOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
         style={{ transformOrigin: 'bottom right' }}
@@ -89,7 +95,7 @@ export default function ChatWidget() {
       <button
         onClick={isOpen ? () => setIsOpen(false) : open}
         aria-label={lang === 'en' ? 'Open help' : 'Abrir ayuda'}
-        className="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-coral text-white shadow-2xl transition-transform duration-150 hover:scale-105 active:scale-95 focus:outline-none"
+        className={`fixed ${sobreBarraMovil ? 'bottom-[84px] lg:bottom-6' : 'bottom-6'} right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-coral text-white shadow-2xl transition-transform duration-150 hover:scale-105 active:scale-95 focus:outline-none`}
       >
         {isOpen ? (
           <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

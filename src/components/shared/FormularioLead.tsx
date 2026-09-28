@@ -138,9 +138,9 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
               <input id={`${formulario}-telefono`} type="tel" value={form.contact_phone} onChange={set('contact_phone')} placeholder="+34 600 000 000" autoComplete="tel" required />
             </div>
             <div className="ed-field">
-              <label htmlFor={`${formulario}-perfil`}>¿Qué querés delegar?</label>
+              <label htmlFor={`${formulario}-perfil`}>¿Qué quieres delegar?</label>
               <select id={`${formulario}-perfil`} value={form.assistant_type} onChange={set('assistant_type')} required>
-                <option value="">Elegí un área</option>
+                <option value="">Elige un área</option>
                 {PERFILES.map(p => <option key={p.valor} value={p.valor}>{t(p.clave)}</option>)}
               </select>
             </div>

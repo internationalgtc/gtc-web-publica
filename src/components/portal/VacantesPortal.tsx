@@ -126,8 +126,9 @@ export function VacantesPortal({ jobs, deptInicial = '', limite }: { jobs: Job[]
                               </span>
                             )}
                           </span>
-                          <span aria-hidden="true" className={`ed-serif text-[22px] lg:text-[26px] pl-4 ${activa ? 'lg:text-gold' : ''}`}>
-                            {activa ? '→' : '↗'}
+                          <span aria-hidden="true" className="ed-serif text-[22px] lg:text-[26px] pl-4">
+                            <span className={activa ? 'lg:hidden' : ''}>↗</span>
+                            {activa && <span className="hidden lg:inline text-gold">→</span>}
                           </span>
                         </Link>
                       </RevealItem>

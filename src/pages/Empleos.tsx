@@ -55,9 +55,9 @@ export default function EmpleosPage() {
               <SecTag n="✳" name={t('empleos_label')} meta={`${activeJobs.length} ${t('emp_activas_meta')}`} />
             </div>
           </Reveal>
-          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-6 lg:gap-[72px] items-end mt-10 lg:mt-14">
+          <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.8fr)_minmax(0,1fr)] gap-6 lg:gap-[72px] items-end mt-10 lg:mt-14">
             <TituloEntrada
-              className="ed-serif font-[330] text-navy leading-[0.98] tracking-[-0.025em] text-[clamp(44px,12vw,64px)] sm:text-[clamp(60px,9.4vw,88px)] lg:text-[clamp(72px,7vw,104px)] [text-wrap:balance]"
+              className="ed-serif font-[330] text-navy leading-[0.98] tracking-[-0.025em] text-[clamp(44px,12vw,64px)] sm:text-[clamp(60px,9.4vw,88px)] lg:text-[clamp(64px,6.2vw,92px)] [text-wrap:balance]"
               tramos={[{ texto: t('empleos_titulo_1') }, { texto: `${t('empleos_titulo_2')}.`, subraya: true }]}
             />
             <Reveal delay={0.6} y={26}>

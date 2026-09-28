@@ -569,7 +569,6 @@ const T: Record<string, Record<string, string>> = {
   portal_ver_todas_n: { es: 'Ver las {n} oportunidades', en: 'See all {n} opportunities' },
   portal_buscar_label: { es: 'Buscar vacante', en: 'Search positions' },
   footer_articulos: { es: 'Artículos', en: 'Articles' },
-  portal_equipo_meta:{ es: 'Quienes te acompañan', en: 'The people who support you' },
   det_contacto_48h: { es: 'Te contactamos en menos de 48 horas', en: 'We contact you within 48 hours' },
   det_otras_de: { es: 'Otras vacantes de', en: 'Other positions in' },
   // «Tu seguridad»: PROPUESTA sin confirmar (lienzo A-portal). Si se descarta,

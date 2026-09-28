@@ -99,7 +99,7 @@ const LOCAL_BUSINESS_SCHEMA = {
 }
 
 const DEFAULT_KEYWORDS =
-  'asistentes virtuales España, talento remoto, trabajo remoto en euros, contratar asistente virtual, ' +
+  'asistentes virtuales España, talento remoto, contratar asistente virtual, ' +
   'outsourcing LATAM, profesionales remotos, reducir costes personal, asistente administrativo remoto, ' +
   'Global Talent Connections, SDR remoto, soporte cliente remoto, marketing digital remoto'
 

@@ -494,3 +494,148 @@
     mask-image: radial-gradient(ellipse 62% 64% at 50% 52%, #000 58%, transparent 78%);
   }
 }
+
+/* ── Portada «A · Revista» (28-sep-2026) ─────────────────────────────────
+   Piezas de la portada de empresas. Colores del tema de Tailwind. */
+@layer components {
+  /* Etiquetas en mayúsculas del diseño A (Inter, más aire que .ed-caps) */
+  .ed-label {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* Botones píldora del diseño A: minúsculas, Inter, 48 px de alto mínimo */
+  .ed-pill {
+    @apply inline-flex items-center justify-center gap-3 rounded-full font-label font-semibold no-underline min-h-[48px] px-[26px] py-[15px] text-[15px] sm:px-[30px] sm:py-[18px] sm:text-base transition-colors duration-300;
+  }
+  .ed-pill:focus-visible {
+    outline: 2px solid theme('colors.navy.DEFAULT');
+    outline-offset: 3px;
+  }
+  .ed-pill-navy {
+    @apply bg-navy text-cream hover:bg-navy-deep hover:text-cream;
+  }
+  .ed-pill-line {
+    @apply bg-cream/60 text-navy hover:bg-cream hover:text-navy;
+    box-shadow: inset 0 0 0 1.5px theme('colors.navy.DEFAULT');
+  }
+  .ed-pill .arrow {
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .ed-pill:hover .arrow {
+    transform: translateX(4px);
+  }
+
+  /* Encabezado: velo crema sobre el video */
+  .ed-hero-velo-v {
+    background: linear-gradient(180deg, rgb(246 243 236 / 0.62) 0%, rgb(246 243 236 / 0.48) 55%, rgb(246 243 236 / 0.7) 100%);
+  }
+  .ed-hero-velo-h {
+    background: linear-gradient(180deg, rgb(246 243 236 / 0.35) 0%, rgb(246 243 236 / 0.55) 35%, rgb(246 243 236 / 0.85) 100%);
+  }
+  @media (min-width: 1024px) {
+    .ed-hero-velo-h {
+      background: linear-gradient(90deg, rgb(246 243 236 / 0) 0%, rgb(246 243 236 / 0) 30%, rgb(246 243 236 / 0.8) 46%, theme('colors.cream.DEFAULT') 58%);
+    }
+  }
+  .ed-hero-video {
+    animation: ed-respira 18s ease-in-out infinite;
+  }
+  @keyframes ed-respira {
+    0%,
+    100% {
+      transform: scale(1.04);
+    }
+    50% {
+      transform: scale(1.1) translateY(-2%);
+    }
+  }
+
+  /* Subrayado coral de la palabra destacada del titular */
+  .ed-subraya {
+    background: linear-gradient(transparent 80%, rgb(255 90 57 / 0.6) 80%, rgb(255 90 57 / 0.6) 91%, transparent 91%);
+  }
+
+  /* Franja de logos de clientes */
+  .ed-logos-track {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    animation: ed-corre 60s linear infinite;
+  }
+  .ed-logos:hover .ed-logos-track {
+    animation-play-state: paused;
+  }
+  @keyframes ed-corre {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* 3D sobre navy: máscara un poco más abierta que .ed-3d */
+  .ed-3d-navy {
+    -webkit-mask-image: radial-gradient(ellipse 62% 70% at 50% 50%, #000 55%, transparent 80%);
+    mask-image: radial-gradient(ellipse 62% 70% at 50% 50%, #000 55%, transparent 80%);
+  }
+
+  /* Preguntas: sin el triángulo del navegador */
+  .ed-faq summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* FormularioLead en tarjeta crema (tono="claro"): solo cambia el aspecto;
+     los campos, la validación y el envío son los mismos. */
+  .ed-form-claro .ed-field {
+    @apply gap-2 py-[9px] border-b-0;
+  }
+  .ed-form-claro .ed-field label {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 500;
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: theme('colors.ink.soft');
+  }
+  .ed-form-claro .ed-field input,
+  .ed-form-claro .ed-field select {
+    @apply bg-white text-ink rounded-xl border border-navy/25 min-h-[48px];
+    font-family: 'Lato', system-ui, sans-serif;
+    font-size: 16px;
+    font-style: normal;
+    padding: 12px 16px;
+  }
+  .ed-form-claro .ed-field select {
+    background-image: linear-gradient(45deg, transparent 50%, theme('colors.navy.DEFAULT') 50%), linear-gradient(135deg, theme('colors.navy.DEFAULT') 50%, transparent 50%);
+    background-position: calc(100% - 20px) 50%, calc(100% - 15px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 40px;
+  }
+  .ed-form-claro .ed-field input::placeholder {
+    color: theme('colors.sand');
+    font-style: normal;
+  }
+  .ed-form-claro .ed-field input:focus,
+  .ed-form-claro .ed-field select:focus {
+    outline: 2px solid theme('colors.navy.DEFAULT');
+    outline-offset: 1px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ed-hero-video {
+    animation: none;
+  }
+  .ed-logos-track {
+    animation: none;
+    width: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 28px;
+  }
+  .ed-logos-dup {
+    display: none;
+  }
+}

@@ -581,6 +581,43 @@
     mask-image: radial-gradient(ellipse 62% 70% at 50% 50%, #000 55%, transparent 80%);
   }
 
+  /* Cuerpo de los artículos del blog: el texto llega como HTML desde
+     src/data/blogPosts.ts, así que el estilo va por etiqueta. */
+  .ed-articulo p {
+    margin: 0;
+  }
+  .ed-articulo strong {
+    font-weight: 700;
+    color: theme('colors.navy.DEFAULT');
+  }
+  .ed-articulo em {
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    font-variation-settings: 'SOFT' 100, 'WONK' 1;
+    color: theme('colors.navy.DEFAULT');
+  }
+  .ed-articulo a {
+    color: theme('colors.navy.DEFAULT');
+    text-decoration-line: underline;
+    text-decoration-color: theme('colors.coral.DEFAULT');
+    text-decoration-thickness: 2px;
+    text-underline-offset: 5px;
+    transition: color 0.3s;
+  }
+  .ed-articulo a:hover {
+    color: theme('colors.navy.deep');
+  }
+  .ed-lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid theme('colors.navy.DEFAULT / 18%');
+  }
+  .ed-lista > li {
+    padding: 16px 0;
+    border-top: 1px solid theme('colors.navy.DEFAULT / 18%');
+  }
+
   /* Preguntas: sin el triángulo del navegador */
   .ed-faq summary::-webkit-details-marker {
     display: none;

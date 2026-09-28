@@ -70,12 +70,7 @@ export const blogPosts: BlogPost[] = [
 
 <h2>¿Tu empresa ya está capturando este ROI?</h2>
 <p>En <strong>Global Talent Connections</strong> conectamos organizaciones con talento remoto de alto rendimiento. No solo cubrimos posiciones — diseñamos equipos que ejecutan con velocidad, foco y escalabilidad real.</p>
-<p><strong>Tres formas de empezar hoy:</strong></p>
-<ul>
-  <li>Agenda una consulta estratégica gratuita de 30 min.</li>
-  <li>Descarga nuestra guía de construcción de equipos remotos de alto ROI.</li>
-  <li>Escríbenos directamente: <strong>amartinez@internationalgtc.com</strong></li>
-</ul>
+<p><strong><a href="/contacto">Agenda una consulta estratégica gratuita de 30 min.</a></strong></p>
 <p>El talento correcto, en el momento correcto, cambia la ecuación del negocio.</p>
       `,
       en: `
@@ -121,12 +116,7 @@ export const blogPosts: BlogPost[] = [
 
 <h2>Is Your Company Already Capturing This ROI?</h2>
 <p>At <strong>Global Talent Connections</strong> we connect organizations with high-performance remote talent. We do not just fill positions — we design teams that execute with speed, focus, and real scalability.</p>
-<p><strong>Three ways to start today:</strong></p>
-<ul>
-  <li>Schedule a free 30-min strategic consultation.</li>
-  <li>Download our guide to building high-ROI remote teams.</li>
-  <li>Write to us directly: <strong>amartinez@internationalgtc.com</strong></li>
-</ul>
+<p><strong><a href="/contacto">Schedule a free 30-min strategic consultation.</a></strong></p>
 <p>The right talent, at the right time, changes the business equation.</p>
       `,
     },

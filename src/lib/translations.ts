@@ -284,6 +284,8 @@ const T: Record<string, Record<string, string>> = {
   home_testi_google_line: { es: 'reseñas verificadas en Google', en: 'verified reviews on Google' },
   home_videos_label: { es: 'Y en video — clientes reales, en sus palabras', en: 'On video — real clients, in their own words' },
   home_videos_cerrar: { es: 'Cerrar video', en: 'Close video' },
+  home_sec_preguntas: { es: 'Preguntas frecuentes', en: 'FAQ' },
+  home_sec_preguntas_meta: { es: 'Antes de empezar', en: 'Before you start' },
   home_sec_contacto_meta: { es: 'Respuesta en menos de 24 h', en: 'Response within 24 h' },
   home_contacto_h2_a: { es: 'Encuentra el perfil que tu empresa', en: 'Find the profile your company' },
   home_contacto_h2_b: { es: 'necesita.', en: 'needs.' },

@@ -7,6 +7,7 @@ import { TELEFONO, TEL_LINK, WHATSAPP_LINK } from '@/data/contacto'
 import { trackContacto } from '@/lib/tracking'
 import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
 import { CIFRAS } from '@/data/cifras'
+import { PREGUNTAS_LANDING, esquemaPreguntas } from '@/data/preguntasFrecuentes'
 import logoDark from '@/assets/logos/logo-gtc-negro.png'
 
 // Landing para tráfico de pago (Google Ads «asistente virtual»). Va FUERA del
@@ -30,18 +31,9 @@ const PASOS = [
   ['Eliges y empieza en 5 días hábiles', 'Recibes perfiles con evidencia. Tú decides. GTC formaliza la incorporación.'],
 ]
 
-const FAQ = [
-  ['¿Qué incluye el precio de 1.200 €/mes?', 'El profesional dedicado en tu horario, su contratación y nómina gestionadas por GTC, y el seguimiento del equipo de Calidad. Tú recibes una única factura mensual.'],
-  ['¿Hay permanencia?', 'No. Puedes parar el servicio con un preaviso. Si el perfil no encaja, lo reemplazamos sin coste.'],
-  ['¿En qué horario trabaja?', 'En el tuyo. Los profesionales trabajan en horario de España, integrados en tus herramientas y tu equipo.'],
-  ['¿Cuánto tarda?', 'Recibes los primeros perfiles evaluados en 5 días hábiles desde que definimos el rol contigo.'],
-]
-
-const FAQ_SCHEMA = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: FAQ.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
-}
+// Las preguntas salen de src/data/preguntasFrecuentes.ts (las mismas que la home).
+const FAQ = PREGUNTAS_LANDING.map(({ pregunta, respuesta }) => [pregunta.es, respuesta.es] as const)
+const FAQ_SCHEMA = esquemaPreguntas(PREGUNTAS_LANDING, 'es')
 
 const RESENAS = ['Sergio Varo', 'Curro Sabán']
   .map(autor => RESENAS_GOOGLE.find(r => r.autor === autor))

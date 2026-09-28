@@ -118,7 +118,7 @@ function Directo() {
             </div>
             <div className={`${celda} sm:border-b-0 sm:pr-6`}>
               <dt className={etiqueta}>{t('contacto_horario_label')}</dt>
-              <dd className="ed-serif text-[clamp(20px,1.7vw,24px)]">Lunes a viernes · 9:00 – 18:00 (CET)</dd>
+              <dd className="ed-serif text-[clamp(20px,1.7vw,24px)]">{t('contacto_horario_valor')}</dd>
             </div>
             <div className={`${celda} border-b-0 sm:pl-6 sm:border-l`}>
               <dt className={etiqueta}>{t('contacto_ubicacion_label')}</dt>
@@ -129,7 +129,7 @@ function Directo() {
                   rel="noopener noreferrer"
                   className={`${enlace} text-[clamp(20px,1.7vw,24px)] min-h-[44px] inline-flex items-center`}
                 >
-                  Alicante, España
+                  {t('contacto_ubicacion_valor')}
                 </a>
               </dd>
             </div>

@@ -219,7 +219,7 @@ export default function CalculadoraAhorro() {
                 </div>
 
                 <dl className="flex flex-col border-t border-cream/20">
-                  <Fila k={t('calc_r_salario')} s={n > 1 ? `${n} ${t('calc_personas').toLowerCase()}` : undefined} v={eur(r.sal)} />
+                  <Fila k={t('calc_r_salario')} s={n > 1 ? `${n} ${t('calc_r_personas')}` : undefined} v={eur(r.sal)} />
                   <Fila k={t('calc_r_ss')} extra="~33 %" v={eur(r.ss)} />
                   {ocultos && <Fila k={t('calc_r_ocultos')} s={t('calc_r_ocultos_d')} v={eur(r.oc)} />}
                 </dl>

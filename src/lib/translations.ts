@@ -564,6 +564,10 @@ const T: Record<string, Record<string, string>> = {
   calc_incluye_meta: { es: 'Una sola factura mensual', en: 'A single monthly invoice' },
   calc_incluye_h2_a: { es: 'Qué incluye', en: 'What the price' },
   calc_incluye_h2_b: { es: 'el precio.', en: 'includes.' },
+  // Aprobados por Larisa en el PR #50.
+  calc_r_personas: { es: 'personas', en: 'people' },
+  contacto_horario_valor: { es: 'Lunes a viernes · 9:00 – 18:00 (CET)', en: 'Monday to Friday · 9:00 – 18:00 (CET)' },
+  contacto_ubicacion_valor: { es: 'Alicante, España', en: 'Alicante, Spain' },
 }
 
 export function t(key: string, lang: string): string {

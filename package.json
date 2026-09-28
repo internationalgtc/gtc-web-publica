@@ -7,7 +7,7 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "build:sin-prerender": "PRERENDER=0 vite build",
-    "deploy:prod": "PRERENDER=1 vercel build --prod --yes && node scripts/verificar-prerender.mjs && vercel deploy --prebuilt --prod --yes"
+    "deploy:prod": "PRERENDER=1 vercel build --prod --yes && node scripts/verificar-prerender.mjs && vercel deploy --prebuilt --prod --yes && node scripts/verificar-publicado.mjs"
   },
   "repository": {
     "type": "git",

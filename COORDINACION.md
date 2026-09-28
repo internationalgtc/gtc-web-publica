@@ -15,11 +15,13 @@
 2. git commit -m "content/feat/fix: descripción breve"
 3. git push
 4. Verificar en https://github.com/internationalgtc/mockup-gtc-azul que el commit aparece
-5. Deployar manualmente: vercel --prod --yes --scope gtc2
-6. Verificar en https://mockup-gtc-azul.vercel.app que los cambios están visibles
+5. Deployar manualmente: npm run deploy:prod
+6. Leer la última línea: tiene que decir "✅ publicado". Si no, NO está en la web.
 ```
 
-> **¿Por qué el deploy manual?** El webhook automático de Vercel está roto — el push a main NO dispara deploy automático. Si no se corre `vercel --prod`, los cambios quedan en GitHub pero NO se ven en producción.
+> **¿Por qué el deploy manual?** El webhook automático de Vercel está roto — el push a main NO dispara deploy automático. Verificado el 28-sep-2026: 40 minutos después de un merge no se había creado ningún deployment. Si no se corre `npm run deploy:prod`, los cambios quedan en GitHub pero NO se ven en producción.
+
+> **¿Por qué mirar la última línea?** Porque el comando puede salir con código 0 teniendo el deploy fallado. El 28-sep-2026 Vercel devolvió «You don't have permission to create a Production Deployment» como JSON, sin fallar, y durante una hora dimos por publicado algo que nunca salió. Desde entonces `deploy:prod` termina en `verificar-publicado.mjs`, que compara el build contra lo que sirve el dominio y corta si no coinciden. Si ves ese error de permisos, te falta el rol **Member** en el equipo `gtc2` de Vercel: Contributor deploya previews pero no producción.
 
 > **Historial:** El 11 mayo 2026 Larisa dejó el sitio en "perfecto estado" pero no hizo deploy manual. Al día siguiente los cambios no estaban y había errores en Empleos. Todo el trabajo de la sesión se perdió.
 

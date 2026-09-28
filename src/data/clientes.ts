@@ -13,18 +13,19 @@
  * Antes de publicar: mostrar logos de clientes necesita el visto bueno de Daniel.
  */
 
-export type Cliente = { nombre: string; logo: string; web: string }
+/** `ancho` y `alto`: tamaño real del PNG, para reservar el lugar del logo. */
+export type Cliente = { nombre: string; logo: string; web: string; ancho: number; alto: number }
 
 export const CLIENTES: Cliente[] = [
-  { nombre: 'Recoautos', logo: '/img/clientes/recoautos.png', web: 'https://recoautos.com/' },
-  { nombre: 'Eco Cero', logo: '/img/clientes/ecocero.png', web: 'https://ecocero.com/' },
-  { nombre: 'Level UP', logo: '/img/clientes/levelup.png', web: 'https://levelupdesarrollo.com/' },
-  { nombre: 'Paladar de Galicia', logo: '/img/clientes/paladar.png', web: 'https://www.paladardegalicia.com/' },
-  { nombre: 'FDSA', logo: '/img/clientes/fdsa.png', web: 'https://www.fdsa.es/' },
-  { nombre: 'Taktics', logo: '/img/clientes/taktics.png', web: 'https://taktics.net/' },
-  { nombre: 'AreaCad', logo: '/img/clientes/areacad.png', web: 'https://areacad.com/' },
-  { nombre: 'Construcciones Ramírez', logo: '/img/clientes/ramirez.png', web: 'https://construccionesramirez2014.es/' },
-  { nombre: 'PMV Factory', logo: '/img/clientes/pmv.png', web: 'https://pmvfactory.com/' },
-  { nombre: 'Miramar', logo: '/img/clientes/miramar.png', web: 'https://www.miramarmenorca.com/' },
-  { nombre: 'Cocinahogar', logo: '/img/clientes/cocinahogar.png', web: 'https://cocinahogar.com/' },
+  { nombre: 'Recoautos', logo: '/img/clientes/recoautos.png', web: 'https://recoautos.com/', ancho: 149, alto: 34 },
+  { nombre: 'Eco Cero', logo: '/img/clientes/ecocero.png', web: 'https://ecocero.com/', ancho: 488, alto: 160 },
+  { nombre: 'Level UP', logo: '/img/clientes/levelup.png', web: 'https://levelupdesarrollo.com/', ancho: 339, alto: 59 },
+  { nombre: 'Paladar de Galicia', logo: '/img/clientes/paladar.png', web: 'https://www.paladardegalicia.com/', ancho: 180, alto: 160 },
+  { nombre: 'FDSA', logo: '/img/clientes/fdsa.png', web: 'https://www.fdsa.es/', ancho: 306, alto: 160 },
+  { nombre: 'Taktics', logo: '/img/clientes/taktics.png', web: 'https://taktics.net/', ancho: 1010, alto: 160 },
+  { nombre: 'AreaCad', logo: '/img/clientes/areacad.png', web: 'https://areacad.com/', ancho: 404, alto: 91 },
+  { nombre: 'Construcciones Ramírez', logo: '/img/clientes/ramirez.png', web: 'https://construccionesramirez2014.es/', ancho: 556, alto: 160 },
+  { nombre: 'PMV Factory', logo: '/img/clientes/pmv.png', web: 'https://pmvfactory.com/', ancho: 764, alto: 160 },
+  { nombre: 'Miramar', logo: '/img/clientes/miramar.png', web: 'https://www.miramarmenorca.com/', ancho: 807, alto: 160 },
+  { nombre: 'Cocinahogar', logo: '/img/clientes/cocinahogar.png', web: 'https://cocinahogar.com/', ancho: 842, alto: 160 },
 ]

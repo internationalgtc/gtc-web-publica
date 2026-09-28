@@ -66,12 +66,16 @@ interface Props {
   perfilFijo?: string
   /** Formulario breve para tráfico de anuncios: contacto por WhatsApp. */
   modoCaptacion?: 'completo' | 'express'
+  /** Aspecto: 'oscuro' (texto crema, directo sobre navy) o 'claro' (tarjeta
+   *  crema de la portada). Solo cambia estilos; el envío es el mismo. */
+  tono?: 'oscuro' | 'claro'
 }
 
-export function FormularioLead({ formulario, cta, pedirTamano = false, contexto, mensajeInicial, onExito, exitoExtra, perfilFijo, modoCaptacion = 'completo' }: Props) {
+export function FormularioLead({ formulario, cta, pedirTamano = false, contexto, mensajeInicial, onExito, exitoExtra, perfilFijo, modoCaptacion = 'completo', tono = 'oscuro' }: Props) {
   const t = useT()
   const { trackComplete } = useCompanyFormTracking(formulario)
   const esCaptacionExpress = modoCaptacion === 'express'
+  const claro = tono === 'claro'
   const [form, setForm] = useState({ ...VACIO, description: mensajeInicial || '', assistant_type: perfilFijo || '' })
   const [estado, setEstado] = useState<'idle' | 'enviando' | 'ok' | 'error'>('idle')
   const set = (campo: keyof typeof VACIO) => (e: { target: { value: string } }) =>
@@ -110,23 +114,23 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
 
   if (estado === 'ok') {
     return (
-      <div className="ed-on-dark py-4">
-        <div className="ed-caps !text-[10px] text-cream/40">{t('form_ok_label')}</div>
-        <p className="font-display text-[clamp(24px,2.4vw,32px)] leading-snug text-cream mt-5">{t('form_ok_titulo')}</p>
-        <p className="text-[14.5px] text-cream/60 leading-relaxed mt-4 max-w-[44ch]">{t('form_ok_desc')}</p>
+      <div className={claro ? 'py-4' : 'ed-on-dark py-4'}>
+        <div className={`ed-caps !text-[10px] ${claro ? 'text-ink-soft' : 'text-cream/40'}`}>{t('form_ok_label')}</div>
+        <p className={`font-display text-[clamp(24px,2.4vw,32px)] leading-snug mt-5 ${claro ? 'text-navy' : 'text-cream'}`}>{t('form_ok_titulo')}</p>
+        <p className={`text-[14.5px] leading-relaxed mt-4 max-w-[44ch] ${claro ? 'text-ink-soft' : 'text-cream/60'}`}>{t('form_ok_desc')}</p>
         {exitoExtra && <div className="mt-8">{exitoExtra}</div>}
       </div>
     )
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate={false}>
+    <form onSubmit={onSubmit} noValidate={false} className={claro ? 'ed-form-claro' : undefined}>
       <div aria-hidden="true" className="absolute -left-[9999px] -top-[9999px] h-0 overflow-hidden opacity-0">
         <label htmlFor={`gtc-web-${formulario}`}>Website</label>
         <input type="text" id={`gtc-web-${formulario}`} name="website" autoComplete="off" tabIndex={-1} />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-[34px]">
+      <div className={`grid grid-cols-1 sm:grid-cols-2 ${claro ? 'gap-x-[18px]' : 'gap-x-[34px]'}`}>
         {esCaptacionExpress ? (
           <>
             <div className="ed-field sm:col-span-2">
@@ -193,7 +197,7 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
       </div>
 
       {esCaptacionExpress && (
-        <p className="text-[13px] text-cream/60 leading-relaxed mt-2">Servicio exclusivo para empresas. No gestionamos búsquedas de empleo.</p>
+        <p className={`text-[13px] leading-relaxed mt-2 ${claro ? 'text-ink-soft' : 'text-cream/60'}`}>Servicio exclusivo para empresas. No gestionamos búsquedas de empleo.</p>
       )}
 
       {!esCaptacionExpress && (
@@ -203,16 +207,18 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
         </div>
       )}
 
-      <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/35 mt-6">
+      <p className={claro ? 'text-sm text-ink-soft mt-4' : 'ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/35 mt-6'}>
         {esCaptacionExpress ? 'Te contactamos por WhatsApp para definir el rol.' : t('form_presupuesto_hint')}
       </p>
 
-      <div className="mt-8 flex flex-col sm:flex-row sm:items-center gap-5">
-        <button type="submit" className="ed-btn ed-btn-primary" disabled={estado === 'enviando'}>
+      <div className={claro ? 'mt-6 flex flex-col gap-4' : 'mt-8 flex flex-col sm:flex-row sm:items-center gap-5'}>
+        <button type="submit" className={`ed-btn ed-btn-primary ${claro ? 'w-full justify-center !px-5 !tracking-[0.1em] sm:!tracking-[0.14em]' : ''}`} disabled={estado === 'enviando'}>
           {estado === 'enviando' ? t('form_enviando') : (cta || t('home_form_cta'))}
           <ArrowRight className="w-4 h-4 arrow" />
         </button>
-        {estado === 'error' && <p className="text-[13.5px] text-coral">{t('form_error')}</p>}
+        {estado === 'error' && (
+          <p className={claro ? 'text-[13.5px] font-bold text-navy' : 'text-[13.5px] text-coral'}>{t('form_error')}</p>
+        )}
       </div>
     </form>
   )

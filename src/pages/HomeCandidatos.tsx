@@ -1,6 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { useReducedMotion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
@@ -11,6 +10,7 @@ import { traerVacantes } from '@/lib/vacantes-nexus'
 import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
 import { Img3D, SecHead, SecTag, TituloEntrada, Wrap } from '@/components/shared/EditorialPiezas'
 import { VacantesPortal } from '@/components/portal/VacantesPortal'
+import { HeroVideo } from '@/components/portal/HeroVideo'
 
 // Portada de la variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos).
 // Rediseño «A · Revista» (28-sep-2026), lienzos A-portal + A-portal-2:
@@ -59,41 +59,6 @@ const minuscula = (s: string) => s.charAt(0).toLowerCase() + s.slice(1)
 
 /* ——— ENCABEZADO ——— */
 
-/** Video a sangre (el mismo de la web de empresas). Con prefers-reduced-motion
- *  se queda quieto en el póster. */
-function HeroVideo() {
-  const ref = useRef<HTMLVideoElement>(null)
-  const reduced = useReducedMotion()
-
-  useEffect(() => {
-    const video = ref.current
-    if (!video) return
-    video.muted = true
-    if (reduced) {
-      video.pause()
-      return
-    }
-    video.play().catch(() => {})
-  }, [reduced])
-
-  return (
-    <video
-      ref={ref}
-      className="ed-hero-video absolute inset-0 w-full h-full object-cover object-[0%_50%]"
-      src="/videos/hero-gtc.mp4"
-      poster="/videos/hero-gtc-poster.webp"
-      autoPlay
-      muted
-      loop
-      playsInline
-      preload="metadata"
-      disablePictureInPicture
-      aria-hidden="true"
-      tabIndex={-1}
-    />
-  )
-}
-
 function Encabezado() {
   const t = useT()
   const lang = useLang()
@@ -107,12 +72,12 @@ function Encabezado() {
   const corte = b.lastIndexOf(' ')
 
   return (
-    <section id="inicio" className="relative overflow-hidden border-b border-navy/15 lg:min-h-[900px]">
+    <section id="inicio" className="relative overflow-hidden border-b border-navy/15 lg:min-h-[960px]">
       <HeroVideo />
       <div className="absolute inset-0 ed-hero-velo-v" aria-hidden="true" />
       <div className="absolute inset-0 ed-hero-velo-h" aria-hidden="true" />
 
-      <div className="relative max-w-[1440px] mx-auto px-5 sm:px-8 lg:pr-[72px] lg:pl-[38%] xl:pl-[44.4%] pt-[106px] sm:pt-[120px] lg:pt-[134px] pb-10 lg:pb-12 flex flex-col lg:min-h-[900px]">
+      <div className="relative max-w-[1440px] mx-auto px-5 sm:px-8 lg:pr-[72px] lg:pl-[38%] xl:pl-[44.4%] pt-[106px] sm:pt-[120px] lg:pt-[134px] pb-10 lg:pb-12 flex flex-col lg:min-h-[960px]">
         <Reveal delay={0} y={0}>
           <div className="ed-label flex flex-wrap items-center gap-x-7 gap-y-2 pb-3.5 border-b border-navy/15 text-ink-soft">
             <span className="flex items-center gap-[9px]">
@@ -150,7 +115,8 @@ function Encabezado() {
         </Reveal>
 
         {/* Cifras: salen de src/data/cifras.ts y se escriben tal cual (sin contador). */}
-        <RevealGroup className="mt-12 lg:mt-auto lg:pt-12 grid grid-cols-1 sm:grid-cols-3 border-t border-navy/15">
+        <div className="mt-12 lg:mt-auto lg:pt-14">
+        <RevealGroup className="grid grid-cols-1 sm:grid-cols-3 border-t border-navy/15">
           {cifras.map((c, i) => (
             <RevealItem
               key={c.texto}
@@ -161,6 +127,7 @@ function Encabezado() {
             </RevealItem>
           ))}
         </RevealGroup>
+        </div>
       </div>
     </section>
   )
@@ -263,7 +230,7 @@ function Proceso() {
               >
                 <span className={`ed-serif text-base lg:text-xl ${destacado ? 'text-navy' : 'text-cream/60'}`}>{String(i + 1).padStart(2, '0')}</span>
                 <h3
-                  className={`ed-serif tracking-[-0.03em] text-[clamp(32px,5.6vw,88px)] [text-wrap:balance] ${
+                  className={`ed-serif tracking-[-0.03em] text-[clamp(32px,5.2vw,80px)] [text-wrap:balance] ${
                     destacado ? 'font-[360] leading-[1.05]' : 'font-[280] leading-[1.15] text-cream/50'
                   }`}
                 >

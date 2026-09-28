@@ -84,3 +84,13 @@ export function ultimaPalabra(texto: string): [string, string] {
   const corte = texto.lastIndexOf(' ')
   return corte > 0 ? [texto.slice(0, corte), texto.slice(corte + 1)] : ['', texto]
 }
+
+/** Parte un título en [principio, final en cursiva]: el paréntesis final
+ *  («… (que nadie te explica)»), lo que sigue a «: », o la última palabra. */
+export function partirTitulo(texto: string): [string, string] {
+  const parentesis = texto.match(/^(.*\S)\s+(\([^()]+\))$/)
+  if (parentesis) return [parentesis[1], parentesis[2]]
+  const dosPuntos = texto.indexOf(': ')
+  if (dosPuntos > 0) return [texto.slice(0, dosPuntos + 1), texto.slice(dosPuntos + 2)]
+  return ultimaPalabra(texto)
+}

@@ -182,6 +182,10 @@ const T: Record<string, Record<string, string>> = {
   blog_leer_mas: { es: 'Leer más', en: 'Read more' },
   blog_volver: { es: 'Volver al blog', en: 'Back to blog' },
   blog_mas_articulos: { es: 'Más artículos', en: 'More articles' },
+  blog_articulo: { es: 'artículo', en: 'article' },
+  blog_articulos: { es: 'artículos', en: 'articles' },
+  blog_en_este_articulo: { es: 'En este artículo', en: 'In this article' },
+  blog_cifras_aria: { es: 'Cifras destacadas', en: 'Key figures' },
 
   // ── EMPLEOS ──
 
@@ -374,7 +378,6 @@ const T: Record<string, Record<string, string>> = {
 
   // ── BLOG POST ──
   blog_not_found: { es: 'Artículo no encontrado', en: 'Article not found' },
-  blog_placeholder: { es: 'Este artículo completo está disponible en el sitio web principal de Global Talent Connections. El mockup muestra la estructura y el diseño de la página de blog individual.', en: 'The full article is available on the main Global Talent Connections website. The mockup shows the structure and design of the individual blog page.' },
 
   // ── CALCULADORA EXTRA ──
   calc_ph_nombre: { es: 'Nombre completo', en: 'Full name' },

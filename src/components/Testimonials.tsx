@@ -21,7 +21,7 @@ const TESTIMONIOS: Testimonio[] = [
   { nombre: 'Miguel Ángel Ramírez', cargoKey: 'testi_t1_cargo', textoKey: 'testi_t1_texto', video: v(1), thumbnail: th(1) },
   { nombre: 'Arturo Sanz Santos', cargoKey: 'testi_t2_cargo', textoKey: 'testi_t2_texto', video: v(2), thumbnail: th(2) },
   { nombre: 'Alex Andreu Peinado', cargoKey: 'testi_t3_cargo', textoKey: 'testi_t3_texto', video: v(3), thumbnail: th(3) },
-  { nombre: 'Curro Sabás', cargoKey: 'testi_t4_cargo', textoKey: 'testi_t4_texto', video: v(4), thumbnail: th(4) },
+  { nombre: 'Curro Sabán', cargoKey: 'testi_t4_cargo', textoKey: 'testi_t4_texto', video: v(4), thumbnail: th(4) },
 ]
 
 const VideoModal: FC<{ testimonio: Testimonio | null; cerrar: () => void }> = ({ testimonio, cerrar }) => {

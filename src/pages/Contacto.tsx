@@ -1,7 +1,7 @@
 import { Reveal } from '@/components/shared/EditorialReveal'
 import { FormularioLead } from '@/components/shared/FormularioLead'
 import { useT } from '@/hooks/useT'
-import { WHATSAPP_LINK } from '@/data/chatbotData'
+import { TELEFONO, TEL_LINK, WHATSAPP_LINK } from '@/data/contacto'
 import { trackContacto, type CanalContacto } from '@/lib/tracking'
 import SEO from '@/components/shared/SEO'
 
@@ -10,9 +10,11 @@ import SEO from '@/components/shared/SEO'
 // su propia validación y el diseño anterior de tarjetas y sombras: dos caras
 // para el mismo pedido.
 
-const CONTACTOS: { clave: string; valor: string; href?: string; canal?: CanalContacto }[] = [
-  { clave: 'contacto_telefono_label', valor: '+34 857 64 07 28', href: 'tel:+34857640728', canal: 'telefono' },
-  { clave: 'contacto_whatsapp', valor: '+34 689 53 98 96', href: WHATSAPP_LINK, canal: 'whatsapp' },
+type Enlace = { href: string; canal: CanalContacto }
+
+// Un solo número para llamar y para WhatsApp (src/data/contacto.ts).
+const CONTACTOS: { clave: string; valor: string; href?: string; canal?: CanalContacto; extra?: Enlace & { clave: string } }[] = [
+  { clave: 'contacto_tel_whatsapp_label', valor: TELEFONO, href: TEL_LINK, canal: 'telefono', extra: { clave: 'contacto_whatsapp_cta', href: WHATSAPP_LINK, canal: 'whatsapp' } },
   { clave: 'contacto_email_label', valor: 'info@globaltalent-connections.com', href: 'mailto:info@globaltalent-connections.com', canal: 'email' },
   { clave: 'contacto_horario_label', valor: 'Lunes a viernes · 9:00 – 18:00 (CET)' },
   { clave: 'contacto_ubicacion_label', valor: 'Alicante, España', href: 'https://www.google.com/maps/search/Global+Talent+Connections+Alicante' },
@@ -25,7 +27,7 @@ export default function Contacto() {
     <>
       <SEO
         title="Contacto"
-        description="Cuéntanos qué perfil necesitas. En menos de 48 horas te presentamos candidatos preseleccionados. Asistentes remotos desde 1.200 €/mes."
+        description="Cuéntanos qué perfil necesitas. En 5 días hábiles te presentamos candidatos preseleccionados. Asistentes remotos desde 1.200 €/mes."
         path="/contacto"
       />
 
@@ -83,6 +85,11 @@ export default function Contacto() {
                           {c.valor}
                         </a>
                       ) : c.valor}
+                      {c.extra && (
+                        <a href={c.extra.href} target="_blank" rel="noopener noreferrer" onClick={() => c.extra && trackContacto(c.extra.canal, 'contacto')} className="block font-body text-[14px] text-ink-soft hover:text-coral transition-colors duration-300 mt-1">
+                          {t(c.extra.clave)} →
+                        </a>
+                      )}
                     </dd>
                   </div>
                 ))}

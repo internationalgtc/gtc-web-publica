@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion, useScroll, useTransform, useInView, animate, AnimatePresence } from 'framer-motion'
+import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
+import { CIFRAS } from '@/data/cifras'
 
 // Portada de la variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos).
 // Objetivo: generar comunidad y valor antes de mandar a las vacantes.
@@ -81,10 +82,12 @@ const AREAS = [
   { nameKey: 'home_area_6', tagKey: 'home_area_6_tag', dept: 'Tecnología' },
 ]
 
+// Las cifras salen de src/data/cifras.ts (las mismas que la web de empresas)
+// y se escriben tal cual en el HTML: sin contador animado.
 const STATS = [
-  { n: 93, lKey: 'home_stat_profesionales', fKey: 'cand_stat_profesionales_foot' },
-  { n: 55, lKey: 'home_stat_empresas', fKey: 'cand_stat_empresas_foot' },
-  { n: 11, lKey: 'home_stat_areas', fKey: 'home_stat_areas_foot' },
+  { n: CIFRAS.profesionales.numero, lKey: 'home_stat_profesionales', fKey: 'cand_stat_profesionales_foot' },
+  { n: CIFRAS.empresas.numero, lKey: 'home_stat_empresas', fKey: 'cand_stat_empresas_foot' },
+  { n: { es: String(CIFRAS.areas), en: String(CIFRAS.areas) }, lKey: 'home_stat_areas', fKey: 'home_stat_areas_foot' },
 ]
 
 const MARQUEE = ['cand_mq_1', 'cand_mq_2', 'cand_mq_3', 'cand_mq_4', 'cand_mq_5']
@@ -177,31 +180,9 @@ function HeroTitle() {
   )
 }
 
-/* Números que cuentan al entrar en viewport */
-function CountUp({ to }: { to: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-8% 0px' })
-  const reduced = useReducedMotion()
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el || !inView || reduced) return
-    const controls = animate(0, to, {
-      duration: 1.8,
-      ease: 'easeOut',
-      onUpdate: v => {
-        el.textContent = String(Math.round(v))
-      },
-    })
-    return () => controls.stop()
-  }, [inView, to, reduced])
-
-  return <span ref={ref}>{to}</span>
-}
-
 export default function HomeCandidatos() {
   const t = useT()
-  useLang()
+  const lang = useLang()
   // Acordeón del proceso: tocar un paso despliega su texto (no redirige).
   const [pasoAbierto, setPasoAbierto] = useState<number | null>(0)
 
@@ -209,9 +190,9 @@ export default function HomeCandidatos() {
     <>
       <SEO
         title="Trabajo remoto para Latinoamérica"
-        description="Trabaja para empresas de España y EE.UU. desde tu casa. Salario en dólares, formación continua y una comunidad de profesionales remotos que te respalda."
+        description="Trabaja para empresas de España y EE.UU. desde tu casa. Pago internacional puntual, formación continua y una comunidad de profesionales remotos que te respalda."
         path="/"
-        keywords="trabajo remoto latinoamerica, empleo remoto en euros, vacantes remotas, asistente virtual, trabajo desde casa, Global Talent Connections"
+        keywords="trabajo remoto latinoamerica, empleo remoto internacional, vacantes remotas, asistente virtual, trabajo desde casa, Global Talent Connections"
       />
 
       {/* HERO */}
@@ -259,7 +240,7 @@ export default function HomeCandidatos() {
                 className={`py-9 md:pb-12 ${i > 0 ? 'md:border-l md:border-navy/15 md:pl-10' : ''} ${i < STATS.length - 1 ? 'border-b md:border-b-0 border-navy/15' : ''}`}
               >
                 <div className="font-display font-light text-[clamp(48px,5vw,76px)] tracking-[-0.02em] leading-none text-navy tabular-nums">
-                  <CountUp to={s.n} />
+                  {s.n[lang]}
                 </div>
                 <div className="ed-caps !text-[11px] mt-3.5">{t(s.lKey)}</div>
                 <div className="ed-caps !text-[9.5px] !tracking-[0.16em] text-sand mt-1.5">{t(s.fKey)}</div>

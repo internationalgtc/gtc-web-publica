@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async'
+import { CIFRAS } from '@/data/cifras'
 
 interface SEOProps {
   title: string
@@ -34,7 +35,7 @@ const ORGANIZATION_SCHEMA = {
     availableLanguage: ['Spanish', 'English'],
   },
   sameAs: [
-    'https://ve.linkedin.com/company/global-talent-connections-limited',
+    'https://www.linkedin.com/company/global-talent-connections-limited',
     'https://www.instagram.com/globaltalentconnections/',
     'https://www.facebook.com/people/Global-Talent-Connections/61570361473550/',
   ],
@@ -47,8 +48,9 @@ const LOCAL_BUSINESS_SCHEMA = {
   url: CORP_URL,
   logo: `${CORP_URL}/og-image.png`,
   image: `${CORP_URL}/og-image.png`,
+  // Las cifras salen de src/data/cifras.ts, igual que en la web de empresas.
   description:
-    'Conectamos empresas españolas con profesionales remotos de alto rendimiento en Latinoamérica. Asistentes virtuales, SDRs y perfiles administrativos con ahorro de hasta el 52%.',
+    `Conectamos empresas españolas con profesionales remotos de alto rendimiento en Latinoamérica: ${CIFRAS.profesionales.enFrase.es} trabajando en ${CIFRAS.empresas.enFrase.es}. Asistentes virtuales, SDRs y perfiles administrativos con ahorro de hasta el 52%.`,
   telephone: '+34623257706',
   email: 'info@globaltalent-connections.com',
   priceRange: '€€',
@@ -91,14 +93,8 @@ const LOCAL_BUSINESS_SCHEMA = {
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Soporte al Cliente Remoto' } },
     ],
   },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: '4.9',
-    reviewCount: '47',
-    bestRating: '5',
-  },
   sameAs: [
-    'https://ve.linkedin.com/company/global-talent-connections-limited',
+    'https://www.linkedin.com/company/global-talent-connections-limited',
     'https://www.instagram.com/globaltalentconnections/',
     'https://www.facebook.com/people/Global-Talent-Connections/61570361473550/',
   ],
@@ -176,7 +172,7 @@ export const SERVICIOS_FAQ_SCHEMA = {
 }
 
 const DEFAULT_KEYWORDS =
-  'asistentes virtuales España, talento remoto, trabajo remoto en euros, contratar asistente virtual, ' +
+  'asistentes virtuales España, talento remoto, trabajo remoto internacional, contratar asistente virtual, ' +
   'outsourcing LATAM, profesionales remotos, reducir costes personal, asistente administrativo remoto, ' +
   'Global Talent Connections, SDR remoto, soporte cliente remoto, marketing digital remoto'
 

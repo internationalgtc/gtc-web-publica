@@ -555,6 +555,28 @@ const T: Record<string, Record<string, string>> = {
   // --- Ficha de una búsqueda que ya cerró (8-sep-2026) ---
   det_cerrada_t: { es: 'Esta búsqueda ya cerró.', en: 'This search has closed.' },
   det_cerrada_p: { es: 'Mira las que siguen abiertas o deja tu CV por área para las próximas.', en: 'Browse the ones still open, or leave your CV by area for the next ones.' },
+
+  // --- Rediseño «A · Revista» del portal (28-sep-2026) ---
+  portal_label: { es: 'Portal de empleos', en: 'Jobs portal' },
+  portal_label_corto: { es: 'Empleos', en: 'Jobs' },
+  portal_inicio_aria: { es: 'Portal de empleos de Global Talent Connections', en: 'Global Talent Connections jobs portal' },
+  portal_oport_h2_a: { es: 'Elige el rol que encaje', en: 'Pick the role that fits' },
+  portal_oport_h2_b: { es: 'con tu perfil.', en: 'your profile.' },
+  portal_ficha_aria: { es: 'Ficha de la vacante', en: 'Position summary' },
+  portal_ficha_proceso: { es: 'Cómo es el proceso', en: 'How the process works' },
+  portal_ficha_ver: { es: 'Ver la vacante completa', en: 'See the full position' },
+  portal_tag_abierta: { es: 'Abierta', en: 'Open' },
+  portal_ver_todas_n: { es: 'Ver las {n} oportunidades', en: 'See all {n} opportunities' },
+  portal_buscar_label: { es: 'Buscar vacante', en: 'Search positions' },
+  footer_articulos: { es: 'Artículos', en: 'Articles' },
+  det_contacto_48h: { es: 'Te contactamos en menos de 48 horas', en: 'We contact you within 48 hours' },
+  det_otras_de: { es: 'Otras vacantes de', en: 'Other positions in' },
+  // «Tu seguridad»: PROPUESTA sin confirmar (lienzo A-portal). Si se descarta,
+  // se quita <TuSeguridad /> y estas cuatro claves.
+  seg_t: { es: 'Tu seguridad', en: 'Your safety' },
+  seg_d: { es: 'GTC nunca te pide dinero para postular ni para empezar a trabajar.', en: 'GTC never asks you for money to apply or to start working.' },
+  seg_reportar: { es: 'Reportar esta oferta', en: 'Report this offer' },
+  seg_asunto: { es: 'Reportar oferta', en: 'Report offer' },
 }
 
 export function t(key: string, lang: string): string {

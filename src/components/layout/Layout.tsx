@@ -6,7 +6,7 @@ export function Layout() {
   return (
     <>
       <Header />
-      <main id="main-content">
+      <main id="main-content" className="bg-cream text-ink">
         <Outlet />
       </main>
       <Footer />

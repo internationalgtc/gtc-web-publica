@@ -1,61 +1,22 @@
-import type { ReactNode } from 'react'
-import { useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, useReducedMotion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
 import { CIFRAS } from '@/data/cifras'
+import { JOBS, type Job } from '@/data/jobs'
+import { equipo, type TeamMember } from '@/data/equipo'
+import { traerVacantes } from '@/lib/vacantes-nexus'
+import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
+import { Img3D, SecHead, SecTag, TituloEntrada, Wrap } from '@/components/shared/EditorialPiezas'
+import { VacantesPortal } from '@/components/portal/VacantesPortal'
+import { HeroVideo } from '@/components/portal/HeroVideo'
 
 // Portada de la variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos).
-// Objetivo: generar comunidad y valor antes de mandar a las vacantes.
-// Mismo sistema editorial que la home de clientes (ed-*, Fraunces, cream/navy).
-
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
-
-function Reveal({ children, className, delay = 0, y = 36 }: { children: ReactNode; className?: string; delay?: number; y?: number }) {
-  const reduced = useReducedMotion()
-  return (
-    <motion.div
-      className={className}
-      initial={reduced ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-12% 0px' }}
-      transition={{ duration: 1, ease: EASE, delay }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function RevealGroup({ children, className }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion()
-  return (
-    <motion.div
-      className={className}
-      initial={reduced ? false : 'hidden'}
-      whileInView="show"
-      viewport={{ once: true, margin: '-10% 0px' }}
-      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.09 } } }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function RevealItem({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <motion.div
-      className={className}
-      variants={{
-        hidden: { opacity: 0, y: 40 },
-        show: { opacity: 1, y: 0, transition: { duration: 1, ease: EASE } },
-      }}
-    >
-      {children}
-    </motion.div>
-  )
-}
+// Rediseño «A · Revista» (28-sep-2026), lienzos A-portal + A-portal-2:
+// encabezado con video, franja navy, 01 oportunidades (la lista viva de Nexus
+// con su ficha), 02 propuesta, 03 proceso, 04 comunidad, 05 áreas y cierre.
+// Mismo lenguaje que la portada de empresas (rama main, src/pages/Index.tsx).
 
 const VALUES = [
   { tKey: 'cand_v1_t', dKey: 'cand_v1_d' },
@@ -69,6 +30,8 @@ const STEPS = [
   { tKey: 'cand_proc_3_t', dKey: 'cand_proc_3_d' },
   { tKey: 'cand_proc_4_t', dKey: 'cand_proc_4_d' },
 ]
+/** El paso que va resaltado en coral (01 · Postúlate), como en el diseño. */
+const PASO_DESTACADO = 0
 
 // Cada área abre la bolsa de empleos ya filtrada (?area=). El departamento es
 // el que usa la web (src/data/jobs.ts): finanzas convive con Administración y
@@ -82,110 +45,327 @@ const AREAS = [
   { nameKey: 'home_area_6', tagKey: 'home_area_6_tag', dept: 'Tecnología' },
 ]
 
-// Las cifras salen de src/data/cifras.ts (las mismas que la web de empresas)
-// y se escriben tal cual en el HTML: sin contador animado.
-const STATS = [
-  { n: CIFRAS.profesionales.numero, lKey: 'home_stat_profesionales', fKey: 'cand_stat_profesionales_foot' },
-  { n: CIFRAS.empresas.numero, lKey: 'home_stat_empresas', fKey: 'cand_stat_empresas_foot' },
-  { n: { es: String(CIFRAS.areas), en: String(CIFRAS.areas) }, lKey: 'home_stat_areas', fKey: 'home_stat_areas_foot' },
-]
-
 const MARQUEE = ['cand_mq_1', 'cand_mq_2', 'cand_mq_3', 'cand_mq_4', 'cand_mq_5']
 
-/* Fondo animado del hero: video en loop con PARALLAX (se mueve más lento que
-   el scroll) + velo cream para legibilidad. Respeta prefers-reduced-motion. */
-function HeroBackground() {
-  const reduced = useReducedMotion()
-  const ref = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '18%'])
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
-  if (reduced) return null
-  return (
-    <div ref={ref} className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-      <motion.div style={{ y, scale }} className="w-full h-full">
-        <video
-          className="w-full h-full object-cover opacity-40"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-        >
-          {/* Solo mp4: no hay .webm en el repo y el rewrite de la SPA le devolvía
-              index.html con 200 al pedirlo (Safari se quedaba mudo en ese source). */}
-          <source src="/videos/hero-candidatos.mp4" type="video/mp4" />
-        </video>
-      </motion.div>
-      {/* Velo para legibilidad: fuerte arriba (texto), se disipa abajo */}
-      <div className="absolute inset-0 bg-gradient-to-b from-cream/85 via-cream/60 to-cream" />
-    </div>
-  )
-}
+/** Quienes acompañan al profesional (RRHH y Calidad), de src/data/equipo.ts. */
+const ACOMPANAN = [9, 21, 6, 13, 17]
+  .map(id => equipo.find(m => m.id === id))
+  .filter((m): m is TeamMember => !!m && !!m.foto)
 
-/* Video ambiental oscuro para las secciones navy (mismo lenguaje, otra luz) */
-function DarkAmbient() {
-  const reduced = useReducedMotion()
-  if (reduced) return null
-  return (
-    <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
-      <video
-        className="w-full h-full object-cover opacity-25"
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-      >
-        <source src="/videos/hero-dark.mp4" type="video/mp4" />
-      </video>
-      <div className="absolute inset-0 bg-gradient-to-b from-navy/80 via-navy/60 to-navy-deep/90" />
-    </div>
-  )
-}
+/* Títulos de sección: misma escala en toda la portada. */
+const H2 = 'ed-serif font-[320] text-navy leading-none tracking-[-0.02em] text-[clamp(40px,6.1vw,88px)] [text-wrap:balance]'
 
-/* Reveal enmascarado por palabra para el H1 del hero */
-function HeroTitle() {
+const minuscula = (s: string) => s.charAt(0).toLowerCase() + s.slice(1)
+
+/* ——— ENCABEZADO ——— */
+
+function Encabezado() {
   const t = useT()
-  const reduced = useReducedMotion()
-  const parts = [
-    { text: t('cand_hero_a'), em: false },
-    { text: t('cand_hero_b'), em: true },
+  const lang = useLang()
+  const cifras = [
+    { n: CIFRAS.profesionales.numero[lang], texto: `${t('home_stat_profesionales')} · ${minuscula(t('cand_stat_profesionales_foot'))}` },
+    { n: CIFRAS.empresas.numero[lang], texto: `${t('home_stat_empresas')} · ${minuscula(t('cand_stat_empresas_foot'))}` },
+    { n: String(CIFRAS.areas), texto: minuscula(t('home_stat_areas')) },
   ]
-  let wordIndex = 0
+  // «sin irte de casa.»: la segunda parte en cursiva y la última palabra subrayada.
+  const b = t('cand_hero_b')
+  const corte = b.lastIndexOf(' ')
+
   return (
-    <h1 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(46px,7.6vw,118px)] mt-16 max-w-[13ch] [text-wrap:balance]">
-      {parts.map((part, pi) => (
-        <span key={pi}>
-          {part.text.split(' ').map((word, wi) => {
-            const delay = 0.2 + wordIndex++ * 0.055
+    <section id="inicio" className="relative overflow-hidden border-b border-navy/15 lg:min-h-[960px]">
+      <HeroVideo />
+      <div className="absolute inset-0 ed-hero-velo-v" aria-hidden="true" />
+      <div className="absolute inset-0 ed-hero-velo-h" aria-hidden="true" />
+
+      <div className="relative max-w-[1440px] mx-auto px-5 sm:px-8 lg:pr-[72px] lg:pl-[38%] xl:pl-[44.4%] pt-[106px] sm:pt-[120px] lg:pt-[134px] pb-10 lg:pb-12 flex flex-col lg:min-h-[960px]">
+        <Reveal delay={0} y={0}>
+          <div className="ed-label flex flex-wrap items-center gap-x-7 gap-y-2 pb-3.5 border-b border-navy/15 text-ink-soft">
+            <span className="flex items-center gap-[9px]">
+              <span className="w-[7px] h-[7px] rounded-full bg-[#2fae6b] motion-safe:animate-pulse" aria-hidden="true" />
+              {t('cand_hero_badge')}
+            </span>
+            <span>{t('cand_hero_badge_meta')}</span>
+          </div>
+        </Reveal>
+
+        <TituloEntrada
+          className="ed-serif font-[330] text-navy leading-[0.98] tracking-[-0.025em] text-[clamp(44px,12vw,64px)] sm:text-[clamp(60px,9.4vw,88px)] lg:text-[clamp(72px,7.8vw,112px)] mt-10 lg:mt-14 [text-wrap:balance]"
+          tramos={[
+            { texto: t('cand_hero_a') },
+            { texto: corte > 0 ? b.slice(0, corte) : '', em: true },
+            { texto: corte > 0 ? b.slice(corte + 1) : b, subraya: true },
+          ]}
+        />
+
+        <Reveal delay={0.7} y={26}>
+          <p className="mt-7 lg:mt-[38px] max-w-[31em] text-[17px] sm:text-[19px] lg:text-[20px] leading-[1.55] text-ink-soft [text-wrap:pretty]">
+            {t('cand_hero_sub')}
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.82} y={26}>
+          <div className="flex flex-col sm:flex-row gap-3.5 mt-8 lg:mt-[34px]">
+            <a className="ed-pill ed-pill-navy" href="#oportunidades">
+              {t('cand_cta_primary')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
+            </a>
+            <a className="ed-pill ed-pill-line" href="#propuesta">
+              {t('cand_cta_secondary')}
+            </a>
+          </div>
+        </Reveal>
+
+        {/* Cifras: salen de src/data/cifras.ts y se escriben tal cual (sin contador). */}
+        <div className="mt-12 lg:mt-auto lg:pt-14">
+        <RevealGroup className="grid grid-cols-1 sm:grid-cols-3 border-t border-navy/15">
+          {cifras.map((c, i) => (
+            <RevealItem
+              key={c.texto}
+              className={`py-4 sm:py-[18px] flex flex-col gap-1 ${i > 0 ? 'border-t sm:border-t-0 sm:border-l border-navy/15 sm:pl-6' : ''}`}
+            >
+              <span className="ed-serif font-[320] text-navy text-[32px] lg:text-[38px] leading-tight whitespace-nowrap">{c.n}</span>
+              <span className="text-[16px] lg:text-[18px] xl:text-[20px] leading-snug text-ink-soft">{c.texto}</span>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+        </div>
+      </div>
+    </section>
+  )
+}
+
+/* ——— FRANJA NAVY ——— La segunda tanda solo existe para el desplazamiento continuo. */
+function Franja() {
+  const t = useT()
+  return (
+    <div className="ed-marquee ed-marquee-navy" aria-hidden="true">
+      <div className="ed-marquee-track">
+        {Array.from({ length: 4 }, (_, half) => MARQUEE.map((k, i) => <span key={`${half}-${i}`}>{t(k)}</span>))}
+      </div>
+    </div>
+  )
+}
+
+/* ——— 01 OPORTUNIDADES ——— */
+function Oportunidades() {
+  const t = useT()
+  // Mismas vacantes que la bolsa: Nexus, con src/data/jobs.ts como estado
+  // inicial y como reserva si Nexus no responde.
+  const [jobs, setJobs] = useState<Job[]>(() => JOBS.filter(j => j.active))
+  useEffect(() => {
+    const ctrl = new AbortController()
+    traerVacantes(ctrl.signal).then(({ jobs }) => {
+      if (!ctrl.signal.aborted) setJobs(jobs)
+    })
+    return () => ctrl.abort()
+  }, [])
+
+  return (
+    <section id="oportunidades" className="pt-20 lg:pt-[120px] pb-10 scroll-mt-[74px]">
+      <Wrap>
+        <SecHead tag={<SecTag n="01" name={t('empleos_label')} meta={`${jobs.length} ${t('emp_activas_meta')}`} />}>
+          <h2 className={H2}>
+            {t('portal_oport_h2_a')} <span className="ed-serif-it">{t('portal_oport_h2_b')}</span>
+          </h2>
+        </SecHead>
+        <VacantesPortal jobs={jobs} limite={12} />
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 02 PROPUESTA ——— */
+function Propuesta() {
+  const t = useT()
+  return (
+    <section id="propuesta" className="pt-20 lg:pt-[130px] pb-10 scroll-mt-[74px]">
+      <Wrap>
+        <SecHead tag={<SecTag n="02" name={t('cand_sec_valor')} meta={t('cand_sec_valor_meta')} />}>
+          <h2 className={H2}>
+            {t('cand_valor_h2_a')} <span className="ed-serif-it">{t('cand_valor_h2_b')}</span>
+          </h2>
+        </SecHead>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] gap-8 lg:gap-16 mt-10 lg:mt-[72px] items-center">
+          <Reveal>
+            <Img3D src="/img/3d/portal-puerta.webp" className="ed-3d w-full h-[220px] sm:h-[320px] lg:h-[520px] object-cover rounded-[28px]" />
+          </Reveal>
+          <RevealGroup className="flex flex-col border-t border-navy/20">
+            {VALUES.map((v, i) => (
+              <RevealItem key={v.tKey} className="grid grid-cols-[48px_minmax(0,1fr)] lg:grid-cols-[80px_minmax(0,1fr)] py-6 lg:py-[30px] border-b border-navy/20">
+                <span className="ed-serif text-[17px] lg:text-[20px] text-gold-deep">{`0${i + 1}/`}</span>
+                <span className="flex flex-col gap-2.5">
+                  <h3 className="ed-serif font-[320] text-navy leading-[1.05] text-[clamp(28px,3.1vw,44px)]">{t(v.tKey)}</h3>
+                  <p className="text-[16px] lg:text-[17px] leading-[1.6] text-ink-soft">{t(v.dKey)}</p>
+                </span>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 03 PROCESO ——— */
+function Proceso() {
+  const t = useT()
+  return (
+    <section id="proceso" className="mt-16 lg:mt-[100px] bg-navy text-cream pt-20 lg:pt-[120px] pb-24 lg:pb-[110px] scroll-mt-[74px]">
+      <Wrap>
+        <SecHead tag={<SecTag dark n="03" name={t('cand_sec_proceso')} meta={t('cand_sec_proceso_meta')} />}>
+          <h2 className="ed-serif font-light text-cream leading-[1.02] tracking-[-0.02em] text-[clamp(38px,5.6vw,80px)] [text-wrap:balance]">
+            {t('cand_proc_h2_a')} <span className="ed-serif-it text-gold">{t('cand_proc_h2_b')}</span>
+          </h2>
+        </SecHead>
+        <RevealGroup className="mt-14 lg:mt-20 border-t border-cream/20">
+          {STEPS.map((paso, i) => {
+            const destacado = i === PASO_DESTACADO
             return (
-              <span key={wi}>
-                <span className="inline-block overflow-hidden align-bottom pb-[0.08em] -mb-[0.08em]">
-                  <motion.span
-                    className={`inline-block ${part.em ? 'italic text-gold-deep' : ''}`}
-                    initial={reduced ? false : { y: '112%' }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 1.15, ease: EASE, delay }}
-                  >
-                    {word}
-                  </motion.span>
-                </span>{' '}
-              </span>
+              <RevealItem
+                key={paso.tKey}
+                className={`grid grid-cols-[36px_minmax(0,1fr)] lg:grid-cols-[90px_minmax(0,1fr)_minmax(0,400px)] items-center gap-x-3 lg:gap-x-6 gap-y-2 ${
+                  destacado
+                    ? 'bg-coral text-navy rounded-md -mx-4 sm:-mx-5 lg:-mx-7 px-4 sm:px-5 lg:px-7 py-5 lg:py-6'
+                    : 'py-4 lg:py-3.5 border-b border-cream/20'
+                }`}
+              >
+                <span className={`ed-serif text-base lg:text-xl ${destacado ? 'text-navy' : 'text-cream/60'}`}>{String(i + 1).padStart(2, '0')}</span>
+                <h3
+                  className={`ed-serif tracking-[-0.03em] text-[clamp(32px,5.2vw,80px)] [text-wrap:balance] ${
+                    destacado ? 'font-[360] leading-[1.05]' : 'font-[280] leading-[1.15] text-cream/50'
+                  }`}
+                >
+                  {t(paso.tKey)}
+                </h3>
+                <p
+                  className={`col-start-2 lg:col-start-3 leading-[1.55] ${
+                    destacado ? 'text-navy font-bold text-[15px] lg:text-[17px]' : 'text-cream/70 text-[15px] lg:text-base'
+                  }`}
+                >
+                  {t(paso.dKey)}
+                </p>
+              </RevealItem>
             )
           })}
-        </span>
-      ))}
-    </h1>
+        </RevealGroup>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 04 COMUNIDAD ——— */
+function Comunidad() {
+  const t = useT()
+  const lang = useLang()
+  return (
+    <section id="comunidad" className="pt-20 lg:pt-[130px] pb-10 scroll-mt-[74px]">
+      <Wrap>
+        <Reveal>
+          <SecTag n="04" name={t('cand_sec_comunidad')} meta={t('cand_sec_comunidad_meta')} />
+        </Reveal>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] gap-6 lg:gap-16 mt-8 lg:mt-12 items-center">
+          <Reveal>
+            <p className="ed-serif font-light text-navy leading-[1.08] tracking-[-0.02em] text-[clamp(34px,5.1vw,74px)] [text-wrap:balance]">
+              {t('cand_com_big_1')} <span className="ed-serif-it">{t('cand_com_big_em')}</span> {t('cand_com_big_2')}
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <Img3D src="/img/3d/portal-comunidad.webp" className="ed-3d w-full h-[220px] sm:h-[320px] lg:h-[460px] object-cover" />
+          </Reveal>
+        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-8 lg:gap-16 mt-10 lg:mt-16 items-start">
+          <Reveal>
+            <p className="text-[17px] lg:text-[18px] leading-[1.65] text-ink-soft">{t('cand_com_p')}</p>
+          </Reveal>
+          <RevealGroup className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5">
+            {ACOMPANAN.map(m => (
+              <RevealItem key={m.id}>
+                <figure className="flex flex-col gap-2">
+                  <img
+                    src={m.foto ?? undefined}
+                    alt={m.nombre}
+                    loading="lazy"
+                    decoding="async"
+                    className="w-full h-[190px] object-cover object-[50%_20%] rounded-[14px] bg-cream-2"
+                  />
+                  <figcaption className="text-[13px] text-ink-soft">
+                    <strong className="block text-navy">{m.nombre}</strong>
+                    {lang === 'en' ? m.rolEn : m.rol}
+                  </figcaption>
+                </figure>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </div>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 05 ÁREAS ——— */
+function Areas() {
+  const t = useT()
+  return (
+    <section id="areas" className="pt-20 lg:pt-[130px] pb-10 scroll-mt-[74px]">
+      <Wrap>
+        <SecHead tag={<SecTag n="05" name={t('cand_sec_areas')} meta={t('home_sec_areas_meta')} />}>
+          <h2 className={H2}>
+            {t('cand_areas_h2_a')} <span className="ed-serif-it">{t('cand_areas_h2_b')}</span>
+          </h2>
+        </SecHead>
+        <RevealGroup className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-12 lg:mt-16 border-t border-l border-navy/20">
+          {AREAS.map((area, i) => (
+            <RevealItem key={area.nameKey} className="flex">
+              <Link
+                to={`/empleos?area=${encodeURIComponent(area.dept)}`}
+                className="flex flex-col justify-between gap-7 lg:gap-[30px] w-full no-underline border-r border-b border-navy/20 p-6 lg:p-[30px] text-navy hover:bg-cream-2 hover:text-navy transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-navy focus-visible:[outline-offset:-4px]"
+              >
+                <span className="ed-label text-ink-soft">/ {String(i + 1).padStart(2, '0')}</span>
+                <span className="flex flex-col gap-1.5">
+                  <span className="ed-serif text-[26px] lg:text-[32px] leading-[1.1]">{t(area.nameKey)}</span>
+                  <span className="text-[15px] text-ink-soft">{t(area.tagKey)}</span>
+                </span>
+              </Link>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+        <Reveal>
+          <p className="ed-serif-it text-[20px] lg:text-[26px] leading-snug text-navy mt-8 lg:mt-[34px]">{t('home_areas_note')}</p>
+        </Reveal>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— CIERRE ——— */
+function Cierre() {
+  const t = useT()
+  return (
+    <section id="contacto" className="pt-20 lg:pt-[110px] pb-20 lg:pb-[110px] scroll-mt-[74px]">
+      <Wrap>
+        <Reveal className="bg-cream-2 rounded-[28px] lg:rounded-[40px] px-5 py-10 sm:p-10 lg:px-[72px] lg:py-[90px] grid grid-cols-1 lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)] gap-8 lg:gap-14 items-center overflow-hidden">
+          <div className="flex flex-col gap-6">
+            <h2 className="ed-serif font-light text-navy leading-none tracking-[-0.025em] text-[clamp(40px,6.6vw,96px)] [text-wrap:balance]">
+              {t('cand_final_h2_a')} <span className="ed-serif-it">{t('cand_final_h2_b')}</span>
+            </h2>
+            <p className="text-[17px] lg:text-[19px] leading-[1.6] text-ink-soft max-w-[30em]">{t('cand_final_p')}</p>
+            <div className="flex flex-col sm:flex-row gap-3.5 mt-2">
+              <Link className="ed-pill ed-pill-navy" to="/empleos">
+                {t('cand_cta_primary')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
+              </Link>
+              <Link className="ed-pill ed-pill-line" to="/areas">
+                {t('cand_cta_general')}
+              </Link>
+            </div>
+            <span className="text-[14px] text-ink-soft">{t('cand_general_nota')}</span>
+          </div>
+          <Img3D src="/img/3d/conexion-crema.webp" className="ed-3d w-full h-[200px] sm:h-[280px] lg:h-[380px] object-cover" />
+        </Reveal>
+      </Wrap>
+    </section>
   )
 }
 
 export default function HomeCandidatos() {
-  const t = useT()
-  const lang = useLang()
-  // Acordeón del proceso: tocar un paso despliega su texto (no redirige).
-  const [pasoAbierto, setPasoAbierto] = useState<number | null>(0)
-
   return (
     <>
       <SEO
@@ -194,246 +374,14 @@ export default function HomeCandidatos() {
         path="/"
         keywords="trabajo remoto latinoamerica, empleo remoto internacional, vacantes remotas, asistente virtual, trabajo desde casa, Global Talent Connections"
       />
-
-      {/* HERO */}
-      <section className="pt-[158px] relative overflow-hidden">
-        {/* Fondo con movimiento (Higgsfield): cae en /public/videos/hero-candidatos.*.
-            Si el archivo no existe todavía, el video 404ea en silencio y queda
-            el cream editorial — la página nunca se rompe por el fondo. */}
-        <HeroBackground />
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 relative">
-          <Reveal delay={0} y={0}>
-            <div className="ed-caps !text-[11px] flex items-baseline flex-wrap gap-[26px] py-[14px] border-y border-navy/15 text-ink-soft">
-              <span className="flex items-center gap-[9px]">
-                <span className="w-[7px] h-[7px] rounded-full bg-[#2fae6b] animate-pulse" />
-                {t('cand_hero_badge')}
-              </span>
-              <span className="ml-auto hidden md:inline text-sand">{t('cand_hero_badge_meta')}</span>
-            </div>
-          </Reveal>
-
-          <HeroTitle />
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-[54px] pb-[70px] items-end">
-            <Reveal delay={0.3}>
-              <p className="text-[clamp(16px,1.5vw,20px)] text-ink-soft max-w-[46ch] leading-relaxed">
-                {t('cand_hero_sub')}
-              </p>
-            </Reveal>
-            <Reveal delay={0.45} y={26}>
-              <div className="flex gap-3.5 flex-wrap md:justify-end">
-                <Link className="ed-btn ed-btn-primary" to="/empleos">
-                  {t('cand_cta_primary')} <ArrowRight className="w-4 h-4 arrow" />
-                </Link>
-                <a className="ed-btn ed-btn-outline" href="#propuesta">
-                  {t('cand_cta_secondary')}
-                </a>
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Stats como fila-índice */}
-          <RevealGroup className="grid grid-cols-1 md:grid-cols-3 border-t border-navy/15">
-            {STATS.map((s, i) => (
-              <RevealItem
-                key={s.lKey}
-                className={`py-9 md:pb-12 ${i > 0 ? 'md:border-l md:border-navy/15 md:pl-10' : ''} ${i < STATS.length - 1 ? 'border-b md:border-b-0 border-navy/15' : ''}`}
-              >
-                <div className="font-display font-light text-[clamp(48px,5vw,76px)] tracking-[-0.02em] leading-none text-navy tabular-nums">
-                  {s.n[lang]}
-                </div>
-                <div className="ed-caps !text-[11px] mt-3.5">{t(s.lKey)}</div>
-                <div className="ed-caps !text-[9.5px] !tracking-[0.16em] text-sand mt-1.5">{t(s.fKey)}</div>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
-
-      {/* MARQUEE DE LA COMUNIDAD */}
-      <div className="ed-marquee" aria-hidden="true">
-        <div className="ed-marquee-track">
-          {Array.from({ length: 6 }, (_, half) => MARQUEE.map((k, i) => <span key={`${half}-${i}`}>{t(k)}</span>))}
-        </div>
-      </div>
-
-      {/* 01 PROPUESTA DE VALOR */}
-      <section id="propuesta" className="py-[110px]">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
-          <Reveal>
-            <div className="ed-sec-tag ed-caps">
-              <span className="idx">01</span>
-              <span className="name">{t('cand_sec_valor')}</span>
-              <span className="meta">{t('cand_sec_valor_meta')}</span>
-            </div>
-          </Reveal>
-          <Reveal className="mt-11 mb-[70px] max-w-[700px]">
-            <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(38px,5.6vw,84px)] [text-wrap:balance]">
-              {t('cand_valor_h2_a')} <em className="italic text-gold-deep">{t('cand_valor_h2_b')}</em>
-            </h2>
-          </Reveal>
-          <RevealGroup className="grid grid-cols-1 md:grid-cols-3 border-t border-navy/15">
-            {VALUES.map((v, i) => (
-              <RevealItem
-                key={v.tKey}
-                className={`py-11 pb-[60px] md:pr-10 transition-colors duration-300 hover:bg-cream-2 ${
-                  i > 0 ? 'md:border-l md:border-navy/15 md:pl-10' : ''
-                } ${i < VALUES.length - 1 ? 'border-b md:border-b-0 border-navy/15' : ''}`}
-              >
-                <div className="font-display font-light text-[clamp(52px,5.6vw,84px)] tracking-[-0.02em] leading-none text-navy tabular-nums">
-                  0<span className="italic text-coral">{i + 1}</span>
-                </div>
-                <h3 className="font-headline font-bold text-[13px] tracking-[0.14em] uppercase mt-[26px] mb-3">{t(v.tKey)}</h3>
-                <p className="text-[14.5px] text-ink-soft leading-relaxed">{t(v.dKey)}</p>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-        </div>
-      </section>
-
-      {/* 02 PROCESO DEL CANDIDATO */}
-      <section id="proceso" className="ed-on-dark py-[110px] relative bg-gradient-to-b from-navy to-navy-deep text-cream overflow-hidden">
-        <DarkAmbient />
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 relative">
-          <Reveal>
-            <div className="ed-sec-tag ed-caps">
-              <span className="idx">02</span>
-              <span className="name">{t('cand_sec_proceso')}</span>
-              <span className="meta">{t('cand_sec_proceso_meta')}</span>
-            </div>
-          </Reveal>
-          <Reveal className="mt-11 mb-[70px] max-w-[920px]">
-            <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(38px,5.6vw,84px)] text-cream [text-wrap:balance]">
-              {t('cand_proc_h2_a')} <em className="italic text-gold">{t('cand_proc_h2_b')}</em>
-            </h2>
-          </Reveal>
-          <RevealGroup>
-            {STEPS.map((step, i) => (
-              <RevealItem key={step.tKey}>
-                <button
-                  type="button"
-                  className="ed-prow w-full text-left"
-                  onClick={() => setPasoAbierto(pasoAbierto === i ? null : i)}
-                  aria-expanded={pasoAbierto === i}
-                >
-                  <span className="idx">{String(i + 1).padStart(2, '0')}</span>
-                  <h3 className="font-display font-normal text-[clamp(22px,2.4vw,32px)] tracking-[-0.01em]">{t(step.tKey)}</h3>
-                  <AnimatePresence initial={false}>
-                    {pasoAbierto === i && (
-                      <motion.div
-                        key="desc"
-                        className="desc overflow-hidden"
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.45, ease: EASE }}
-                      >
-                        <p className="text-[14.5px] text-cream/60 max-w-[46ch] leading-relaxed">{t(step.dKey)}</p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                  <span className="arr">{pasoAbierto === i ? '−' : '+'}</span>
-                </button>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-          <Reveal>
-            <div className="mt-14">
-              <Link className="ed-btn ed-btn-primary !px-8 !py-3.5" to="/empleos">
-                {t('beneficios_cta')} <ArrowRight className="w-4 h-4 arrow" />
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 03 COMUNIDAD */}
-      <section id="comunidad" className="py-[110px] bg-cream-2">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
-          <Reveal>
-            <div className="ed-sec-tag ed-caps">
-              <span className="idx">03</span>
-              <span className="name">{t('cand_sec_comunidad')}</span>
-              <span className="meta">{t('cand_sec_comunidad_meta')}</span>
-            </div>
-          </Reveal>
-          <Reveal>
-            <p className="font-display font-light text-[clamp(30px,4.4vw,58px)] leading-[1.15] tracking-[-0.01em] max-w-[24ch] mt-11">
-              {t('cand_com_big_1')} <em className="italic text-gold-deep">{t('cand_com_big_em')}</em> {t('cand_com_big_2')}
-            </p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="text-[clamp(16px,1.4vw,19px)] text-ink-soft max-w-[56ch] leading-relaxed mt-[30px]">
-              {t('cand_com_p')}
-            </p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 04 ÁREAS */}
-      <section id="areas" className="py-[110px]">
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
-          <Reveal>
-            <div className="ed-sec-tag ed-caps">
-              <span className="idx">04</span>
-              <span className="name">{t('cand_sec_areas')}</span>
-              <span className="meta">{t('home_sec_areas_meta')}</span>
-            </div>
-          </Reveal>
-          <Reveal className="mt-11 mb-[70px] max-w-[660px]">
-            <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.02] text-[clamp(38px,5.6vw,84px)] [text-wrap:balance]">
-              {t('cand_areas_h2_a')} <em className="italic text-gold-deep">{t('cand_areas_h2_b')}</em>
-            </h2>
-          </Reveal>
-          <RevealGroup>
-            {AREAS.map((area, i) => (
-              <RevealItem key={area.nameKey}>
-                <Link className="ed-area-row" to={`/empleos?area=${encodeURIComponent(area.dept)}`}>
-                  <span className="font-display italic text-sm text-sand">/ {String(i + 1).padStart(2, '0')}</span>
-                  <span className="name font-display font-normal text-[clamp(24px,3vw,40px)] tracking-[-0.01em]">{t(area.nameKey)}</span>
-                  <span className="tag ed-caps !text-[11px] text-sand">{t(area.tagKey)}</span>
-                  <span className="font-display text-[22px] text-coral">→</span>
-                </Link>
-              </RevealItem>
-            ))}
-          </RevealGroup>
-          <Reveal>
-            <p className="mt-[26px] text-xs text-sand">{t('home_areas_note')}</p>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* 05 CTA FINAL */}
-      <section className="ed-on-dark py-[130px] relative bg-gradient-to-b from-navy to-navy-deep text-cream text-center overflow-hidden">
-        <DarkAmbient />
-        <div className="max-w-[1280px] mx-auto px-6 lg:px-10 relative">
-          <Reveal>
-            <h2 className="font-display font-normal tracking-[-0.015em] leading-[1.05] text-[clamp(38px,5.6vw,84px)] text-cream [text-wrap:balance] max-w-[16ch] mx-auto">
-              {t('cand_final_h2_a')} <em className="italic text-gold">{t('cand_final_h2_b')}</em>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <p className="text-cream/70 text-[clamp(16px,1.4vw,19px)] max-w-[48ch] mx-auto leading-relaxed mt-7">
-              {t('cand_final_p')}
-            </p>
-          </Reveal>
-          <Reveal delay={0.22}>
-            <div className="mt-12 flex flex-wrap gap-3.5 justify-center">
-              <Link className="ed-btn ed-btn-primary !px-10 !py-4" to="/empleos">
-                {t('cand_cta_primary')} <ArrowRight className="w-4 h-4 arrow" />
-              </Link>
-              <Link
-                className="ed-btn ed-btn-outline !px-10 !py-4 !text-cream"
-                style={{ boxShadow: 'inset 0 0 0 1.5px rgba(246,243,236,.3)' }}
-                to="/areas"
-              >
-                {t('cand_cta_general')}
-              </Link>
-            </div>
-            <p className="ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/40 mt-6">{t('cand_general_nota')}</p>
-          </Reveal>
-        </div>
-      </section>
+      <Encabezado />
+      <Franja />
+      <Oportunidades />
+      <Propuesta />
+      <Proceso />
+      <Comunidad />
+      <Areas />
+      <Cierre />
     </>
   )
 }

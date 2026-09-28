@@ -109,9 +109,9 @@ export default function AsistenteVirtual() {
                   [CIFRAS.profesionales.numero.es, CIFRAS.profesionales.sustantivo.es],
                   [`${RESUMEN_GOOGLE.rating.toFixed(1).replace('.', ',')} ★`, `${RESUMEN_GOOGLE.total} reseñas en Google`],
                 ].map(([v, l], i) => (
-                  <div key={l} className={`py-4 ${i > 0 ? 'pl-3 sm:pl-5 border-l border-navy/15' : ''}`}>
-                    <div className="font-display font-light text-[20px] sm:text-[30px] leading-none text-navy">{v}</div>
-                    <div className="ed-caps !text-[10px] !tracking-[0.1em] sm:!tracking-[0.22em] text-sand mt-2">{l}</div>
+                  <div key={l} className={`py-4 ${i > 0 ? 'pl-5 border-l border-navy/15' : ''}`}>
+                    <div className="font-display font-light text-[30px] leading-none text-navy">{v}</div>
+                    <div className="ed-caps !text-[10px] text-sand mt-2">{l}</div>
                   </div>
                 ))}
               </div>

@@ -1,8 +1,10 @@
+import { Fragment, useEffect, useRef, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
-import { ArrowRight, MessageCircle, Phone } from 'lucide-react'
+import { motion, useReducedMotion } from 'framer-motion'
+import { MessageCircle, Phone } from 'lucide-react'
 import SEO from '@/components/shared/SEO'
 import { FormularioLead } from '@/components/shared/FormularioLead'
-import { RevealSection } from '@/components/shared/RevealSection'
+import { EASE, Reveal } from '@/components/shared/EditorialReveal'
 import { TELEFONO, TEL_LINK, WHATSAPP_LINK } from '@/data/contacto'
 import { trackContacto } from '@/lib/tracking'
 import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
@@ -14,7 +16,9 @@ import logoDark from '@/assets/logos/logo-gtc-negro.png'
 // Layout a propósito: sin menú ni enlaces a blog/empleos, para que quien llega
 // de un anuncio solo pueda hacer una cosa. Copy solo en español: los anuncios
 // son para España y aquí no hay selector de idioma.
-
+//
+// Diseño «A · Revista» (28-sep-2026), lienzo A-anuncio-movil. El escritorio no
+// tiene maqueta propia: usa el mismo lenguaje que la portada (src/pages/Index.tsx).
 
 const AREAS = [
   ['Administración', 'Operaciones y soporte'],
@@ -30,6 +34,10 @@ const PASOS = [
   ['Buscamos y evaluamos', 'RRHH entrevista y valida candidatos con pruebas técnicas, humanas y de encaje.'],
   ['Eliges y empieza en 5 días hábiles', 'Recibes perfiles con evidencia. Tú decides. GTC formaliza la incorporación.'],
 ]
+const ROMANOS = ['i.', 'ii.', 'iii.']
+
+const COSTE_ESPANA = ['Salario bruto', 'Seguridad Social a cargo de la empresa (~33 %)', 'Puesto de trabajo, equipo, formación', 'Selección, bajas, sustituciones, despido']
+const COSTE_GTC = ['Profesional dedicado, en tu horario', 'Contratación y nómina las gestiona GTC', 'Seguimiento de Calidad incluido', 'Reemplazo si no encaja, sin coste']
 
 // Las preguntas salen de src/data/preguntasFrecuentes.ts (las mismas que la home).
 const FAQ = PREGUNTAS_LANDING.map(({ pregunta, respuesta }) => [pregunta.es, respuesta.es] as const)
@@ -39,13 +47,453 @@ const RESENAS = ['Sergio Varo', 'Curro Sabán']
   .map(autor => RESENAS_GOOGLE.find(r => r.autor === autor))
   .filter((r): r is NonNullable<typeof r> => !!r && !!r.texto)
 
+// Mismas cifras que la home: salen de src/data/cifras.ts. Las reseñas, del
+// mismo resumen de Google que usa la home.
+const CIFRAS_ENCABEZADO = [
+  [CIFRAS.empresas.numero.es, CIFRAS.empresas.sustantivo.es],
+  [CIFRAS.profesionales.numero.es, CIFRAS.profesionales.sustantivo.es],
+  [`${RESUMEN_GOOGLE.rating.toFixed(1).replace('.', ',')} ★`, `${RESUMEN_GOOGLE.total} reseñas en Google`],
+]
 
-function LeadForm() {
-  // La landing de anuncios elimina los campos que no hacen falta para iniciar
-  // el contacto: Ventas continúa el diagnóstico por WhatsApp.
+/** Tamaño real de los objetos 3D (public/img/3d): reserva el lugar antes de cargar. */
+const IMG_3D = { width: 1200, height: 655 }
+
+const H2 = 'ed-serif font-[330] text-navy leading-[1.08] tracking-[-0.015em] text-[clamp(30px,8.7vw,36px)] sm:text-[44px] lg:text-[clamp(44px,4.2vw,60px)] [text-wrap:balance]'
+
+/* ——— Piezas comunes (mismo lenguaje que la portada) ——— */
+
+function Wrap({ children, className = '' }: { children: ReactNode; className?: string }) {
+  return <div className={`max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-[72px] ${className}`}>{children}</div>
+}
+
+/** Etiqueta de sección: «01 · Lo que cuesta de verdad». */
+function SecTag({ n, name, nameAs = 'span' }: { n: string; name: string; nameAs?: 'span' | 'h2' }) {
+  const Name = nameAs
   return (
-    <div id="solicitar" className="bg-navy text-cream p-8 lg:p-9 rounded-[4px] scroll-mt-24">
-      <FormularioLead formulario="asistente-virtual" cta="Quiero recibir perfiles" contexto="Landing asistente virtual" modoCaptacion="express" />
+    <div className="ed-label flex flex-wrap gap-x-3 gap-y-1 text-ink-soft">
+      <span className="font-semibold text-navy">{n}</span>
+      <Name>{name}</Name>
+    </div>
+  )
+}
+
+/** Etiqueta arriba en móvil; a la izquierda del título en escritorio. */
+function SecHead({ tag, children }: { tag: ReactNode; children: ReactNode }) {
+  return (
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-[18px] lg:gap-14 items-end">
+      <Reveal>{tag}</Reveal>
+      <Reveal delay={0.08}>{children}</Reveal>
+    </div>
+  )
+}
+
+function Img3D({ src, className }: { src: string; className: string }) {
+  return <img src={src} alt="" {...IMG_3D} loading="lazy" decoding="async" className={className} />
+}
+
+function Estrellas({ size = 16 }: { size?: number }) {
+  return (
+    <span className="flex gap-1" role="img" aria-label="5 de 5 estrellas">
+      {Array.from({ length: 5 }, (_, i) => (
+        <svg key={i} width={size} height={size} viewBox="0 0 24 24" className="fill-gold-deep" aria-hidden="true">
+          <path d="M12 3l2.8 5.8 6.2.9-4.5 4.4 1 6.2L12 17.4 6.5 20.3l1-6.2L3 9.7l6.2-.9z" />
+        </svg>
+      ))}
+    </span>
+  )
+}
+
+/* ——— CABECERA ——— */
+
+function Cabecera() {
+  return (
+    <header className="border-b border-navy/15">
+      <Wrap className="h-[72px] flex items-center justify-between gap-3">
+        <Link to="/" aria-label="Global Talent Connections" className="shrink-0 inline-flex items-center min-h-[44px]">
+          <img src={logoDark} alt="Global Talent Connections" width={480} height={131} className="h-[30px] w-auto" />
+        </Link>
+        {/* Un solo número para llamar y para WhatsApp: el círculo llama, la píldora abre WhatsApp. */}
+        <div className="flex items-center gap-2">
+          <a
+            href={TEL_LINK}
+            aria-label={`Llamar al ${TELEFONO}`}
+            onClick={() => trackContacto('telefono', 'asistente-virtual-cabecera')}
+            className="w-11 h-11 rounded-full border border-navy/25 grid place-items-center text-navy hover:bg-cream-2 hover:text-navy transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy"
+          >
+            <Phone className="w-[18px] h-[18px]" strokeWidth={1.8} aria-hidden="true" />
+          </a>
+          <a
+            href={WHATSAPP_LINK}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Escribir por WhatsApp al ${TELEFONO}`}
+            onClick={() => trackContacto('whatsapp', 'asistente-virtual-cabecera')}
+            className="h-11 px-4 rounded-full bg-navy text-cream inline-flex items-center gap-2 font-label font-semibold text-sm hover:bg-navy-deep hover:text-cream transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy"
+          >
+            <MessageCircle className="w-4 h-4" strokeWidth={1.8} aria-hidden="true" />
+            WhatsApp
+            <span className="hidden md:inline font-normal text-cream/80">· {TELEFONO}</span>
+          </a>
+        </div>
+      </Wrap>
+    </header>
+  )
+}
+
+/* ——— ENCABEZADO ——— */
+
+/** Franja de video. Sin autoplay en el HTML: arranca por JS y, con
+ *  prefers-reduced-motion, se queda quieto en el póster. */
+function VideoEncabezado() {
+  const ref = useRef<HTMLVideoElement>(null)
+  const reduced = useReducedMotion()
+
+  useEffect(() => {
+    const video = ref.current
+    if (!video) return
+    video.muted = true
+    if (reduced) {
+      video.pause()
+      return
+    }
+    video.play().catch(() => {})
+  }, [reduced])
+
+  return (
+    <div className="relative overflow-hidden h-[190px] sm:h-[240px] lg:h-[200px]" aria-hidden="true">
+      <video
+        ref={ref}
+        className="absolute inset-0 w-full h-full object-cover object-[30%_50%]"
+        src="/videos/hero-gtc.mp4"
+        poster="/videos/hero-gtc-poster.webp"
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        disablePictureInPicture
+        tabIndex={-1}
+      />
+      <div className="absolute inset-x-0 bottom-0 h-[70px] bg-gradient-to-b from-cream/0 to-cream" />
+    </div>
+  )
+}
+
+/* Reveal enmascarado por palabra, como el titular de la portada. «1.200 €» va
+   con espacio duro para que el símbolo no quede solo en otra línea. */
+const TITULO_A = 'Un profesional remoto dedicado,'
+const TITULO_B = 'desde 1.200 € al mes.'
+
+function Titular() {
+  const reduced = useReducedMotion()
+  const palabras = [
+    ...TITULO_A.split(' ').map(w => ({ w, em: false })),
+    ...TITULO_B.split(' ').map(w => ({ w, em: true })),
+  ]
+  return (
+    <h1 className="ed-serif font-[340] text-navy leading-[1.02] tracking-[-0.02em] text-[clamp(38px,11.2vw,46px)] sm:text-[58px] lg:text-[clamp(56px,5.2vw,78px)] [text-wrap:balance]">
+      {palabras.map((p, i) => (
+        <Fragment key={i}>
+          <span className={`inline-block overflow-hidden align-bottom pb-[0.1em] -mb-[0.1em] ${p.em ? 'pr-[0.05em]' : ''}`}>
+            <motion.span
+              className={`inline-block ${p.em ? 'ed-serif-it' : ''}`}
+              initial={reduced ? false : { y: '112%' }}
+              animate={{ y: 0 }}
+              transition={{ duration: 1.15, ease: EASE, delay: 0.15 + i * 0.055 }}
+            >
+              {p.w}
+            </motion.span>
+          </span>{' '}
+        </Fragment>
+      ))}
+    </h1>
+  )
+}
+
+/** Tarjeta navy con el precio y el formulario. El formulario es el de siempre
+ *  (FormularioLead, misma configuración: envío a Nexus + UTM/referrer/geo +
+ *  conversiones); acá solo cambian el contenedor y el estilo (.ed-form-anuncio). */
+function TarjetaFormulario() {
+  return (
+    <div id="solicitar" className="scroll-mt-4 bg-navy text-cream rounded-[26px] lg:rounded-[28px] px-5 py-[26px] sm:p-8 lg:p-10 flex flex-col gap-4">
+      <div className="flex items-baseline justify-between gap-4">
+        <span className="ed-serif font-[330] leading-none whitespace-nowrap text-[40px] lg:text-[48px]">
+          1.200 €<span className="text-base text-cream/70"> /mes</span>
+        </span>
+        <span className="ed-label text-gold">Una factura</span>
+      </div>
+      <p className="text-[14px] lg:text-[15px] leading-[1.5] text-cream/80">Una factura mensual. Contratación, nómina y seguimiento incluidos.</p>
+      <div className="ed-form-anuncio mt-1.5">
+        <FormularioLead formulario="asistente-virtual" cta="Quiero recibir perfiles" contexto="Landing asistente virtual" modoCaptacion="express" />
+      </div>
+    </div>
+  )
+}
+
+function Encabezado() {
+  return (
+    <section aria-label="Asistente virtual para empresas">
+      <VideoEncabezado />
+      <div className="max-w-[1440px] mx-auto px-3 sm:px-8 lg:px-[72px] grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-[26px] lg:gap-16 items-start">
+        <div className="px-2 sm:px-0 pt-1.5 lg:pt-2 flex flex-col gap-[18px] lg:gap-6">
+          <Reveal delay={0} y={0}>
+            <p className="ed-label text-ink-soft">Asistentes virtuales para empresas · España</p>
+          </Reveal>
+          <Titular />
+          <Reveal delay={0.6} y={20}>
+            <p className="text-[16px] sm:text-[18px] lg:text-[19px] leading-[1.55] text-ink-soft max-w-[34em] [text-wrap:pretty]">
+              Seleccionado, evaluado y en tu equipo en 5 días hábiles. Administración, finanzas, marketing o automatización con IA. Sin permanencia. Si no encaja, lo reemplazamos.
+            </p>
+          </Reveal>
+          <Reveal delay={0.7} y={20}>
+            <div className="grid grid-cols-3 border-y border-navy/15">
+              {CIFRAS_ENCABEZADO.map(([v, l], i) => (
+                <div key={l} className={`py-3.5 lg:py-5 flex flex-col gap-1 min-w-0 ${i > 0 ? 'pl-3 sm:pl-5 border-l border-navy/15' : 'pr-2'}`}>
+                  <span className="ed-serif text-navy leading-[1.1] text-[clamp(18px,5.6vw,22px)] sm:text-[26px] lg:text-[30px]">{v}</span>
+                  <span className="text-[12px] sm:text-[13px] lg:text-sm leading-snug text-ink-soft">{l}</span>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        </div>
+        <TarjetaFormulario />
+      </div>
+    </section>
+  )
+}
+
+/* ——— 01 LO QUE CUESTA ——— */
+
+function Coste() {
+  return (
+    <section id="coste" className="pt-16 lg:pt-[110px]">
+      <Wrap>
+        <SecHead tag={<SecTag n="01" name="Lo que cuesta de verdad" />}>
+          <h2 className={H2}>
+            Un empleado en España cuesta más de <span className="ed-serif-it">30.000 € al año.</span>
+          </h2>
+        </SecHead>
+        <Reveal className="mt-[18px] lg:mt-14 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-3 md:gap-6 items-center">
+          <div className="h-full bg-cream-2 rounded-[20px] p-5 lg:p-8 flex flex-col gap-2.5">
+            <span className="ed-label text-ink-soft">Administrativo en plantilla · España</span>
+            <span className="ed-serif text-navy leading-none text-[34px] lg:text-[44px]">
+              <span className="whitespace-nowrap">≈ 2.500 €</span> <span className="text-[15px] lg:text-lg text-ink-soft">/mes</span>
+            </span>
+            <ul className="list-disc pl-[18px] flex flex-col gap-1 text-[14px] lg:text-[15px] leading-[1.45] text-ink-soft">
+              {COSTE_ESPANA.map(x => <li key={x}>{x}</li>)}
+            </ul>
+          </div>
+          <span className="ed-serif-it text-center text-lg lg:text-2xl text-ink-soft">frente a</span>
+          <div className="h-full bg-navy text-cream rounded-[20px] p-5 lg:p-8 flex flex-col gap-2.5">
+            <span className="ed-label text-cream/70">Mismo perfil con GTC</span>
+            <span className="ed-serif leading-none text-[34px] lg:text-[44px]">
+              <span className="whitespace-nowrap">1.200 €</span> <span className="text-[15px] lg:text-lg text-cream/70">/mes</span>
+            </span>
+            <ul className="list-disc pl-[18px] flex flex-col gap-1 text-[14px] lg:text-[15px] leading-[1.45] text-cream/80">
+              {COSTE_GTC.map(x => <li key={x}>{x}</li>)}
+            </ul>
+          </div>
+        </Reveal>
+        <Reveal className="mt-6 lg:mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-8">
+          <div className="flex items-center gap-1.5 sm:gap-4">
+            <Img3D src="/img/3d/ahorro.webp" className="ed-3d shrink-0 w-[150px] h-[150px] lg:w-[220px] lg:h-[190px] object-cover" />
+            <div className="flex flex-col gap-1 min-w-0">
+              <span className="ed-serif font-light text-navy leading-[0.9] tracking-[-0.03em] whitespace-nowrap text-[clamp(56px,17vw,72px)] lg:text-[112px]">52 %</span>
+              <span className="text-[14px] lg:text-[17px] leading-[1.4] text-ink-soft max-w-[22em]">menos de coste al año, sin renunciar a la calidad.</span>
+            </div>
+          </div>
+          <Link
+            to="/calculadora-ahorro"
+            className="self-start sm:self-center shrink-0 inline-flex items-center min-h-[44px] font-label font-semibold text-[15px] lg:text-base text-navy underline decoration-coral decoration-2 underline-offset-[6px] hover:text-navy-deep"
+          >
+            Calcúlalo con tus números&nbsp;<span aria-hidden="true">→</span>
+          </Link>
+        </Reveal>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 02 CÓMO FUNCIONA ——— */
+
+function Proceso() {
+  return (
+    <section id="proceso" className="pt-16 lg:pt-[110px]">
+      <Wrap>
+        <SecHead tag={<SecTag n="02" name="Cómo funciona" />}>
+          <h2 className={H2}>
+            Del perfil que necesitas a una <span className="ed-serif-it">incorporación acompañada.</span>
+          </h2>
+        </SecHead>
+        <div className="mt-6 lg:mt-14 grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-4 lg:gap-16 items-center">
+          <Reveal>
+            <ol className="border-t border-navy/15">
+              {PASOS.map(([h, p], i) => (
+                <li key={h} className="grid grid-cols-[34px_minmax(0,1fr)] lg:grid-cols-[56px_minmax(0,1fr)] gap-2 py-[18px] lg:py-7 border-b border-navy/15">
+                  <span className="ed-serif-it text-[20px] lg:text-[24px] text-navy" aria-hidden="true">{ROMANOS[i]}</span>
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="ed-serif font-normal text-navy leading-[1.15] text-[22px] lg:text-[30px]">{h}</h3>
+                    <p className="text-[14px] lg:text-[16px] leading-[1.5] text-ink-soft">{p}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <Img3D src="/img/3d/proceso.webp" className="ed-3d w-full h-[190px] sm:h-[280px] lg:h-[340px] object-cover" />
+          </Reveal>
+        </div>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 03 ÁREAS ——— */
+
+function Areas() {
+  return (
+    <section id="areas" className="pt-12 lg:pt-[110px]">
+      <Wrap>
+        <SecHead tag={<SecTag n="03" name="Áreas" />}>
+          <h2 className={H2}>
+            Un profesional para <span className="ed-serif-it">cada necesidad.</span>
+          </h2>
+        </SecHead>
+        <Reveal className="mt-[18px] lg:mt-14">
+          <ul className="grid grid-cols-2 md:grid-cols-3 border-t border-l border-navy/15">
+            {AREAS.map(([n, s]) => (
+              <li key={n} className="px-3.5 py-4 sm:p-6 lg:px-8 lg:py-9 border-r border-b border-navy/15 flex flex-col gap-1.5">
+                <span className="ed-serif text-navy leading-[1.15] text-[19px] sm:text-[22px] lg:text-[28px]">{n}</span>
+                <span className="text-[12.5px] sm:text-[14px] lg:text-[15px] text-ink-soft">{s}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 04 RESEÑAS ———
+   Salen de src/data/resenasGoogle.ts (fuente única de reseñas), tal cual. */
+
+function Resenas() {
+  const [principal, ...otras] = RESENAS
+  return (
+    <section id="resenas" className="mt-14 lg:mt-[110px] bg-cream-2 py-12 lg:py-[100px]">
+      <Wrap>
+        <Reveal>
+          <SecTag n="04" name="Clientes reales · reseñas verificadas en Google" nameAs="h2" />
+        </Reveal>
+        <div className="mt-[22px] lg:mt-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-[22px] lg:gap-14 items-center">
+          {principal?.texto && (
+            <Reveal>
+              <figure className="flex flex-col gap-3 lg:gap-5">
+                <Estrellas />
+                <blockquote className="ed-serif-it text-navy leading-[1.3] tracking-[-0.01em] text-[24px] sm:text-[30px] lg:text-[clamp(32px,3vw,42px)] [text-wrap:pretty]">
+                  “{principal.texto.es}”
+                </blockquote>
+                <figcaption className="text-[13px] lg:text-[15px] text-ink-soft">
+                  <strong className="text-navy">{principal.autor}</strong> · reseña en Google
+                </figcaption>
+              </figure>
+            </Reveal>
+          )}
+          {otras.map(r => (
+            <Reveal key={r.autor} delay={0.1}>
+              <figure className="bg-cream rounded-[18px] lg:rounded-[22px] p-5 lg:p-8 flex flex-col gap-2.5 lg:gap-4">
+                <Estrellas size={14} />
+                <blockquote className="ed-serif text-navy leading-[1.45] text-[17px] lg:text-[20px]">“{r.texto?.es}”</blockquote>
+                <figcaption className="text-[13px] lg:text-[15px] text-ink-soft">
+                  <strong className="text-navy">{r.autor}</strong> · reseña en Google
+                </figcaption>
+              </figure>
+            </Reveal>
+          ))}
+        </div>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 05 PREGUNTAS ———
+   Las mismas que los datos estructurados FAQPage de esta página. */
+
+function Preguntas() {
+  return (
+    <section id="preguntas" className="pt-12 lg:pt-[110px]">
+      <Wrap className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-3.5 lg:gap-14">
+        <Reveal>
+          <SecTag n="05" name="Preguntas frecuentes" nameAs="h2" />
+        </Reveal>
+        <div className="ed-faq border-t border-navy/15">
+          {FAQ.map(([q, a], i) => (
+            <details key={q} open={i === 0} className="group border-b border-navy/15 py-[18px] lg:py-6">
+              <summary className="ed-serif text-navy list-none cursor-pointer flex justify-between items-start gap-3.5 min-h-[44px] leading-snug text-[19px] sm:text-[22px] lg:text-[26px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-navy">
+                {q}
+                <span aria-hidden="true" className="font-label font-light shrink-0">
+                  <span className="group-open:hidden">+</span>
+                  <span className="hidden group-open:inline">−</span>
+                </span>
+              </summary>
+              <p className="mt-2.5 text-[14px] lg:text-[17px] leading-[1.55] text-ink-soft max-w-[40em]">{a}</p>
+            </details>
+          ))}
+        </div>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— CIERRE ——— */
+
+function Cierre() {
+  return (
+    <section className="pt-14 lg:pt-[110px] max-w-[1440px] mx-auto px-3 sm:px-8 lg:px-[72px]">
+      <Reveal className="bg-navy text-cream rounded-[26px] lg:rounded-[32px] overflow-hidden px-[22px] pt-9 pb-4 sm:p-10 lg:px-16 lg:py-14 grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-4 lg:gap-10 items-center">
+        <div className="flex flex-col items-start gap-4 lg:gap-6">
+          <h2 className="ed-serif font-[320] leading-[1.04] tracking-[-0.015em] text-[38px] sm:text-[48px] lg:text-[clamp(52px,5vw,72px)]">
+            ¿Qué quieres <span className="ed-serif-it text-gold">delegar?</span>
+          </h2>
+          <p className="ed-label text-cream/75 leading-[1.6]">Desde 1.200 €/mes · Sin permanencia · Reemplazo garantizado</p>
+          <a href="#solicitar" className="ed-pill bg-coral text-navy hover:bg-coral-hover hover:text-navy focus-visible:outline-gold">
+            Quiero mi propuesta
+          </a>
+        </div>
+        <Img3D src="/img/3d/conexion-navy.webp" className="ed-3d-navy w-full h-[170px] sm:h-[240px] lg:h-[300px] object-cover" />
+      </Reveal>
+    </section>
+  )
+}
+
+/* ——— BARRA FIJA (móvil y tableta) ———
+   Mide 60 px y flota a 12 px del borde: su tope queda a 72 px. El botón de
+   ayuda del chat, en esta ruta, está a 84 px (ChatWidget): no tapa «Solicitar». */
+
+function BarraFija() {
+  return (
+    <div className="lg:hidden fixed inset-x-3 bottom-3 z-40 sm:max-w-[520px] sm:mx-auto bg-navy-deep text-cream rounded-full pl-5 pr-2 py-2 flex items-center justify-between gap-3 shadow-[0_18px_40px_-12px_rgba(4,30,58,0.55)]">
+      <span className="flex flex-col leading-[1.2] min-w-0">
+        <span className="text-xs text-cream/70">Asistente virtual</span>
+        <strong className="text-[15px] whitespace-nowrap">desde 1.200 €/mes</strong>
+      </span>
+      <span className="flex items-center gap-1.5 shrink-0">
+        <a
+          href={WHATSAPP_LINK}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Escribir por WhatsApp al ${TELEFONO}`}
+          onClick={() => trackContacto('whatsapp', 'asistente-virtual-barra')}
+          className="w-11 h-11 rounded-full bg-cream/[0.12] text-cream grid place-items-center hover:bg-cream/20 hover:text-cream transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+        >
+          <MessageCircle className="w-[18px] h-[18px]" strokeWidth={1.8} aria-hidden="true" />
+        </a>
+        <a
+          href="#solicitar"
+          className="h-11 px-5 rounded-full bg-coral text-navy inline-flex items-center font-label font-semibold text-[15px] hover:bg-coral-hover hover:text-navy transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+        >
+          Solicitar
+        </a>
+      </span>
     </div>
   )
 }
@@ -61,180 +509,28 @@ export default function AsistenteVirtual() {
         faqSchema={FAQ_SCHEMA}
       />
 
-      <header className="border-b border-navy/15">
-        <div className="max-w-[1180px] mx-auto px-6 h-16 flex items-center justify-between">
-          <Link to="/" aria-label="Global Talent Connections"><img src={logoDark} alt="Global Talent Connections" className="h-7 w-auto object-contain" /></Link>
-          <div className="flex items-center gap-4">
-            {/* Un solo número para llamar y para WhatsApp: el icono llama, el enlace abre WhatsApp. */}
-            <a href={TEL_LINK} aria-label={`Llamar al ${TELEFONO}`} onClick={() => trackContacto('telefono', 'asistente-virtual-cabecera')} className="ed-caps !text-[11px] text-navy hover:text-coral transition-colors flex items-center gap-2">
-              <Phone className="w-4 h-4" />
-            </a>
-            <a href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" onClick={() => trackContacto('whatsapp', 'asistente-virtual-cabecera')} className="ed-caps !text-[11px] text-navy hover:text-coral transition-colors flex items-center gap-2">
-              <MessageCircle className="w-4 h-4" /> <span className="hidden sm:inline">WhatsApp ·</span> {TELEFONO}
-            </a>
-          </div>
-        </div>
-      </header>
+      <Cabecera />
 
       <main id="main-content">
-        {/* HERO + FORMULARIO */}
-        <section className="py-14 lg:py-16">
-          <div className="max-w-[1180px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-[1.15fr_.85fr] gap-12 lg:gap-14 items-start">
-            <div>
-              <div className="flex items-center gap-4 ed-caps !text-[11px] text-sand mb-6">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#2fae6b]" /> Asistentes virtuales para empresas <span>·</span> España
-              </div>
-              <h1 className="font-display font-light tracking-[-0.015em] leading-[1.02] text-[clamp(38px,4.6vw,64px)] mb-5 [text-wrap:balance]">
-                Un profesional remoto dedicado, <em className="italic text-gold-deep">desde 1.200 € al mes.</em>
-              </h1>
-              <p className="text-[19px] text-ink-soft max-w-[52ch] leading-relaxed mb-6">
-                Seleccionado, evaluado y en tu equipo en 5 días hábiles. Administración, finanzas, marketing o automatización con IA. Sin permanencia. Si no encaja, lo reemplazamos.
-              </p>
-              <div className="flex items-baseline gap-4 mb-7">
-                <span className="font-display font-light text-[56px] leading-none text-navy">1.200 €<small className="text-[22px] text-ink-soft">/mes</small></span>
-                <span className="text-ink-soft text-sm max-w-[26ch]">Una factura mensual. Contratación, nómina y seguimiento incluidos.</span>
-              </div>
-              <div className="grid grid-cols-3 border-y border-navy/15">
-                {/* Mismas cifras que la home: salen de src/data/cifras.ts. Las
-                    reseñas, del mismo resumen de Google que usa la home. */}
-                {[
-                  [CIFRAS.empresas.numero.es, CIFRAS.empresas.sustantivo.es],
-                  [CIFRAS.profesionales.numero.es, CIFRAS.profesionales.sustantivo.es],
-                  [`${RESUMEN_GOOGLE.rating.toFixed(1).replace('.', ',')} ★`, `${RESUMEN_GOOGLE.total} reseñas en Google`],
-                ].map(([v, l], i) => (
-                  <div key={l} className={`py-4 ${i > 0 ? 'pl-5 max-sm:pl-3 border-l border-navy/15' : ''}`}>
-                    <div className="font-display font-light text-[30px] leading-none text-navy">{v}</div>
-                    {/* En móvil «PROFESIONALES» no entraba en su columna y se pegaba a la siguiente:
-                        menos espaciado y 9px solo por debajo de 640px (medido de 360 a 1440px). */}
-                    <div className="ed-caps !text-[10px] max-sm:!text-[9px] max-sm:!tracking-[0.1em] text-sand mt-2">{l}</div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <LeadForm />
-          </div>
-        </section>
-
-        {/* COMPARATIVA */}
-        <RevealSection className="bg-cream-2 py-16 lg:py-20">
-          <div className="max-w-[1180px] mx-auto px-6">
-            <div className="ed-sec-tag ed-caps"><span className="idx">01</span><span className="name">Lo que cuesta de verdad</span></div>
-            <h2 className="font-display font-light text-[clamp(30px,3.4vw,46px)] leading-[1.05] mt-6 mb-8 [text-wrap:balance]">
-              Un empleado en España cuesta más de <em className="italic text-gold-deep">30.000 € al año.</em>
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-[1fr_auto_1fr] gap-8 border-t border-navy/15">
-              <div className="py-7">
-                <div className="ed-caps !text-[10px] text-sand">Administrativo en plantilla · España</div>
-                <div className="font-display font-light text-[44px] leading-none text-navy mt-3 mb-2">≈ 2.500 €<span className="text-lg text-sand">/mes</span></div>
-                <ul className="text-ink-soft text-sm">
-                  {['Salario bruto', 'Seguridad Social a cargo de la empresa (~33 %)', 'Puesto de trabajo, equipo, formación', 'Selección, bajas, sustituciones, despido'].map(x => <li key={x} className="py-1.5 border-t border-navy/15">{x}</li>)}
-                </ul>
-              </div>
-              <div className="hidden md:block self-center font-display italic text-sand text-2xl">frente a</div>
-              <div className="py-7">
-                <div className="ed-caps !text-[10px] text-sand">Mismo perfil con GTC</div>
-                <div className="font-display font-light text-[44px] leading-none text-coral mt-3 mb-2">1.200 €<span className="text-lg text-sand">/mes</span></div>
-                <ul className="text-ink-soft text-sm">
-                  {['Profesional dedicado, en tu horario', 'Contratación y nómina las gestiona GTC', 'Seguimiento de Calidad incluido', 'Reemplazo si no encaja, sin coste'].map(x => <li key={x} className="py-1.5 border-t border-navy/15">{x}</li>)}
-                </ul>
-              </div>
-            </div>
-            <div className="mt-6 flex items-baseline gap-4 flex-wrap">
-              <span className="font-display font-light text-[60px] leading-none text-coral">52 %</span>
-              <span className="text-ink-soft">menos de coste al año, sin renunciar a la calidad. <Link to="/calculadora-ahorro" className="text-navy underline underline-offset-4">Calcúlalo con tus números →</Link></span>
-            </div>
-          </div>
-        </RevealSection>
-
-        {/* PROCESO */}
-        <RevealSection className="py-16 lg:py-20">
-          <div className="max-w-[1180px] mx-auto px-6">
-            <div className="ed-sec-tag ed-caps"><span className="idx">02</span><span className="name">Cómo funciona</span></div>
-            <h2 className="font-display font-light text-[clamp(30px,3.4vw,46px)] leading-[1.05] mt-6 mb-8">Del perfil que necesitas a una <em className="italic text-gold-deep">incorporación acompañada.</em></h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 border-t border-navy/15">
-              {PASOS.map(([h, p], i) => (
-                <div key={h} className={`py-7 pr-6 ${i > 0 ? 'md:pl-6 md:border-l border-navy/15' : ''}`}>
-                  <div className="font-display italic text-coral mb-3">{['i.', 'ii.', 'iii.'][i]}</div>
-                  <h4 className="font-display text-[22px] mb-2">{h}</h4>
-                  <p className="text-ink-soft text-[15px]">{p}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </RevealSection>
-
-        {/* ÁREAS */}
-        <RevealSection className="bg-cream-2 py-16 lg:py-20">
-          <div className="max-w-[1180px] mx-auto px-6">
-            <div className="ed-sec-tag ed-caps"><span className="idx">03</span><span className="name">Áreas</span></div>
-            <h2 className="font-display font-light text-[clamp(30px,3.4vw,46px)] leading-[1.05] mt-6 mb-8">Un profesional para <em className="italic text-gold-deep">cada necesidad.</em></h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 border-t border-l border-navy/15">
-              {AREAS.map(([n, s]) => (
-                <div key={n} className="p-6 border-r border-b border-navy/15">
-                  <div className="font-display text-[22px]">{n}</div>
-                  <div className="ed-caps !text-[10px] text-sand mt-1">{s}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </RevealSection>
-
-        {/* RESEÑAS */}
-        <RevealSection className="ed-on-dark bg-gradient-to-b from-navy to-navy-deep text-cream py-16 lg:py-20">
-          <div className="max-w-[1180px] mx-auto px-6">
-            <div className="ed-sec-tag ed-caps"><span className="idx">04</span><span className="name">Clientes reales · reseñas verificadas en Google</span></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-8">
-              {RESENAS.map(r => (
-                <blockquote key={r.autor}>
-                  <div className="text-gold tracking-[2px] mb-3">★★★★★</div>
-                  <p className="font-display font-light text-2xl leading-[1.3] mb-4">“{r.texto!.es}”</p>
-                  <footer className="ed-caps !text-[10px] text-cream/55">{r.autor} · reseña en Google</footer>
-                </blockquote>
-              ))}
-            </div>
-          </div>
-        </RevealSection>
-
-        {/* FAQ */}
-        <RevealSection className="py-16 lg:py-20">
-          <div className="max-w-[1180px] mx-auto px-6">
-            <div className="ed-sec-tag ed-caps"><span className="idx">05</span><span className="name">Preguntas frecuentes</span></div>
-            <div className="mt-6">
-              {FAQ.map(([q, a], i) => (
-                <details key={q} open={i === 0} className="border-t border-navy/15 py-5 group">
-                  <summary className="font-display text-[22px] cursor-pointer list-none flex justify-between items-center gap-4">{q}<span className="text-coral text-xl group-open:rotate-45 transition-transform">+</span></summary>
-                  <p className="text-ink-soft mt-3 max-w-[70ch]">{a}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </RevealSection>
-
-        {/* CTA FINAL */}
-        <section className="bg-cream-2 py-16 text-center">
-          <div className="max-w-[1180px] mx-auto px-6">
-            <h2 className="font-display font-light text-[clamp(30px,3.4vw,46px)] leading-[1.05] mb-3">¿Qué quieres <em className="italic text-gold-deep">delegar?</em></h2>
-            <p className="text-ink-soft mb-6">Desde 1.200 €/mes · Sin permanencia · Reemplazo garantizado</p>
-            <a href="#solicitar" className="ed-btn ed-btn-primary">Quiero mi propuesta <ArrowRight className="w-4 h-4 arrow" /></a>
-          </div>
-        </section>
+        <Encabezado />
+        <Coste />
+        <Proceso />
+        <Areas />
+        <Resenas />
+        <Preguntas />
+        <Cierre />
       </main>
 
-      <footer className="border-t border-navy/15">
-        <div className="max-w-[1180px] mx-auto px-6 py-6 flex flex-col sm:flex-row justify-between gap-2 ed-caps !text-[10px] !tracking-[0.18em] text-sand">
+      <footer className="mt-14 lg:mt-20 border-t border-navy/15">
+        <Wrap className="pt-5 pb-[100px] lg:pb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-[12.5px] lg:text-sm text-ink-soft">
           <span>© {new Date().getFullYear()} Global Talent Connections · Alicante, España</span>
-          <Link to="/politica-de-privacidad" className="hover:text-navy">Política de privacidad</Link>
-        </div>
+          <Link to="/politica-de-privacidad" className="self-start inline-flex items-center min-h-[44px] text-ink-soft underline underline-offset-4 hover:text-navy">
+            Política de privacidad
+          </Link>
+        </Wrap>
       </footer>
 
-      {/* Barra fija en móvil */}
-      <div className="lg:hidden fixed inset-x-0 bottom-0 z-40 bg-navy text-cream px-5 py-3 flex items-center justify-between border-t border-cream/[0.18]">
-        <div>
-          <div className="ed-caps !text-[9px] text-cream/55">Asistente virtual</div>
-          <div className="font-display text-xl leading-none">desde 1.200 €/mes</div>
-        </div>
-        <a href="#solicitar" className="ed-btn ed-btn-primary !px-5 !py-3">Solicitar</a>
-      </div>
+      <BarraFija />
     </div>
   )
 }

@@ -11,7 +11,7 @@ export default function ChatWidget() {
   const lang = i18n.language === 'en' ? 'en' : 'es'
   const [isOpen, setIsOpen] = useState(false)
   const [showBadge, setShowBadge] = useState(true)
-  // /asistente-virtual tiene una barra fija abajo (65px, solo por debajo de lg) con el
+  // /asistente-virtual tiene una barra fija abajo (su tope a 72px, solo por debajo de lg) con el
   // botón «Solicitar»: el chat, a 24px del borde, lo tapaba. Ahí sube por encima de la
   // barra; en el resto de páginas y desde lg queda exactamente donde estaba.
   const { pathname } = useLocation()

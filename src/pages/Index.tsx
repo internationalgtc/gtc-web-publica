@@ -1,11 +1,12 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { motion, useInView, useReducedMotion, animate } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight, Play, X } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
 import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
 import { direccion, filasOperativo, type TeamMember } from '@/data/equipo'
-import SEO, { HOME_FAQ_SCHEMA } from '@/components/shared/SEO'
+import SEO from '@/components/shared/SEO'
+import { CIFRAS } from '@/data/cifras'
 import { FormularioLead } from '@/components/shared/FormularioLead'
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
@@ -90,27 +91,6 @@ function RevealItem({ children, className }: { children: ReactNode; className?: 
   )
 }
 
-function CountUp({ to }: { to: number }) {
-  const ref = useRef<HTMLSpanElement>(null)
-  const inView = useInView(ref, { once: true, margin: '-8% 0px' })
-  const reduced = useReducedMotion()
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el || !inView || reduced) return
-    const controls = animate(0, to, {
-      duration: 1.8,
-      ease: 'easeOut',
-      onUpdate: v => {
-        el.textContent = String(Math.round(v))
-      },
-    })
-    return () => controls.stop()
-  }, [inView, to, reduced])
-
-  return <span ref={ref}>{to}</span>
-}
-
 /* Reveal enmascarado por palabra para el H1 del hero */
 function HeroTitle() {
   const t = useT()
@@ -149,6 +129,7 @@ function HeroTitle() {
 
 export default function HomePage() {
   const t = useT()
+  const lang = useLang()
   const { hash } = useLocation()
 
   useEffect(() => {
@@ -166,7 +147,6 @@ export default function HomePage() {
         title="Home"
         description="Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño."
         path="/"
-        faqSchema={HOME_FAQ_SCHEMA}
         keywords="asistentes virtuales España, talento remoto para empresas, contratar asistente virtual barato, trabajo remoto en euros, outsourcing LATAM, profesionales remotos España, reducir costes de personal, SDR remoto, Global Talent Connections"
       />
 
@@ -208,12 +188,14 @@ export default function HomePage() {
             <p className="ed-caps !text-[11px] text-ink-soft mt-8">{t('hero_precio')}</p>
           </Reveal>
 
-          {/* Stats como fila-índice */}
+          {/* Stats como fila-índice. Las cifras salen de src/data/cifras.ts y se
+              escriben tal cual en el HTML: sin contador animado, que dejaba a
+              los lectores y a los bots con un número a mitad de camino. */}
           <RevealGroup className="grid grid-cols-1 md:grid-cols-3 mt-[88px] border-t border-navy/15">
             {[
-              { value: 55, lblKey: 'home_stat_empresas', footKey: 'home_stat_empresas_foot' },
-              { value: 93, lblKey: 'home_stat_profesionales', footKey: 'home_stat_profesionales_foot' },
-              { value: 11, lblKey: 'home_stat_areas', footKey: 'home_stat_areas_foot' },
+              { value: CIFRAS.empresas.numero[lang], lblKey: 'home_stat_empresas', footKey: 'home_stat_empresas_foot' },
+              { value: CIFRAS.profesionales.numero[lang], lblKey: 'home_stat_profesionales', footKey: 'home_stat_profesionales_foot' },
+              { value: String(CIFRAS.areas), lblKey: 'home_stat_areas', footKey: 'home_stat_areas_foot' },
             ].map((stat, i) => (
               <RevealItem
                 key={stat.lblKey}
@@ -222,7 +204,7 @@ export default function HomePage() {
                 } ${i < 2 ? 'border-b md:border-b-0 border-navy/15' : ''}`}
               >
                 <div className="font-display font-light text-[clamp(44px,5vw,72px)] tracking-[-0.02em] leading-none tabular-nums">
-                  <CountUp to={stat.value} />
+                  {stat.value}
                 </div>
                 <div className="ed-caps !text-[11px] text-ink-soft mt-3">{t(stat.lblKey)}</div>
                 <div className="ed-caps !text-[10px] text-sand mt-6 md:mt-0 md:absolute md:bottom-[26px] md:left-0 md:pl-[inherit]">

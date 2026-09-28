@@ -1,3 +1,5 @@
+import { CIFRAS } from '@/data/cifras'
+
 const T: Record<string, Record<string, string>> = {
   // ── NAV ──
   nav_servicios: { es: 'Servicios', en: 'Services' },
@@ -12,8 +14,8 @@ const T: Record<string, Record<string, string>> = {
   nav_equipo: { es: 'Equipo', en: 'Team' },
 
   // ── HERO ──
-  hero_badge: { es: 'Más de 90 profesionales activos', en: 'Over 90 active professionals' },
-  hero_title_1: { es: 'Ahorra hasta un 50%', en: 'Save up to 50%' },
+  hero_badge: CIFRAS.profesionales.texto,
+  hero_title_1: { es: 'Ahorra hasta un 52%', en: 'Save up to 52%' },
   hero_title_2: { es: 'en talento de alto rendimiento.', en: 'on high-performance talent.' },
   hero_subtitle: { es: 'Conectamos empresas con profesionales remotos. Selección, gestión y supervisión integral.', en: 'We connect companies with remote professionals. Selection, management and comprehensive supervision.' },
   hero_cta_empresa: { es: 'Para Empresas', en: 'For Companies' },
@@ -25,13 +27,6 @@ const T: Record<string, Record<string, string>> = {
   hero_disponibilidad: { es: 'DISPONIBILIDAD', en: 'AVAILABILITY' },
   hero_inmediata: { es: 'Inmediata', en: 'Immediate' },
   hero_ver_perfiles: { es: 'Ver perfiles disponibles', en: 'View available profiles' },
-
-  // ── STATS ──
-  stat_empresas: { es: 'empresas activas', en: 'active companies' },
-  stat_profesionales: { es: 'profesionales', en: 'professionals' },
-  stat_ahorro: { es: 'ahorro promedio', en: 'average savings' },
-  stat_micro: { es: 'Datos a Julio 2026', en: 'Data as of July 2026' },
-  stat_retencion: { es: 'retención', en: 'retention' },
 
   // ── LOGOS ──
   logos_titulo: { es: 'Empresas que confían en nosotros', en: 'Companies that trust us' },
@@ -52,7 +47,7 @@ const T: Record<string, Record<string, string>> = {
   ventaja_1_titulo: { es: 'Match en 15 días', en: 'Match in 15 days' },
   ventaja_1_desc: { es: 'De la primera llamada a tu asistente operando. Pruebas técnicas, shortlist de 2-3 candidatos, tú eliges.', en: 'From the first call to your assistant up and running. Technical tests, shortlist of 2-3 candidates, you choose.' },
   ventaja_2_titulo: { es: 'Selección rigurosa', en: 'Rigorous selection' },
-  ventaja_2_desc: { es: 'Menos del 5% de tasa de aceptación. +11.000 candidatos validados con pruebas técnicas y conductuales.', en: 'Less than 5% acceptance rate. 11,000+ candidates validated with technical and behavioral tests.' },
+  ventaja_2_desc: { es: '+11.000 candidatos validados con pruebas técnicas y conductuales.', en: '11,000+ candidates validated with technical and behavioral tests.' },
   ventaja_3_titulo: { es: 'Zero Overhead', en: 'Zero Overhead' },
   ventaja_3_desc: { es: 'Nosotros contratamos, gestionamos y supervisamos. Tu empresa recibe una factura mensual. Reemplazo garantizado.', en: 'We hire, manage and supervise. Your company receives one monthly invoice. Replacement guaranteed.' },
 
@@ -113,7 +108,7 @@ const T: Record<string, Record<string, string>> = {
   servicios_label: { es: 'Nuestros Servicios', en: 'Our Services' },
   servicios_titulo_1: { es: 'Un profesional para cada', en: 'A professional for every' },
   servicios_titulo_2: { es: 'necesidad', en: 'need' },
-  servicios_subtitle: { es: 'Seleccionamos, capacitamos y gestionamos asistentes virtuales especializados en más de 11 áreas profesionales.', en: 'We select, train and manage virtual assistants specialized in more than 11 professional areas.' },
+  servicios_subtitle: { es: `Seleccionamos, capacitamos y gestionamos asistentes virtuales especializados en ${CIFRAS.areas} áreas profesionales.`, en: `We select, train and manage virtual assistants specialized in ${CIFRAS.areas} professional areas.` },
   servicios_solicitar: { es: 'Solicitar este perfil', en: 'Request this profile' },
   servicios_no_encuentras: { es: '¿No encuentras el perfil que buscas?', en: "Can't find the profile you're looking for?" },
   servicios_cuentanos: { es: 'Cuéntanos qué necesitas y te presentamos candidatos en menos de 48 horas.', en: 'Tell us what you need and we present candidates in less than 48 hours.' },
@@ -158,7 +153,7 @@ const T: Record<string, Record<string, string>> = {
   nosotros_equipo_operativo: { es: 'Equipo Operativo', en: 'Operations Team' },
   nosotros_presencia: { es: 'Presencia Estratégica', en: 'Strategic Presence' },
   nosotros_global: { es: 'Global', en: 'Global' },
-  nosotros_empresas_activas: { es: 'Empresas Activas', en: 'Active Companies' },
+  nosotros_empresas_activas: CIFRAS.empresas.sustantivo,
   nosotros_sedes: { es: 'Sedes (España + Miami)', en: 'Offices (Spain + Miami)' },
   nosotros_cta_titulo: { es: 'Listo para expandir sus', en: 'Ready to expand your' },
   nosotros_horizontes: { es: 'horizontes', en: 'horizons' },
@@ -221,7 +216,7 @@ const T: Record<string, Record<string, string>> = {
   footer_privacidad: { es: 'Política de Privacidad', en: 'Privacy Policy' },
 
   // ── HOME EDITORIAL (Sep 2026) ──
-  home_meta_activos: { es: '93 profesionales activos', en: '93 active professionals' },
+  home_meta_activos: CIFRAS.profesionales.texto,
   home_meta_region: { es: 'España · Latinoamérica', en: 'Spain · Latin America' },
   home_meta_servicio: { es: 'Selección · Contratación · Acompañamiento', en: 'Selection · Hiring · Ongoing support' },
   home_hero_title_a: { es: 'Incorpora talento remoto con', en: 'Bring in remote talent with' },
@@ -229,12 +224,12 @@ const T: Record<string, Record<string, string>> = {
   home_hero_sub: { es: 'Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño.', en: 'We connect companies with professionals from Latin America. We select the profile, handle the hiring and support their performance.' },
   home_hero_cta_primary: { es: 'Cuéntanos qué perfil necesitas', en: 'Tell us what profile you need' },
   home_hero_cta_secondary: { es: 'Calcular tu ahorro', en: 'Calculate your savings' },
-  home_stat_empresas: { es: 'Empresas activas', en: 'Active companies' },
+  home_stat_empresas: CIFRAS.empresas.sustantivo,
   home_stat_empresas_foot: { es: 'Con profesionales trabajando', en: 'With professionals working' },
-  home_stat_profesionales: { es: 'Profesionales activos', en: 'Active professionals' },
+  home_stat_profesionales: CIFRAS.profesionales.sustantivo,
   home_stat_profesionales_foot: { es: 'Talento externo en clientes', en: 'External talent in client companies' },
   home_stat_areas: { es: 'Áreas profesionales', en: 'Professional areas' },
-  home_stat_areas_foot: { es: 'Datos de Nexus · 6 sep 2026', en: 'Nexus data · Sep 6, 2026' },
+  home_stat_areas_foot: { es: 'De administración a IA', en: 'From administration to AI' },
   home_sec_servicio: { es: 'El servicio', en: 'The service' },
   home_sec_servicio_meta: { es: 'Más que encontrar un perfil', en: 'More than finding a profile' },
   home_servicio_h2_a: { es: 'Delegar con', en: 'Delegate with' },
@@ -258,7 +253,7 @@ const T: Record<string, Record<string, string>> = {
   home_proc_4_t: { es: 'Trabajamos en equipo', en: 'We work as a team' },
   home_proc_4_d: { es: 'Tú lideras prioridades y objetivos. Calidad acompaña el rendimiento, los reportes y cualquier incidencia.', en: 'You lead priorities and goals. Quality supports performance, reporting and any issues that come up.' },
   home_sec_areas: { es: 'Áreas', en: 'Areas' },
-  home_sec_areas_meta: { es: '11 especialidades', en: '11 specialties' },
+  home_sec_areas_meta: { es: `${CIFRAS.areas} especialidades`, en: `${CIFRAS.areas} specialties` },
   home_areas_h2_a: { es: 'Un profesional para cada', en: 'A professional for every' },
   home_areas_h2_b: { es: 'necesidad.', en: 'need.' },
   home_area_1: { es: 'Administración', en: 'Administration' },
@@ -342,8 +337,8 @@ const T: Record<string, Record<string, string>> = {
   calc_de_ahorro: { es: 'de ahorro', en: 'savings' },
   calc_prefiero: { es: 'Prefiero que me calculen el ahorro', en: "I'd rather have my savings calculated" },
   calc_quieres: { es: '¿Quieres que calculemos tu ahorro juntos?', en: 'Want us to calculate your savings together?' },
-  calc_pill_1: { es: '55 empresas activas', en: '55 active companies' },
-  calc_pill_2: { es: '93 profesionales', en: '93 professionals' },
+  calc_pill_1: CIFRAS.empresas.texto,
+  calc_pill_2: CIFRAS.profesionales.texto,
   calc_pill_3: { es: 'Sin permanencia', en: 'No lock-in' },
   calc_pill_4: { es: 'Reemplazo garantizado', en: 'Guaranteed replacement' },
 
@@ -370,7 +365,7 @@ const T: Record<string, Record<string, string>> = {
   nos_v2_t: { es: 'Resultados Medibles', en: 'Measurable Results' },
   nos_v2_d: { es: 'Métricas de productividad visibles desde el día uno. Reportes semanales y seguimiento continuo del rendimiento.', en: 'Visible productivity metrics from day one. Weekly reports and continuous performance tracking.' },
   nos_v3_t: { es: 'Selección Rigurosa', en: 'Rigorous Selection' },
-  nos_v3_d: { es: 'Proceso con menos del 5% de tasa de aceptación. Pruebas técnicas, entrevistas conductuales y verificación de referencias.', en: 'Process with less than 5% acceptance rate. Technical tests, behavioral interviews and reference checks.' },
+  nos_v3_d: { es: 'Pruebas técnicas, entrevistas conductuales y verificación de referencias.', en: 'Technical tests, behavioral interviews and reference checks.' },
   nos_presencia_d: { es: 'Operamos desde España con entidad legal en Miami para el mercado norteamericano. Talento de toda Latinoamérica.', en: 'We operate from Spain with a legal entity in Miami for the North American market. Talent from across Latin America.' },
   nos_espana: { es: 'España', en: 'Spain' },
   nos_sede: { es: 'Sede principal', en: 'Headquarters' },

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, BarChart3, Code, Palette, Users, FileSpreadsheet, Headphones, Megaphone, BrainCircuit, Building2, Cog, ShoppingCart, type LucideIcon } from 'lucide-react'
 import { RevealSection } from '@/components/shared/RevealSection'
-import SEO, { SERVICIOS_FAQ_SCHEMA } from '@/components/shared/SEO'
+import SEO from '@/components/shared/SEO'
 import { useT } from '@/hooks/useT'
 
 interface Servicio {
@@ -77,7 +77,6 @@ export default function ServiciosPage() {
         title="Servicios de Talento Remoto"
         description="Asistentes virtuales y profesionales remotos para marketing, administración, diseño, desarrollo, ventas, RRHH y más. Perfiles desde 1.200 €/mes."
         path="/servicios"
-        faqSchema={SERVICIOS_FAQ_SCHEMA}
         keywords="servicios asistente virtual, asistente virtual marketing, asistente administrativo remoto, SDR remoto, diseñador gráfico remoto, desarrollador remoto, atención cliente remoto, RRHH remoto, contratar profesional remoto España"
         breadcrumbs={[{ name: 'Servicios', url: '/servicios' }]}
       />

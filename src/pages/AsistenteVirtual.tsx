@@ -5,17 +5,14 @@ import { FormularioLead } from '@/components/shared/FormularioLead'
 import { RevealSection } from '@/components/shared/RevealSection'
 import { WHATSAPP_LINK } from '@/data/chatbotData'
 import { trackContacto } from '@/lib/tracking'
-import { RESENAS_GOOGLE } from '@/data/resenasGoogle'
+import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
+import { CIFRAS } from '@/data/cifras'
 import logoDark from '@/assets/logos/logo-gtc-negro.png'
 
 // Landing para tráfico de pago (Google Ads «asistente virtual»). Va FUERA del
 // Layout a propósito: sin menú ni enlaces a blog/empleos, para que quien llega
 // de un anuncio solo pueda hacer una cosa. Copy solo en español: los anuncios
 // son para España y aquí no hay selector de idioma.
-
-
-// Mismos números que la home (Index.tsx, «DATOS DE NEXUS»).
-const STATS = { empresas: 55, profesionales: 93 }
 
 
 const AREAS = [
@@ -105,14 +102,16 @@ export default function AsistenteVirtual() {
                 <span className="text-ink-soft text-sm max-w-[26ch]">Una factura mensual. Contratación, nómina y seguimiento incluidos.</span>
               </div>
               <div className="grid grid-cols-3 border-y border-navy/15">
+                {/* Mismas cifras que la home: salen de src/data/cifras.ts. Las
+                    reseñas, del mismo resumen de Google que usa la home. */}
                 {[
-                  [STATS.empresas, 'Empresas activas'],
-                  [STATS.profesionales, 'Profesionales trabajando'],
-                  ['5,0 ★', `${RESENAS_GOOGLE.length} reseñas en Google`],
+                  [CIFRAS.empresas.numero.es, CIFRAS.empresas.sustantivo.es],
+                  [CIFRAS.profesionales.numero.es, CIFRAS.profesionales.sustantivo.es],
+                  [`${RESUMEN_GOOGLE.rating.toFixed(1).replace('.', ',')} ★`, `${RESUMEN_GOOGLE.total} reseñas en Google`],
                 ].map(([v, l], i) => (
-                  <div key={l} className={`py-4 ${i > 0 ? 'pl-5 border-l border-navy/15' : ''}`}>
-                    <div className="font-display font-light text-[30px] leading-none text-navy">{v}</div>
-                    <div className="ed-caps !text-[10px] text-sand mt-2">{l}</div>
+                  <div key={l} className={`py-4 ${i > 0 ? 'pl-3 sm:pl-5 border-l border-navy/15' : ''}`}>
+                    <div className="font-display font-light text-[20px] sm:text-[30px] leading-none text-navy">{v}</div>
+                    <div className="ed-caps !text-[10px] !tracking-[0.1em] sm:!tracking-[0.22em] text-sand mt-2">{l}</div>
                   </div>
                 ))}
               </div>

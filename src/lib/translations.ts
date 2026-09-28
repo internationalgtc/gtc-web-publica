@@ -1,4 +1,4 @@
-import { CIFRAS } from '@/data/cifras'
+import { CIFRAS } from '../data/cifras'
 
 const T: Record<string, Record<string, string>> = {
   // ── NAV ──

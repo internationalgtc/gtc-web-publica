@@ -5,6 +5,9 @@ import fs from 'fs'
 import os from 'os'
 import { createRequire } from 'module'
 import prerender from '@prerenderer/rollup-plugin'
+import type { Plugin } from 'vite'
+import { blogPosts } from './src/data/blogPosts'
+import { generarLlmsTxt } from './scripts/llms'
 
 // 🔴 El prerender necesita un Chromium REAL y solo se activa si está instalado
 // en la máquina que compila.
@@ -48,14 +51,26 @@ if (!PRERENDER_ACTIVO) {
 }
 
 // Rutas que se guardan como HTML ya renderizado. Son las que reciben tráfico
-// PAGADO o de buscador: el rastreador tiene que ver el contenido sin ejecutar
-// JavaScript. Las rutas con parámetro (/empleos/:id, /blog/:id) quedan fuera a
-// propósito: su contenido viene de la API en tiempo real.
-// 🔴 La home («/») se deja FUERA a propósito: al prerenderizarla, el plugin
-// ELIMINA el `dist/index.html` que genera Vite y el sitio se queda sin home
-// (verificado en este repo el 8-sep-2026). Las rutas que reciben el tráfico
-// pagado son las de abajo, así que la home no pierde nada.
+// PAGADO o de buscador: el rastreador (y los de IA, que casi nunca ejecutan
+// JavaScript) tiene que ver el contenido sin ejecutar JavaScript.
+//
+// 🔴 LA HOME («/») — cómo entra sin romper el sitio (28-sep-2026)
+// Si el plugin guarda «/» en `index.html`, PISA el esqueleto de la SPA que
+// genera Vite (el 8-sep-2026 el sitio se quedó sin home por eso). Por eso:
+//   1. el HTML de la home se guarda aparte, en HOME_PRERENDER (ver postProcess);
+//   2. `separarHomeDeLaSpa` (abajo) copia el esqueleto a `spa.html` y recién
+//      después pone la home prerenderizada en `index.html`;
+//   3. `vercel.json` manda las rutas sin archivo propio a `/spa.html`, NO a
+//      `/index.html`: así ninguna otra dirección recibe el HTML de la home.
+// Sin Chromium (build remoto de Vercel) no hay HOME_PRERENDER: `index.html`
+// queda como esqueleto y `spa.html` es una copia idéntica. Nada se rompe.
+//
+// Los artículos del blog salen de src/data/blogPosts.ts (no de una API), así
+// que también se prerenderizan.
+const HOME_PRERENDER = '_home-prerender.html'
+const RUTAS_BLOG = blogPosts.map(p => `/blog/${p.id}`)
 const RUTAS_PRERENDER = [
+  '/',
   '/asistente-virtual',
   '/calculadora-ahorro',
   '/servicios',
@@ -69,7 +84,34 @@ const RUTAS_PRERENDER = [
   // depender de que ejecute JavaScript. No redirigen: no existen.
   '/empleos',
   '/beneficios',
+  ...RUTAS_BLOG,
 ]
+
+function separarHomeDeLaSpa(): Plugin {
+  return {
+    name: 'gtc-separar-home-de-la-spa',
+    apply: 'build',
+    writeBundle(options) {
+      const dir = options.dir ?? path.resolve(__dirname, 'dist')
+      const index = path.join(dir, 'index.html')
+      const home = path.join(dir, HOME_PRERENDER)
+      // Siempre: el esqueleto de la SPA en spa.html (destino del rewrite).
+      fs.copyFileSync(index, path.join(dir, 'spa.html'))
+      if (fs.existsSync(home)) fs.renameSync(home, index)
+    },
+  }
+}
+
+// /llms.txt se genera en el build con los mismos textos y cifras de la web.
+function llmsTxt(): Plugin {
+  return {
+    name: 'gtc-llms-txt',
+    apply: 'build',
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'llms.txt', source: generarLlmsTxt() })
+    },
+  }
+}
 
 export default defineConfig({
   plugins: [
@@ -94,6 +136,8 @@ export default defineConfig({
         maxConcurrentRoutes: 2,
       },
       postProcess(renderedRoute) {
+        // La home NO se escribe en index.html (ver HOME_PRERENDER arriba).
+        if (renderedRoute.route === '/') renderedRoute.outputPath = HOME_PRERENDER
         // El prerender corre en localhost: si algún href absoluto se coló, se
         // devuelve al dominio real para no publicar enlaces a 127.0.0.1.
         renderedRoute.html = renderedRoute.html
@@ -102,6 +146,8 @@ export default defineConfig({
       },
     }),
     ] : []),
+    llmsTxt(),
+    separarHomeDeLaSpa(),
   ],
   resolve: {
     alias: {

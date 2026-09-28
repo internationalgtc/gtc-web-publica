@@ -132,8 +132,13 @@ export default function SEO({
     ],
   } : null
 
+  // defer={false}: react-helmet escribe <title>/<meta> en el acto, no en el
+  // próximo requestAnimationFrame. En el prerender se renderizan dos páginas a
+  // la vez y la que queda en segundo plano no recibe rAF: se guardaba con el
+  // título de la home y sin description ni canonical (/nosotros,
+  // /asistente-virtual, /politica-de-privacidad, 28-sep-2026).
   return (
-    <Helmet>
+    <Helmet defer={false}>
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       {noIndex && <meta name="robots" content="noindex, follow" />}

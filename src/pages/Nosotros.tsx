@@ -1,65 +1,229 @@
 import { Link } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
 import SEO from '@/components/shared/SEO'
+import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
+import { Img3D, SecHead, SecTag, TituloEntrada, Wrap } from '@/components/shared/EditorialPiezas'
 import { CIFRAS } from '@/data/cifras'
+import { direccion, operativo, type TeamMember } from '@/data/equipo'
 import { useT, useLang } from '@/hooks/useT'
 
-function LinkedinIcon({ className }: { className?: string }) {
+/* Nosotros — rediseño «A · Revista» (28-sep-2026), lienzo A-nosotros.
+   El equipo sale de src/data/equipo.ts (fuente única, orden definido por
+   Ariel); las cifras, de src/data/cifras.ts. */
+
+const VALORES = [
+  { tKey: 'nos_v1_t', dKey: 'nos_v1_d' },
+  { tKey: 'nos_v2_t', dKey: 'nos_v2_d' },
+  { tKey: 'nos_v3_t', dKey: 'nos_v3_d' },
+]
+
+const H2 = 'ed-serif leading-none tracking-[-0.02em] [text-wrap:balance]'
+
+function Encabezado() {
+  const t = useT()
+  const lang = useLang()
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-    </svg>
+    <section className="pt-[112px] sm:pt-[140px] lg:pt-[174px] pb-12 lg:pb-[90px] border-b border-navy/15">
+      <Wrap className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.45fr)_minmax(0,1fr)] gap-6 lg:gap-12 items-center">
+        <div className="flex flex-col">
+          <Reveal y={0}>
+            <div className="ed-label flex flex-wrap gap-x-3.5 gap-y-1 pb-3.5 border-b border-navy/15 text-ink-soft">
+              <span className="font-semibold text-navy">{t('nav_nosotros')}</span>
+              <span>· {t('nosotros_label')}</span>
+            </div>
+          </Reveal>
+          <TituloEntrada
+            className="ed-serif font-[330] text-navy leading-none tracking-[-0.025em] mt-10 lg:mt-[52px] text-[clamp(42px,11.4vw,60px)] sm:text-[clamp(60px,9vw,84px)] lg:text-[clamp(70px,6.9vw,100px)] [text-wrap:balance]"
+            tramos={[
+              { texto: t('nosotros_titulo_1') },
+              { texto: t('nosotros_mercados'), em: true },
+              { texto: lang === 'en' ? 'and' : 'y' },
+              { texto: `${t('nosotros_talento')}.`, subraya: true },
+            ]}
+          />
+          <Reveal delay={0.6} y={26}>
+            <p className="mt-7 lg:mt-10 max-w-[30em] text-[17px] sm:text-[19px] lg:text-[21px] leading-[1.55] text-ink-soft [text-wrap:pretty]">
+              {t('nosotros_subtitle')}
+            </p>
+          </Reveal>
+        </div>
+        <Reveal delay={0.3} y={0}>
+          <Img3D primero src="/img/3d/conexion-crema.webp" className="ed-3d w-full h-[240px] sm:h-[340px] lg:h-[520px] object-cover" />
+        </Reveal>
+      </Wrap>
+    </section>
   )
 }
-import { RevealSection } from '@/components/shared/RevealSection'
-import { direccion, filasOperativo, type TeamMember } from '@/data/equipo'
 
-function TeamCard({ member, size = 'lg', lang }: { member: TeamMember; size?: 'lg' | 'sm'; lang: 'es' | 'en' }) {
-  const isLg = size === 'lg'
+/* ——— 01 MISIÓN ——— */
+function Mision() {
+  const t = useT()
   return (
-    <div className="group">
-      <div className={`${isLg ? 'aspect-[3/4] mb-6' : 'aspect-[3/4] mb-4'} overflow-hidden rounded-xl bg-[#0c1a2e] warm-overlay`}>
-        {member.foto ? (
-          <img
-            alt={member.nombre}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            src={member.foto}
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-white/20 font-headline text-4xl">
-            {member.nombre.split(' ').map(n => n[0]).join('')}
-          </div>
-        )}
-      </div>
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <h4 className={`font-headline ${isLg ? 'text-xl' : 'text-lg'} mb-1 text-white`}>{member.nombre}</h4>
-          <p className={`font-label ${isLg ? 'text-xs' : 'text-[10px]'} uppercase tracking-widest text-blue-light font-bold ${isLg ? 'mb-2' : ''}`}>
-            {lang === 'en' ? member.rolEn : member.rol}
-          </p>
-          <p className="text-gold text-sm">{member.email}</p>
+    <section id="mision" className="bg-navy text-cream py-20 lg:py-[120px]">
+      <Wrap>
+        <SecHead tag={<SecTag dark n="01" name={t('nosotros_mision_titulo').replace(/:\s*$/, '')} />}>
+          <h2 className={`${H2} font-light leading-[1.02] text-[clamp(38px,6.1vw,88px)]`}>
+            {t('nosotros_mision_highlight')} <span className="ed-serif-it text-gold">{t('nosotros_mision_cierre')}</span>
+          </h2>
+        </SecHead>
+        <RevealGroup className="grid grid-cols-1 md:grid-cols-3 mt-12 lg:mt-[84px] border-t border-cream/20">
+          {VALORES.map((v, i) => (
+            <RevealItem
+              key={v.tKey}
+              className={`flex flex-col gap-4 lg:gap-[18px] py-8 lg:pt-10 lg:pb-2.5 ${
+                i === 0 ? 'md:pr-8 lg:pr-10' : 'border-t md:border-t-0 md:border-l border-cream/20 md:px-8 lg:px-10'
+              } ${i === 2 ? 'md:pr-0 lg:pr-0' : ''}`}
+            >
+              <span className="ed-serif text-lg lg:text-xl text-gold">0{i + 1}/</span>
+              <h3 className="ed-serif font-[320] leading-[1.1] text-[clamp(30px,2.9vw,42px)]">{t(v.tKey)}</h3>
+              <p className="text-[16px] lg:text-[18px] leading-[1.6] text-cream/80">{t(v.dKey)}</p>
+            </RevealItem>
+          ))}
+        </RevealGroup>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— Fotos del equipo: enteras (3/4), encuadre en la cara ——— */
+function Persona({ m, grande }: { m: TeamMember; grande: boolean }) {
+  const lang = useLang()
+  const forma = `w-full aspect-[3/4] ${grande ? 'rounded-[18px] lg:rounded-[22px]' : 'rounded-2xl'}`
+  return (
+    <figure className={`flex flex-col ${grande ? 'gap-3.5' : 'gap-2.5'}`}>
+      {m.foto ? (
+        <img src={m.foto} alt={m.nombre} width={600} height={800} loading="lazy" decoding="async" className={`${forma} h-auto object-cover object-[50%_15%] bg-cream-2`} />
+      ) : (
+        <div className={`${forma} bg-navy-deep grid place-items-center ed-serif-it text-3xl text-cream/60`} aria-hidden="true">
+          {m.nombre.split(' ').map(p => p[0]).slice(0, 2).join('')}
         </div>
-        {member.linkedin && (
-          <a
-            href={member.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white/30 hover:text-blue-light transition-colors mt-1"
-            aria-label={`LinkedIn de ${member.nombre}`}
-          >
-            <LinkedinIcon className="w-4 h-4" />
-          </a>
-        )}
-      </div>
-    </div>
+      )}
+      <figcaption className="flex flex-col gap-0.5 min-w-0">
+        <span className={`ed-serif text-navy leading-tight ${grande ? 'text-[20px] sm:text-[24px] lg:text-[28px]' : 'text-[17px] lg:text-[19px]'}`}>{m.nombre}</span>
+        <span className={grande ? 'ed-label text-ink-soft' : 'text-[13px] text-ink-soft'}>{lang === 'en' ? m.rolEn : m.rol}</span>
+        <a
+          href={`mailto:${m.email}`}
+          className={`mt-0.5 text-ink-soft no-underline hover:text-navy hover:underline [overflow-wrap:anywhere] ${grande ? 'text-[13px] lg:text-[14px]' : 'text-[12px] leading-[1.35]'}`}
+        >
+          {m.email}
+        </a>
+      </figcaption>
+    </figure>
+  )
+}
+
+/* ——— 02 LIDERAZGO · 03 EQUIPO OPERATIVO ——— */
+function Equipo() {
+  const t = useT()
+  return (
+    <>
+      <section id="equipo" className="pt-20 lg:pt-[130px] pb-10">
+        <Wrap>
+          <SecHead tag={<SecTag n="02" name={t('nosotros_liderazgo')} />}>
+            <h2 className={`${H2} font-[320] text-navy text-[clamp(40px,6.1vw,88px)]`}>
+              {t('nosotros_arquitectos')} <span className="ed-serif-it">{t('nosotros_conexiones')}.</span>
+            </h2>
+          </SecHead>
+          <RevealGroup className="grid grid-cols-2 md:grid-cols-4 gap-x-4 gap-y-8 lg:gap-5 mt-12 lg:mt-16">
+            {direccion.map(m => (
+              <RevealItem key={m.id}>
+                <Persona m={m} grande />
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </Wrap>
+      </section>
+
+      <section className="pt-16 lg:pt-[90px] pb-10">
+        <Wrap>
+          <Reveal>
+            <h2 className="ed-label flex gap-3.5 text-ink-soft pb-3.5 border-b border-navy/15">
+              <span className="font-semibold text-navy">03</span>
+              <span>{t('nosotros_equipo_operativo')}</span>
+            </h2>
+          </Reveal>
+          <RevealGroup className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-4 gap-y-7 lg:gap-y-6 mt-8 lg:mt-9">
+            {operativo.map(m => (
+              <RevealItem key={m.id}>
+                <Persona m={m} grande={false} />
+              </RevealItem>
+            ))}
+          </RevealGroup>
+        </Wrap>
+      </section>
+    </>
+  )
+}
+
+/* ——— 04 PRESENCIA ——— */
+function Presencia() {
+  const t = useT()
+  const lang = useLang()
+  const cifras = [
+    { numero: CIFRAS.empresas.numero[lang], texto: t('nosotros_empresas_activas') },
+    { numero: '2', texto: t('nosotros_sedes') },
+  ]
+  return (
+    <section id="presencia" className="pt-20 lg:pt-[130px] pb-10">
+      <Wrap>
+        <Reveal className="bg-cream-2 rounded-[28px] lg:rounded-[36px] px-5 py-10 sm:p-10 lg:px-[72px] lg:py-20 grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)] gap-10 lg:gap-16 items-center">
+          <div className="flex flex-col gap-6 lg:gap-[30px]">
+            <SecTag n="04" name={t('nosotros_presencia')} />
+            <h2 className={`${H2} font-[320] text-navy leading-[1.02] text-[clamp(38px,5.6vw,80px)]`}>
+              {t('nosotros_presencia')} <span className="ed-serif-it">{t('nosotros_global')}.</span>
+            </h2>
+            <p className="text-[17px] lg:text-[20px] leading-[1.6] text-ink-soft max-w-[28em]">{t('nos_presencia_d')}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-5 mt-2.5">
+              <div className="bg-cream rounded-[22px] p-6 lg:p-7 flex flex-col gap-2.5">
+                <span className="ed-label text-ink-soft">{t('nos_sede')}</span>
+                <span className="ed-serif text-navy leading-tight text-[30px] lg:text-[36px]">{t('nos_espana')}</span>
+              </div>
+              <div className="bg-cream rounded-[22px] p-6 lg:p-7 flex flex-col gap-2.5">
+                <span className="ed-label text-ink-soft">{t('nos_entidad')}</span>
+                <span className="ed-serif text-navy leading-tight text-[30px] lg:text-[36px]">{t('nos_miami')}</span>
+                <span className="text-[15px] text-ink-soft">20900 NE 30th Ave, Suite 703</span>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col border-t border-navy/20">
+            {cifras.map(c => (
+              <div key={c.texto} className="flex flex-wrap items-baseline gap-x-6 gap-y-1 py-6 lg:py-[30px] border-b border-navy/20">
+                <span className="ed-serif font-[280] text-navy leading-none tracking-[-0.03em] whitespace-nowrap text-[clamp(56px,6.7vw,96px)]">{c.numero}</span>
+                <span className="text-[18px] lg:text-[24px] text-ink-soft">{c.texto}</span>
+              </div>
+            ))}
+          </div>
+        </Reveal>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— CIERRE ——— */
+function Cierre() {
+  const t = useT()
+  return (
+    <section id="contacto" className="mt-16 lg:mt-[110px] bg-navy text-cream py-20 lg:py-[120px]">
+      <Wrap className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-8 lg:gap-[72px] items-center">
+        <Reveal>
+          <h2 className="ed-serif font-light leading-[1.02] tracking-[-0.025em] text-[clamp(40px,6.7vw,96px)] [text-wrap:balance]">
+            {t('nosotros_cta_titulo')} <span className="ed-serif-it text-gold">{t('nosotros_horizontes')}?</span>
+          </h2>
+        </Reveal>
+        <Reveal delay={0.1} className="flex flex-col gap-6 lg:gap-[26px]">
+          <Img3D src="/img/3d/conexion-navy.webp" className="ed-3d-navy w-full h-[180px] sm:h-[230px] object-cover" />
+          <Link to="/contacto" className="ed-pill self-start bg-coral text-navy hover:bg-coral-hover hover:text-navy focus-visible:outline-gold">
+            {t('nosotros_soy_empresa')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
+          </Link>
+        </Reveal>
+      </Wrap>
+    </section>
   )
 }
 
 export default function NosotrosPage() {
-  const t = useT()
-  const lang = useLang()
   return (
-    <>
+    <div className="bg-cream text-ink">
       <SEO
         title="Sobre Nosotros"
         description={`Conoce a Global Talent Connections: equipo, misión y por qué ${CIFRAS.empresas.enFrase.es} confían en nuestros profesionales remotos de Latinoamérica.`}
@@ -67,151 +231,11 @@ export default function NosotrosPage() {
         keywords="quienes somos Global Talent Connections, empresa talento remoto España, agencia asistentes virtuales, outsourcing Latinoamérica, equipo Global Talent"
         breadcrumbs={[{ name: 'Nosotros', url: '/nosotros' }]}
       />
-      {/* HERO */}
-      <section className="bg-[#0c1a2e] min-h-[600px] lg:min-h-[700px] flex items-center relative overflow-hidden">
-        <div className="absolute top-0 right-1/3 w-[500px] h-[500px] bg-blue-prime/[0.06] blur-[120px] rounded-full" />
-        <div className="container mx-auto px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
-          <div className="z-10 py-24 lg:py-20">
-            <span className="font-label uppercase tracking-[0.2em] text-blue-light text-sm font-bold block mb-6">
-              {t('nosotros_label')}
-            </span>
-            <h1 className="font-headline text-4xl sm:text-5xl md:text-7xl text-white leading-[1.1] mb-8">
-              {t('nosotros_titulo_1')}{' '}
-              <span className="italic text-gold">{t('nosotros_mercados')}</span> {lang === 'en' ? 'and' : 'y'}{' '}
-              <span className="italic text-gold">{t('nosotros_talento')}</span>.
-            </h1>
-            <p className="text-[#8899b0] text-lg md:text-xl max-w-xl leading-relaxed">
-              {t('nosotros_subtitle')}
-            </p>
-          </div>
-          <div className="relative lg:absolute lg:right-0 lg:w-1/2 h-[300px] lg:h-full hidden lg:block">
-            <img
-              alt="Global presence"
-              className="w-full h-full object-cover grayscale mix-blend-luminosity opacity-60"
-              src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1200&q=80"
-              loading="eager"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0c1a2e] via-[#0c1a2e]/40 to-transparent" />
-          </div>
-        </div>
-      </section>
-
-      {/* MISION & VALORES */}
-      <RevealSection className="py-24 lg:py-32 bg-cream">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="max-w-4xl">
-            <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl mb-16 text-navy">
-              {t('nosotros_mision_titulo')} <span className="text-blue-prime">{t('nosotros_mision_highlight')}</span> {t('nosotros_mision_cierre')}
-            </h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-12 lg:gap-20">
-            {[
-              { color: 'bg-blue-prime', titleKey: 'nos_v1_t', descKey: 'nos_v1_d' },
-              { color: 'bg-gold', titleKey: 'nos_v2_t', descKey: 'nos_v2_d' },
-              { color: 'bg-blue-prime', titleKey: 'nos_v3_t', descKey: 'nos_v3_d' },
-            ].map(item => (
-              <div key={item.titleKey} className="space-y-6">
-                <div className={`w-12 h-[2px] ${item.color}`} />
-                <h3 className="font-headline text-2xl text-navy">{t(item.titleKey)}</h3>
-                <p className="text-dark-gray leading-relaxed">{t(item.descKey)}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </RevealSection>
-
-      {/* EQUIPO */}
-      <RevealSection className="py-24 lg:py-32 bg-navy">
-        <div className="container mx-auto px-6 lg:px-8">
-          {/* Liderazgo */}
-          <div className="mb-16 lg:mb-20">
-            <span className="font-label uppercase tracking-widest text-blue-light text-xs font-bold block mb-4">{t('nosotros_liderazgo')}</span>
-            <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl text-white">
-              {t('nosotros_arquitectos')} <span className="italic text-gold">{t('nosotros_conexiones')}</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-            {direccion.map(member => (
-              <TeamCard key={member.id} member={member} size="lg" lang={lang} />
-            ))}
-          </div>
-
-          {/* Equipo Operativo */}
-          <div className="mt-16 lg:mt-20 mb-10 lg:mb-12">
-            <span className="font-label uppercase tracking-widest text-white/60 text-xs font-bold block">{t('nosotros_equipo_operativo')}</span>
-          </div>
-
-          <div className="space-y-6 lg:space-y-8">
-            {filasOperativo.map((fila, i) => (
-              <div key={i} className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-                {fila.map(member => (
-                  <TeamCard key={member.id} member={member} size="sm" lang={lang} />
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </RevealSection>
-
-      {/* PRESENCIA GLOBAL */}
-      <RevealSection className="py-24 lg:py-32 bg-cream relative overflow-hidden">
-        <div className="container mx-auto px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
-            <div>
-              <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl mb-8 leading-tight text-navy">
-                {t('nosotros_presencia')} <span className="italic text-gold">{t('nosotros_global')}</span>.
-              </h2>
-              <p className="text-dark-gray text-lg mb-12 max-w-lg">
-                {t('nos_presencia_d')}
-              </p>
-              <div className="grid grid-cols-2 gap-8">
-                <div className="flex items-start gap-4">
-                  <span className="w-2 h-2 mt-2 bg-blue-prime rounded-full shadow-[0_0_10px_rgba(59,130,246,0.4)]" />
-                  <div>
-                    <h4 className="font-bold text-navy">{t('nos_espana')}</h4>
-                    <p className="text-dark-gray text-sm">{t('nos_sede')}</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <span className="w-2 h-2 mt-2 bg-gold rounded-full shadow-[0_0_10px_rgba(201,168,76,0.5)]" />
-                  <div>
-                    <h4 className="font-bold text-navy">{t('nos_miami')}</h4>
-                    <p className="text-dark-gray text-sm">{t('nos_entidad')}</p>
-                    <p className="text-dark-gray text-xs">20900 NE 30th Ave, Suite 703</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="relative h-[350px] flex items-center justify-center">
-              <div className="absolute w-80 h-80 bg-blue-prime/[0.08] blur-[100px] rounded-full" />
-              <div className="relative z-10 p-10 lg:p-12 bg-white/60 backdrop-blur-md rounded-2xl border border-white/60 text-center shadow-xl">
-                <div className="text-5xl font-headline text-blue-prime mb-2">{CIFRAS.empresas.numero[lang]}</div>
-                <div className="font-label text-xs uppercase tracking-widest text-navy/70 mb-8 font-bold">{t('nosotros_empresas_activas')}</div>
-                <div className="h-[1px] w-full bg-navy/10 mb-8" />
-                <div className="text-5xl font-headline text-gold mb-2">2</div>
-                <div className="font-label text-xs uppercase tracking-widest text-navy/70 font-bold">{t('nosotros_sedes')}</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </RevealSection>
-
-      {/* CTA FINAL */}
-      <section className="py-24 lg:py-32 bg-[#0c1a2e] relative overflow-hidden text-center">
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-blue-prime/[0.08] blur-[120px] rounded-full" />
-        <div className="container mx-auto px-6 lg:px-8 relative z-10">
-          <h2 className="font-headline text-3xl md:text-4xl lg:text-6xl text-white mb-12 max-w-3xl mx-auto">
-            {t('nosotros_cta_titulo')} <span className="italic text-gold">{t('nosotros_horizontes')}</span>?
-          </h2>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link to="/contacto" className="px-10 lg:px-12 py-4 bg-blue-prime text-white font-bold rounded-md hover:bg-blue-deep hover:scale-95 transition-all">
-              {t('nosotros_soy_empresa')}
-            </Link>
-          </div>
-        </div>
-      </section>
-    </>
+      <Encabezado />
+      <Mision />
+      <Equipo />
+      <Presencia />
+      <Cierre />
+    </div>
   )
 }

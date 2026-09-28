@@ -153,8 +153,8 @@ const T: Record<string, Record<string, string>> = {
   nosotros_presencia: { es: 'Presencia Estratégica', en: 'Strategic Presence' },
   nosotros_global: { es: 'Global', en: 'Global' },
   nosotros_empresas_activas: CIFRAS.empresas.sustantivo,
-  nosotros_sedes: { es: 'Sedes (España + Miami)', en: 'Offices (Spain + Miami)' },
-  nosotros_cta_titulo: { es: 'Listo para expandir sus', en: 'Ready to expand your' },
+  nosotros_sedes: { es: 'sedes (España + Miami)', en: 'offices (Spain + Miami)' },
+  nosotros_cta_titulo: { es: '¿Listo para expandir tus', en: 'Ready to expand your' },
   nosotros_horizontes: { es: 'horizontes', en: 'horizons' },
   nosotros_soy_empresa: { es: 'Soy una empresa', en: "I'm a company" },
   nosotros_soy_profesional: { es: 'Soy un profesional', en: "I'm a professional" },
@@ -540,6 +540,20 @@ const T: Record<string, Record<string, string>> = {
   contacto_nota_respuesta: { es: 'Si prefieres, escríbenos por WhatsApp: es la vía más rápida y contesta una persona del equipo.', en: 'If you prefer, message us on WhatsApp: it is the fastest way and a real person answers.' },
 
   calc_meta: { es: 'Cálculo en vivo · Excel incluido', en: 'Live calculation · Excel included' },
+
+  // --- Rediseño «A · Revista»: Servicios, Nosotros y Qué es GTC (28-sep-2026) ---
+  // Textos nuevos del diseño aprobado: a confirmar por Larisa.
+  serv_meta_areas: { es: `${CIFRAS.areas} áreas profesionales`, en: `${CIFRAS.areas} professional areas` },
+  serv_sec_perfiles: { es: 'Perfiles', en: 'Profiles' },
+  serv_sec_perfiles_meta: { es: 'Elige el que necesitas', en: 'Choose the one you need' },
+  serv_h2_a: { es: 'Once perfiles,', en: 'Eleven profiles,' },
+  serv_h2_b: { es: 'un mismo respaldo.', en: 'the same backing.' },
+  serv_incluye_meta: { es: 'Desde 1.200 €/mes', en: 'From €1,200/month' },
+  serv_incluye_h2_a: { es: 'Un solo precio,', en: 'One price,' },
+  serv_incluye_h2_b: { es: 'todo resuelto.', en: 'everything covered.' },
+  que_es_meta: { es: 'En una frase', en: 'In one sentence' },
+  que_es_h2_a: { es: 'Seis datos,', en: 'Six facts,' },
+  que_es_h2_b: { es: 'una sola historia.', en: 'one single story.' },
 }
 
 export function t(key: string, lang: string): string {

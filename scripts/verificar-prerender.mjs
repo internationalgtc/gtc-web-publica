@@ -47,6 +47,9 @@ for (const ruta of RUTAS) {
 const spa = leer(path.join(STATIC, 'spa.html'))
 if (!spa) errores.push('/spa.html: falta (las rutas sin HTML propio darían 404)')
 else if (!/<div id="root"><\/div>/.test(spa)) errores.push('/spa.html: no es el esqueleto vacío de la SPA (¿se copió la home?)')
+const p404 = leer(path.join(STATIC, '404.html'))
+if (!p404) errores.push('/404.html: falta (las direcciones que no existen darían la página 404 genérica de Vercel)')
+else if (!/<div id="root"><\/div>/.test(p404)) errores.push('/404.html: no es el esqueleto vacío de la SPA')
 
 // 4. llms.txt generado en el build.
 const llms = leer(path.join(STATIC, 'llms.txt'))
@@ -61,4 +64,4 @@ if (errores.length) {
   process.exit(1)
 }
 
-console.log(`✅ prerender OK — ${RUTAS.length} rutas con HTML, título, description y canonical propios en ${STATIC}; spa.html y llms.txt presentes`)
+console.log(`✅ prerender OK — ${RUTAS.length} rutas con HTML, título, description y canonical propios en ${STATIC}; spa.html, 404.html y llms.txt presentes`)

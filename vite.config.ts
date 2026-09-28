@@ -78,12 +78,9 @@ const RUTAS_PRERENDER = [
   '/nosotros',
   '/blog',
   '/politica-de-privacidad',
-  // Retiradas el 8-sep-2026: el portal de candidatos es otro dominio. Se
-  // prerenderizan A PROPÓSITO para que el HTML que Google recibe en esas
-  // direcciones (que tiene indexadas) traiga el 404 y el `noindex` sin
-  // depender de que ejecute JavaScript. No redirigen: no existen.
-  '/empleos',
-  '/beneficios',
+  // /empleos, /empleos/:id y /beneficios ya no se prerenderizan: desde el
+  // 28-sep-2026 redirigen al portal de candidatos (vercel.json), que tiene
+  // esas mismas rutas.
   ...RUTAS_BLOG,
 ]
 

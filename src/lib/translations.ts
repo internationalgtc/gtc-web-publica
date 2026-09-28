@@ -224,7 +224,7 @@ const T: Record<string, Record<string, string>> = {
   que_es_titulo: { es: 'Qué es Global Talent Connections', en: 'What is Global Talent Connections' },
   que_es_datos: { es: 'En pocas palabras', en: 'In short' },
   que_es_ver_precio: { es: 'Ver precio y qué incluye', en: 'See price and what is included' },
-  que_es_solo_empresas: { es: 'El servicio es para empresas. Si buscas trabajo, las vacantes están en el portal de empleos: empleos.globaltalent-connections.com.', en: 'The service is for companies. If you are looking for a job, openings are on our jobs portal: empleos.globaltalent-connections.com.' },
+  que_es_solo_empresas: { es: 'Servicio exclusivo para empresas. No gestionamos búsquedas de empleo.', en: 'A service exclusively for companies. We do not handle job searches.' },
   home_hero_sub: { es: 'Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño.', en: 'We connect companies with professionals from Latin America. We select the profile, handle the hiring and support their performance.' },
   home_hero_cta_primary: { es: 'Cuéntanos qué perfil necesitas', en: 'Tell us what profile you need' },
   home_hero_cta_secondary: { es: 'Calcular tu ahorro', en: 'Calculate your savings' },

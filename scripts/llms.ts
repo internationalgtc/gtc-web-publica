@@ -34,6 +34,5 @@ ${datos.map(d => `- ${d}`).join('\n')}
 - [Nosotros](${BASE}/nosotros): equipo y sedes.
 - [Contacto](${BASE}/contacto)
 - [Blog](${BASE}/blog)
-- [Portal de empleos](https://empleos.globaltalent-connections.com/): vacantes para profesionales de Latinoamérica.
 `
 }

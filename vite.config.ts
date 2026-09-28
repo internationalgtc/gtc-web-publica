@@ -80,8 +80,9 @@ const RUTAS_PRERENDER = [
   '/blog',
   '/politica-de-privacidad',
   // /empleos, /empleos/:id y /beneficios ya no se prerenderizan: desde el
-  // 28-sep-2026 redirigen al portal de candidatos (vercel.json), que tiene
-  // esas mismas rutas.
+  // 28-sep-2026 redirigen a la portada (vercel.json). NO al portal de
+  // candidatos: Ariel, 8-sep-2026, «que no quede linkeada, que no exista,
+  // que no redirija» (ver src/App.tsx).
   ...RUTAS_BLOG,
 ]
 
@@ -95,6 +96,10 @@ function separarHomeDeLaSpa(): Plugin {
       const home = path.join(dir, HOME_PRERENDER)
       // Siempre: el esqueleto de la SPA en spa.html (destino del rewrite).
       fs.copyFileSync(index, path.join(dir, 'spa.html'))
+      // Y en 404.html: Vercel lo sirve con estado 404 a toda dirección que no
+      // existe (vercel.json ya no reescribe «todo» a la SPA). Como es la misma
+      // SPA, React muestra la página «no encontrada» con su noindex.
+      fs.copyFileSync(index, path.join(dir, '404.html'))
       if (fs.existsSync(home)) fs.renameSync(home, index)
     },
   }

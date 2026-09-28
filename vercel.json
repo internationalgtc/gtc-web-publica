@@ -6,14 +6,15 @@
       "destination": "https://www.globaltalent-connections.com/:path*",
       "permanent": true
     },
-    { "source": "/empleos", "destination": "https://empleos.globaltalent-connections.com/empleos", "permanent": true },
-    { "source": "/empleos/:id", "destination": "https://empleos.globaltalent-connections.com/empleos/:id", "permanent": true },
-    { "source": "/beneficios", "destination": "https://empleos.globaltalent-connections.com/beneficios", "permanent": true },
+    { "source": "/empleos", "destination": "https://www.globaltalent-connections.com/", "permanent": true },
+    { "source": "/empleos/:id", "destination": "https://www.globaltalent-connections.com/", "permanent": true },
+    { "source": "/beneficios", "destination": "https://www.globaltalent-connections.com/", "permanent": true },
     { "source": "/blog/herramientas-vacantes-internacionales", "destination": "https://empleos.globaltalent-connections.com/blog/herramientas-vacantes-internacionales", "permanent": true },
     { "source": "/blog/oferta-trabajo-remoto-confiable-estafa", "destination": "https://empleos.globaltalent-connections.com/blog/oferta-trabajo-remoto-confiable-estafa", "permanent": true },
     { "source": "/blog/como-conseguir-trabajo-remoto-euros", "destination": "https://empleos.globaltalent-connections.com/", "permanent": true }
   ],
   "rewrites": [
-    { "source": "/((?!.*\\.xlsx$).*)", "destination": "/spa.html" }
+    { "source": "/:ruta(nosotros|contacto|servicios|calculadora-ahorro|blog|politica-de-privacidad|asistente-virtual|que-es-gtc)", "destination": "/spa.html" },
+    { "source": "/blog/:id", "destination": "/spa.html" }
   ]
 }

@@ -1,6 +1,6 @@
 import { ConversationFlow } from "@/types/chat";
 
-export const WHATSAPP_LINK = "https://wa.me/34622850423";
+export const WHATSAPP_LINK = "https://wa.me/34689539896";
 export const CONTACT_LINK = "/contacto";
 export const JOBS_LINK = "/empleos";
 export const WEBSITE_LINK = "/";
@@ -245,7 +245,7 @@ export const conversationFlowEN: ConversationFlow = {
     ],
   },
   contactar_empresa: {
-    message: "Perfect! 🎯\n\nWe'll take you to our contact form where you can leave your details and requirements.\n\nAn advisor will contact you in less than 24 hours.",
+    message: "Perfect! 🎯\n\nWe'll take you to our contact form where you can leave your details and requirements.\n\nAn advisor will contact you within 24 hours.",
     options: [
       { id: "formulario", icon: "📝", label: "Go to contact form", action: "open_contact" },
       { id: "volver", icon: "🔙", label: "Back to start", action: "initial" },

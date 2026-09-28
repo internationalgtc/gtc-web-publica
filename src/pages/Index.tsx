@@ -35,7 +35,7 @@ const VIDEOS_TESTIMONIO = [
   { nombre: 'Miguel Ángel Ramírez', cargoKey: 'testi_t1_cargo', src: '/videos/testimonio-1.mp4', poster: '/videos/testimonio-1.jpg' },
   { nombre: 'Arturo Sanz Santos', cargoKey: 'testi_t2_cargo', src: '/videos/testimonio-2.mp4', poster: '/videos/testimonio-2.jpg' },
   { nombre: 'Alex Andreu Peinado', cargoKey: 'testi_t3_cargo', src: '/videos/testimonio-3.mp4', poster: '/videos/testimonio-3.jpg' },
-  { nombre: 'Curro Sabás', cargoKey: 'testi_t4_cargo', src: '/videos/testimonio-4.mp4', poster: '/videos/testimonio-4.jpg' },
+  { nombre: 'Curro Sabán', cargoKey: 'testi_t4_cargo', src: '/videos/testimonio-4.mp4', poster: '/videos/testimonio-4.jpg' },
 ]
 
 const GUARANTEES = [

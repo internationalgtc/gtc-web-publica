@@ -6,6 +6,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Layout } from '@/components/layout/Layout'
 import { ScrollToTop } from '@/components/shared/ScrollToTop'
+import { AvisoCookies } from '@/components/shared/AvisoCookies'
 
 // Variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos):
 // la home ES el portal de vacantes. Sin páginas de clientes ni ChatWidget
@@ -49,6 +50,7 @@ export default function App() {
           </Route>
         </Routes>
       </Suspense>
+      <AvisoCookies />
       <Analytics />
       <SpeedInsights />
     </>

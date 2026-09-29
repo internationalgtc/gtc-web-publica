@@ -35,56 +35,51 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&family=Montserrat:wght@400;600;700;800&family=Poppins:wght@400;500;600&family=Lato:wght@300;400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-W66STSP6');</script>
-
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-J6SJCJ1PK7"></script>
+  <!-- Medición y publicidad (Google Tag Manager, Google Analytics 4 + Google Ads, LinkedIn
+       Insight, Meta Pixel). NO se carga al entrar: la LSSI (art. 22.2) exige consentimiento
+       previo para cookies que no son técnicas. Se carga solo si la persona aceptó en el aviso
+       de cookies (src/components/shared/AvisoCookies.tsx), ahora o en una visita anterior. -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-J6SJCJ1PK7');
-    gtag('config', 'AW-18022609299');
-  </script>
+    window.__gtcCargarMedicion = function () {
+      if (window.__gtcMedicionCargada) return;
+      window.__gtcMedicionCargada = true;
+      var s0 = document.getElementsByTagName('script')[0];
+      function cargar(src) { var e = document.createElement('script'); e.async = true; e.src = src; s0.parentNode.insertBefore(e, s0); }
 
-  <!-- LinkedIn Insight Tag -->
-  <script type="text/javascript">
-    _linkedin_partner_id="9741425";
-    window._linkedin_data_partner_ids=window._linkedin_data_partner_ids||[];
-    window._linkedin_data_partner_ids.push(_linkedin_partner_id);
-  </script>
-  <script type="text/javascript">
-    (function(l){if(!l){window.lintrk=function(a,b){window.lintrk.q.push([a,b])};
-    window.lintrk.q=[]}var s=document.getElementsByTagName("script")[0];
-    var b=document.createElement("script");b.type="text/javascript";b.async=true;
-    b.src="https://snap.licdn.com/li.lms-analytics/insight.min.js";
-    s.parentNode.insertBefore(b,s);})(window.lintrk);
-  </script>
+      // Google Tag Manager
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+      cargar('https://www.googletagmanager.com/gtm.js?id=GTM-W66STSP6');
 
-  <!-- Meta Pixel -->
-  <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init','1296564382354555');
-    fbq('track','PageView');
+      // Google Analytics 4 + Google Ads
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+      window.gtag('config', 'G-J6SJCJ1PK7');
+      window.gtag('config', 'AW-18022609299');
+      cargar('https://www.googletagmanager.com/gtag/js?id=G-J6SJCJ1PK7');
+
+      // LinkedIn Insight Tag
+      window._linkedin_partner_id = '9741425';
+      window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+      window._linkedin_data_partner_ids.push(window._linkedin_partner_id);
+      if (!window.lintrk) { window.lintrk = function (a, b) { window.lintrk.q.push([a, b]); }; window.lintrk.q = []; }
+      cargar('https://snap.licdn.com/li.lms-analytics/insight.min.js');
+
+      // Meta Pixel
+      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+      document,'script','https://connect.facebook.net/en_US/fbevents.js');
+      window.fbq('init', '1296564382354555');
+      window.fbq('track', 'PageView');
+    };
+    try {
+      if (localStorage.getItem('gtc-cookies') === 'aceptadas') window.__gtcCargarMedicion();
+    } catch (e) { /* sin almacenamiento: no se carga nada hasta que acepte */ }
   </script>
 </head>
 <body>
-  <!-- GTM noscript -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W66STSP6" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- LinkedIn noscript -->
-  <noscript><img height="1" width="1" style="display:none;" alt="" src="https://px.ads.linkedin.com/collect/?pid=9741425&fmt=gif" /></noscript>
-  <!-- Meta noscript -->
-  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1296564382354555&ev=PageView&noscript=1" /></noscript>
-
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
 

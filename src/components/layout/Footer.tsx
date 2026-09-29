@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import logoWhite from '@/assets/logos/logo-gtc-blanco.png'
 import { useT } from '@/hooks/useT'
+import { EVENTO_ABRIR_AVISO_COOKIES } from '@/components/shared/AvisoCookies'
 
 // Variante CANDIDATOS (rama `candidatos`, deploy gtc-empleos): footer reducido
 // a lo que le sirve a quien busca empleo. Sin enlaces a páginas de clientes.
@@ -39,9 +40,18 @@ export function Footer() {
 
         <div className="flex flex-col sm:flex-row justify-between gap-3 py-[26px] border-t border-cream/15 text-[14px] text-cream/80">
           <p>{t('footer_derechos')}</p>
-          <Link className="text-cream/80 underline underline-offset-4 hover:text-cream transition-colors" to="/politica-de-privacidad">
-            {t('footer_privacidad')}
-          </Link>
+          <div className="flex gap-6">
+            <Link className="text-cream/80 underline underline-offset-4 hover:text-cream transition-colors" to="/politica-de-privacidad">
+              {t('footer_privacidad')}
+            </Link>
+            <button
+              type="button"
+              className="text-cream/80 underline underline-offset-4 hover:text-cream transition-colors"
+              onClick={() => window.dispatchEvent(new Event(EVENTO_ABRIR_AVISO_COOKIES))}
+            >
+              {t('footer_cookies')}
+            </button>
+          </div>
         </div>
       </div>
       <div className="ed-foot-word" aria-hidden="true">Global Talent</div>

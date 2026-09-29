@@ -6,6 +6,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
 import { Layout } from '@/components/layout/Layout'
 import { ScrollToTop } from '@/components/shared/ScrollToTop'
+import { AvisoCookies } from '@/components/shared/AvisoCookies'
 import ChatWidget from '@/components/ChatWidget'
 import HomePage from '@/pages/Index'
 
@@ -55,6 +56,7 @@ export default function App() {
         </Routes>
       </Suspense>
       <ChatWidget />
+      <AvisoCookies />
       <Analytics />
       <SpeedInsights />
     </>

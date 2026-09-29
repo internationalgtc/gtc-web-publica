@@ -3,6 +3,7 @@ import logoWhite from '@/assets/logos/logo-gtc-blanco.png'
 import { useT } from '@/hooks/useT'
 import { TELEFONO, TEL_LINK, WHATSAPP_LINK } from '@/data/contacto'
 import { trackContacto } from '@/lib/tracking'
+import { EVENTO_ABRIR_AVISO_COOKIES } from '@/components/shared/AvisoCookies'
 
 export function Footer() {
   const t = useT()
@@ -51,9 +52,18 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center gap-3 py-[22px] border-t border-cream/[0.18] ed-caps !text-[10px] !tracking-[0.18em] text-cream/35">
           <p>{t('footer_derechos')} · Alicante, España</p>
-          <Link className="hover:text-cream transition-colors" to="/politica-de-privacidad">
-            {t('footer_privacidad')}
-          </Link>
+          <div className="flex gap-6">
+            <Link className="hover:text-cream transition-colors" to="/politica-de-privacidad">
+              {t('footer_privacidad')}
+            </Link>
+            <button
+              type="button"
+              className="ed-caps !text-[10px] !tracking-[0.18em] hover:text-cream transition-colors"
+              onClick={() => window.dispatchEvent(new Event(EVENTO_ABRIR_AVISO_COOKIES))}
+            >
+              {t('footer_cookies')}
+            </button>
+          </div>
         </div>
       </div>
       <div className="ed-foot-word" aria-hidden="true">Global Talent</div>

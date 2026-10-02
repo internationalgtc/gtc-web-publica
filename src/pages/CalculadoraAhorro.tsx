@@ -29,7 +29,7 @@ const PERFILES: { key: string; labelKey: string; salario: number }[] = [
   { key: 'Automatización e IA', labelKey: 'serv_ia', salario: 32000 },
 ]
 const NIVELES = [
-  { key: 'calc_junior', tarifa: 1200 },
+  { key: 'calc_junior', tarifa: 1300 },
   { key: 'calc_mid', tarifa: 1400 },
   { key: 'calc_senior', tarifa: 1650 },
 ]

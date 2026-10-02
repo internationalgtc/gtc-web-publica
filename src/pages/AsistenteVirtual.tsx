@@ -180,10 +180,10 @@ function VideoEncabezado() {
   )
 }
 
-/* Reveal enmascarado por palabra, como el titular de la portada. «1.200 €» va
+/* Reveal enmascarado por palabra, como el titular de la portada. «1.300 €» va
    con espacio duro para que el símbolo no quede solo en otra línea. */
 const TITULO_A = 'Un profesional remoto dedicado,'
-const TITULO_B = 'desde 1.200 € al mes.'
+const TITULO_B = 'desde 1.300 € al mes.'
 
 function Titular() {
   const reduced = useReducedMotion()
@@ -219,7 +219,7 @@ function TarjetaFormulario() {
     <div id="solicitar" className="scroll-mt-4 bg-navy text-cream rounded-[26px] lg:rounded-[28px] px-5 py-[26px] sm:p-8 lg:p-10 flex flex-col gap-4">
       <div className="flex items-baseline justify-between gap-4">
         <span className="ed-serif font-[330] leading-none whitespace-nowrap text-[40px] lg:text-[48px]">
-          1.200 €<span className="text-base text-cream/70"> /mes</span>
+          1.300 €<span className="text-base text-cream/70"> /mes</span>
         </span>
         <span className="ed-label text-gold">Una factura</span>
       </div>
@@ -288,7 +288,7 @@ function Coste() {
           <div className="h-full bg-navy text-cream rounded-[20px] p-5 lg:p-8 flex flex-col gap-2.5">
             <span className="ed-label text-cream/70">Mismo perfil con GTC</span>
             <span className="ed-serif leading-none text-[34px] lg:text-[44px]">
-              <span className="whitespace-nowrap">1.200 €</span> <span className="text-[15px] lg:text-lg text-cream/70">/mes</span>
+              <span className="whitespace-nowrap">1.300 €</span> <span className="text-[15px] lg:text-lg text-cream/70">/mes</span>
             </span>
             <ul className="list-disc pl-[18px] flex flex-col gap-1 text-[14px] lg:text-[15px] leading-[1.45] text-cream/80">
               {COSTE_GTC.map(x => <li key={x}>{x}</li>)}
@@ -456,7 +456,7 @@ function Cierre() {
           <h2 className="ed-serif font-[320] leading-[1.04] tracking-[-0.015em] text-[38px] sm:text-[48px] lg:text-[clamp(52px,5vw,72px)]">
             ¿Qué quieres <span className="ed-serif-it text-gold">delegar?</span>
           </h2>
-          <p className="ed-label text-cream/75 leading-[1.6]">Desde 1.200 €/mes · Sin permanencia · Reemplazo garantizado</p>
+          <p className="ed-label text-cream/75 leading-[1.6]">Desde 1.300 €/mes · Sin permanencia · Reemplazo garantizado</p>
           <a href="#solicitar" className="ed-pill bg-coral text-navy hover:bg-coral-hover hover:text-navy focus-visible:outline-gold">
             Quiero mi propuesta
           </a>
@@ -476,7 +476,7 @@ function BarraFija() {
     <div className="lg:hidden fixed inset-x-3 bottom-3 z-40 sm:max-w-[520px] sm:mx-auto bg-navy-deep text-cream rounded-full pl-5 pr-2 py-2 flex items-center justify-between gap-3 shadow-[0_18px_40px_-12px_rgba(4,30,58,0.55)]">
       <span className="flex flex-col leading-[1.2] min-w-0">
         <span className="text-xs text-cream/70">Asistente virtual</span>
-        <strong className="text-[15px] whitespace-nowrap">desde 1.200 €/mes</strong>
+        <strong className="text-[15px] whitespace-nowrap">desde 1.300 €/mes</strong>
       </span>
       <span className="flex items-center gap-1.5 shrink-0">
         <a
@@ -504,8 +504,8 @@ export default function AsistenteVirtual() {
   return (
     <div className="bg-cream text-ink">
       <SEO
-        title="Asistente virtual para empresas desde 1.200 €/mes"
-        description="Un profesional remoto dedicado, seleccionado y evaluado, en tu equipo en 5 días hábiles. Desde 1.200 €/mes, sin permanencia y con reemplazo garantizado."
+        title="Asistente virtual para empresas desde 1.300 €/mes"
+        description="Un profesional remoto dedicado, seleccionado y evaluado, en tu equipo en 5 días hábiles. Desde 1.300 €/mes, sin permanencia y con reemplazo garantizado."
         path="/asistente-virtual"
         keywords="asistente virtual para empresas, contratar asistente virtual, asistente virtual precio, secretaria virtual empresas, externalizar tareas administrativas"
         faqSchema={FAQ_SCHEMA}

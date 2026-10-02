@@ -149,7 +149,7 @@ export default function Contacto() {
     <div className="bg-cream text-ink">
       <SEO
         title="Contacto"
-        description="Cuéntanos qué perfil necesitas. En 5 días hábiles te presentamos candidatos preseleccionados. Asistentes remotos desde 1.200 €/mes."
+        description="Cuéntanos qué perfil necesitas. En 5 días hábiles te presentamos candidatos preseleccionados. Asistentes remotos desde 1.300 €/mes."
         path="/contacto"
       />
       <Encabezado />

@@ -9,8 +9,8 @@ export const BUDGET_MIN: Record<string, string> = {
 }
 
 const BUDGET_LABEL: Record<string, string> = {
-  menos_1200: 'Menos de 1.200 €',
-  '1200_2000': '1.200 – 2.000 €',
+  menos_1200: 'Menos de 1.300 €',
+  '1200_2000': '1.300 – 2.000 €',
   mas_2000: 'Más de 2.000 €',
 }
 

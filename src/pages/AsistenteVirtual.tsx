@@ -278,7 +278,7 @@ function Coste() {
           <div className="h-full bg-cream-2 rounded-[20px] p-5 lg:p-8 flex flex-col gap-2.5">
             <span className="ed-label text-ink-soft">Administrativo en plantilla · España</span>
             <span className="ed-serif text-navy leading-none text-[34px] lg:text-[44px]">
-              <span className="whitespace-nowrap">≈ 2.500 €</span> <span className="text-[15px] lg:text-lg text-ink-soft">/mes</span>
+              <span className="whitespace-nowrap">≈ 2.700 €</span> <span className="text-[15px] lg:text-lg text-ink-soft">/mes</span>
             </span>
             <ul className="list-disc pl-[18px] flex flex-col gap-1 text-[14px] lg:text-[15px] leading-[1.45] text-ink-soft">
               {COSTE_ESPANA.map(x => <li key={x}>{x}</li>)}

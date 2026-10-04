@@ -350,7 +350,7 @@ const T: Record<string, Record<string, string>> = {
   home_coste_h2_a: { es: 'Un empleado en España cuesta más de', en: 'An employee in Spain costs more than' },
   home_coste_h2_b: { es: '30.000 € al año.', en: '€30,000 a year.' },
   home_coste_es_label: { es: 'Administrativo en plantilla · España', en: 'In-house administrative · Spain' },
-  home_coste_es_precio: { es: '≈ 2.500 €', en: '≈ €2,500' },
+  home_coste_es_precio: { es: '≈ 2.700 €', en: '≈ €2,700' },
   home_coste_gtc_precio: { es: '1.300 €', en: '€1,300' },
   home_coste_mes: { es: '/mes', en: '/month' },
   home_coste_es_1: { es: 'Salario bruto', en: 'Gross salary' },

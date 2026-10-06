@@ -4,13 +4,16 @@ import { TituloEntrada, Wrap, partirTitulo } from '@/components/shared/Editorial
 import { blogPosts } from '@/data/blogPosts'
 import { useT, useLang, l } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
+import { useQuery } from '@tanstack/react-query'
+import { articulosDeLeax, type TarjetaLeax } from '@/lib/leax-blog'
 
 /* Blog — rediseño «A · Revista» (28-sep-2026), lienzo A-blog.
-   Los artículos salen de src/data/blogPosts.ts: foto y texto alternan de lado. */
+   Los artículos salen de src/data/blogPosts.ts: foto y texto alternan de lado.
+   Debajo, los que vienen de Leax (piloto SEO, P5): solo texto, porque Leax no
+   manda foto de portada. Si Leax no responde, la portada sigue con los propios. */
 
-function Encabezado() {
+function Encabezado({ n }: { n: number }) {
   const t = useT()
-  const n = blogPosts.length
   return (
     <section className="pt-[112px] sm:pt-[140px] lg:pt-[174px] pb-14 lg:pb-20 border-b border-navy/15">
       <Wrap className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] gap-8 lg:gap-14 items-end">
@@ -95,7 +98,48 @@ function Articulos() {
   )
 }
 
+function fecha(iso: string | null, lang: string): string | null {
+  if (!iso) return null
+  const d = new Date(iso)
+  return Number.isNaN(d.getTime()) ? null : d.toLocaleDateString(lang === 'en' ? 'en-GB' : 'es-ES', { day: 'numeric', month: 'long', year: 'numeric' })
+}
+
+function ArticulosLeax({ articulos }: { articulos: TarjetaLeax[] }) {
+  const t = useT()
+  const lang = useLang()
+  if (!articulos.length) return null
+  return (
+    <section className="pb-20 lg:pb-[120px]">
+      <Wrap>
+        <ul className="ed-lista">
+          {articulos.map(a => {
+            const [principio, final] = partirTitulo(a.title)
+            const cuando = fecha(a.publicado_en, lang)
+            return (
+              <li key={a.slug}>
+                <Link to={`/blog/${a.slug}`} className="group flex flex-col gap-3 py-4 no-underline text-navy hover:text-navy">
+                  {cuando && <span className="ed-label text-ink-soft">{cuando}</span>}
+                  <h2 className="ed-serif font-[330] leading-[1.08] tracking-[-0.02em] text-[clamp(26px,6.4vw,34px)] lg:text-[clamp(32px,2.8vw,42px)] [text-wrap:balance]">
+                    {principio && `${principio} `}
+                    <span className="ed-serif-it">{final}</span>
+                  </h2>
+                  {a.meta_description && <p className="text-[17px] leading-[1.6] text-ink-soft max-w-[40em] [text-wrap:pretty]">{a.meta_description}</p>}
+                  <span className="self-start font-label font-semibold text-[16px] border-b-2 border-coral pb-1">
+                    {t('blog_leer_mas')}{' '}
+                    <span aria-hidden="true" className="inline-block transition-transform duration-300 group-hover:translate-x-1">→</span>
+                  </span>
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+      </Wrap>
+    </section>
+  )
+}
+
 export default function BlogPage() {
+  const { data: deLeax = [] } = useQuery({ queryKey: ['articulos-leax'], queryFn: articulosDeLeax, staleTime: 5 * 60 * 1000, retry: 1 })
   return (
     <div className="bg-cream text-ink">
       <SEO
@@ -103,8 +147,9 @@ export default function BlogPage() {
         description="Insights y casos de éxito sobre talento remoto, gestión de equipos y crecimiento empresarial con asistentes virtuales."
         path="/blog"
       />
-      <Encabezado />
+      <Encabezado n={blogPosts.length + deLeax.length} />
       <Articulos />
+      <ArticulosLeax articulos={deLeax} />
     </div>
   )
 }

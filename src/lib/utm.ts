@@ -76,3 +76,16 @@ export function getUTMs(): Record<string, string | undefined> {
 export function getLandingUrl(): string {
   return sessionStorage.getItem(LANDING_KEY) ?? window.location.href
 }
+
+/**
+ * Marca el origen de la visita solo si todavía no tiene uno. Para enlaces
+ * internos (el botón de un artículo del blog que viene de Leax): no pisa una
+ * campaña de Ads o Meta por la que la persona ya había entrado.
+ */
+export function marcarOrigenSiNoHay(utms: Partial<Record<typeof UTM_KEYS[number], string>>): void {
+  try {
+    if (!sessionStorage.getItem(STORAGE_KEY)) sessionStorage.setItem(STORAGE_KEY, JSON.stringify(utms))
+  } catch {
+    // Sin almacenamiento (modo privado estricto): el lead llega igual, sin la marca.
+  }
+}

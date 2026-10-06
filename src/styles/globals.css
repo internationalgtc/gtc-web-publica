@@ -607,6 +607,93 @@
   .ed-articulo a:hover {
     color: theme('colors.navy.deep');
   }
+
+  /* Artículos que llegan de Leax (piloto SEO): el HTML trae subtítulos, listas,
+     imágenes, fuentes y un botón propio, que los dos artículos escritos a mano
+     no usan. Mismo sistema: Fraunces en títulos, hairlines, coral solo en acentos. */
+  .ed-articulo-leax h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 340;
+    color: theme('colors.navy.DEFAULT');
+    font-size: clamp(30px, 7.4vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+    margin: 28px 0 0;
+    text-wrap: balance;
+  }
+  .ed-articulo-leax h3 {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    color: theme('colors.navy.DEFAULT');
+    font-size: 1.05em;
+    margin: 12px 0 0;
+  }
+  .ed-articulo-leax ul,
+  .ed-articulo-leax ol {
+    margin: 0;
+    padding-left: 1.3em;
+  }
+  .ed-articulo-leax ul { list-style: disc; }
+  .ed-articulo-leax ol { list-style: decimal; }
+  .ed-articulo-leax li { margin: 0.4em 0; }
+  .ed-articulo-leax li::marker { color: theme('colors.coral.DEFAULT'); }
+  .ed-articulo-leax figure { margin: 8px 0; }
+  .ed-articulo-leax img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+  }
+  .ed-articulo-leax figcaption {
+    margin-top: 10px;
+    font-size: 0.8em;
+    color: theme('colors.ink.soft');
+  }
+  .ed-articulo-leax blockquote {
+    margin: 0;
+    padding-left: 22px;
+    border-left: 2px solid theme('colors.coral.DEFAULT');
+    font-family: 'Fraunces', Georgia, serif;
+    font-style: italic;
+    color: theme('colors.navy.DEFAULT');
+  }
+  .ed-articulo-leax .seo-fuentes {
+    padding-top: 20px;
+    border-top: 1px solid theme('colors.navy.DEFAULT / 18%');
+    font-size: 0.85em;
+  }
+  .ed-articulo-leax .seo-fuentes h2 {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .ed-articulo-leax .seo-cta {
+    padding: 28px 0;
+    border-top: 1px solid theme('colors.navy.DEFAULT / 18%');
+    border-bottom: 1px solid theme('colors.navy.DEFAULT / 18%');
+  }
+  .ed-articulo-leax .seo-cta .seo-cta-boton {
+    display: inline-flex;
+    margin-top: 14px;
+    padding: 14px 26px;
+    min-height: 44px;
+    border-radius: 999px;
+    background: theme('colors.coral.DEFAULT');
+    color: theme('colors.cream.DEFAULT');
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .ed-articulo-leax .seo-cta .seo-cta-boton:hover {
+    background: theme('colors.coral.hover');
+    color: theme('colors.cream.DEFAULT');
+  }
   .ed-lista {
     list-style: none;
     margin: 0;

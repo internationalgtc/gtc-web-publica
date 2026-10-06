@@ -6,6 +6,7 @@ import { Img3D, TituloEntrada, Wrap, partirTitulo } from '@/components/shared/Ed
 import { blogPosts } from '@/data/blogPosts'
 import { useT, useLang, l } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
+import ArticuloLeax from '@/components/shared/ArticuloLeax'
 
 /* Artículo — rediseño «A · Revista» (28-sep-2026), lienzo A-articulo.
    El texto sigue en src/data/blogPosts.ts como HTML. Acá se lee bloque por
@@ -296,6 +297,21 @@ function Cierre({ bloques }: { bloques: Bloque[] }) {
   )
 }
 
+function NoEncontrado() {
+  const t = useT()
+  return (
+    <div className="min-h-screen bg-cream text-ink flex items-center justify-center pt-32 pb-20">
+      <SEO title={t('blog_not_found')} description={t('blog_not_found')} noIndex />
+      <Wrap className="text-center flex flex-col items-center gap-6">
+        <h1 className="ed-serif font-[320] text-navy leading-none tracking-[-0.02em] text-[clamp(40px,6vw,72px)]">{t('blog_not_found')}</h1>
+        <Link to="/blog" className="ed-pill ed-pill-navy">
+          {t('blog_volver')}
+        </Link>
+      </Wrap>
+    </div>
+  )
+}
+
 export default function BlogPostPage() {
   const { id } = useParams()
   const t = useT()
@@ -303,18 +319,9 @@ export default function BlogPostPage() {
   const navigate = useNavigate()
   const post = blogPosts.find(p => p.id === id)
 
-  if (!post) {
-    return (
-      <div className="min-h-screen bg-cream text-ink flex items-center justify-center pt-32 pb-20">
-        <Wrap className="text-center flex flex-col items-center gap-6">
-          <h1 className="ed-serif font-[320] text-navy leading-none tracking-[-0.02em] text-[clamp(40px,6vw,72px)]">{t('blog_not_found')}</h1>
-          <Link to="/blog" className="ed-pill ed-pill-navy">
-            {t('blog_volver')}
-          </Link>
-        </Wrap>
-      </div>
-    )
-  }
+  // Lo que no está escrito acá puede venir de Leax (piloto SEO): si Leax no lo
+  // tiene aprobado para esta web, es el «no encontrado» de siempre.
+  if (!post) return id ? <ArticuloLeax key={id} slug={id} noEncontrado={<NoEncontrado />} /> : <NoEncontrado />
 
   const titulo = l(post.title, lang)
   const [principio, final] = partirTitulo(titulo)

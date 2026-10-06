@@ -8,6 +8,17 @@ import prerender from '@prerenderer/rollup-plugin'
 import type { Plugin } from 'vite'
 import { blogPosts } from './src/data/blogPosts'
 import { generarLlmsTxt } from './scripts/llms'
+import { ARTICULOS_PROPIOS } from './api/_blog-leax'
+
+// La función del blog (api/blog-articulo.ts) deja pasar a la SPA los artículos
+// escritos a mano y pide el resto a Leax. Si se suma uno acá y no allá, la
+// función lo buscaría en Leax y daría 404: el build no sigue.
+{
+  const propios = blogPosts.map(p => p.id).sort().join(',')
+  if (propios !== [...ARTICULOS_PROPIOS].sort().join(',')) {
+    throw new Error(`api/_blog-leax.ts ARTICULOS_PROPIOS (${ARTICULOS_PROPIOS.join(', ')}) no coincide con src/data/blogPosts.ts (${propios}).`)
+  }
+}
 
 // 🔴 El prerender necesita un Chromium REAL y solo se activa si está instalado
 // en la máquina que compila.

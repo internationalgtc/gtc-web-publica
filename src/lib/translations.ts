@@ -186,6 +186,9 @@ const T: Record<string, Record<string, string>> = {
   blog_articulos: { es: 'artículos', en: 'articles' },
   blog_en_este_articulo: { es: 'En este artículo', en: 'In this article' },
   blog_cifras_aria: { es: 'Cifras destacadas', en: 'Key figures' },
+  blog_leax_cta: { es: '¿Lo hablamos para tu empresa?', en: 'Shall we talk about it for your company?' },
+  blog_leax_error: { es: 'No pudimos cargar el artículo. Prueba de nuevo en un momento.', en: 'We could not load the article. Please try again in a moment.' },
+  blog_leax_reintentar: { es: 'Intentar de nuevo', en: 'Try again' },
 
   // ── EMPLEOS ──
 

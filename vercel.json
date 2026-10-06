@@ -15,6 +15,7 @@
   ],
   "rewrites": [
     { "source": "/:ruta(nosotros|contacto|servicios|calculadora-ahorro|blog|politica-de-privacidad|asistente-virtual|que-es-gtc)", "destination": "/spa.html" },
-    { "source": "/blog/:id", "destination": "/spa.html" }
+    { "source": "/blog/sitemap.xml", "destination": "/api/blog-sitemap" },
+    { "source": "/blog/:id", "destination": "/api/blog-articulo?slug=:id" }
   ]
 }

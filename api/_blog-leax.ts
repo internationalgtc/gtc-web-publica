@@ -81,6 +81,9 @@ export function paginaDelArticulo(spa: string, a: ArticuloLeax): string {
   const cabecera = [
     descripcion ? `<meta name="description" content="${escapar(descripcion)}" />` : '',
     `<link rel="canonical" href="${escapar(url)}" />`,
+    // Qué versión aprobada de Leax es esta página: para comprobar que la web
+    // muestra exactamente lo publicado (spec SEO premium §6.2).
+    a.revision ? `<meta name="leax-revision" content="${escapar(`${a.revision.id}:${a.revision.hash}`)}" />` : '',
     `<script type="application/ld+json">${jsonEnScript(a.structuredData)}</script>`,
     `<script>window.__ARTICULO_LEAX__=${jsonEnScript(a)}</script>`,
   ].filter(Boolean).join('\n  ')

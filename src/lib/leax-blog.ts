@@ -39,7 +39,9 @@ export async function articuloDeLeax(slug: string): Promise<ArticuloLeax | null>
   const r = await fetch(api(`slug=${encodeURIComponent(slug)}`))
   if (r.status === 404) return null
   if (!r.ok) throw new Error(`Leax ${r.status}`)
-  const { article } = (await r.json()) as { article?: ArticuloLeax }
+  const { article, movido } = (await r.json()) as { article?: ArticuloLeax; movido?: { slug: string; url: string } }
+  // Dirección vieja (cambió en Leax): se trae la nueva. Al entrar directo, el servidor ya manda un 301.
+  if (movido) return deEstaWeb(movido) && movido.slug !== slug ? articuloDeLeax(movido.slug) : null
   return article && deEstaWeb(article) ? article : null
 }
 

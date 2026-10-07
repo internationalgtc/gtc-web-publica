@@ -8,6 +8,7 @@ import { ARTICULOS_PROPIOS, LEAX_API, LEAX_WORKSPACE, esDeEstaWeb, paginaDelArti
 // - Leax no lo tiene aprobado para esta web → 404 con noindex; la SPA muestra
 //   «Artículo no encontrado».
 // - Leax no responde → 503 sin caché: la SPA lo vuelve a pedir desde el navegador.
+// - La dirección cambió en Leax (dirección vieja) → 301 a la nueva, si es de esta web.
 
 const ESPERA_MS = 8000
 
@@ -26,13 +27,15 @@ async function esqueletoDeLaSpa(req: VercelRequest): Promise<string | null> {
   }
 }
 
-async function articuloDeLeax(slug: string): Promise<ArticuloLeax | 'no_existe' | 'error'> {
+async function articuloDeLeax(slug: string): Promise<ArticuloLeax | { movido: string } | 'no_existe' | 'error'> {
   const url = `${LEAX_API}/api/public/seo-articles?workspace=${encodeURIComponent(LEAX_WORKSPACE)}&slug=${encodeURIComponent(slug)}`
   try {
     const r = await fetch(url, { signal: AbortSignal.timeout(ESPERA_MS) })
     if (r.status === 404) return 'no_existe'
     if (!r.ok) return 'error'
-    const data = await r.json() as { article?: ArticuloLeax }
+    const data = await r.json() as { article?: ArticuloLeax; movido?: { slug: string; url: string } }
+    // Una dirección vieja: Leax dice adónde se movió. Solo si la nueva es de esta web.
+    if (data.movido) return slugValido(data.movido.slug) && esDeEstaWeb(data.movido) ? { movido: data.movido.slug } : 'no_existe'
     return data.article ?? 'error'
   } catch {
     return 'error'
@@ -60,6 +63,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader('Cache-Control', 'no-store')
     res.setHeader('Retry-After', '60')
     res.status(503).send(spa)
+    return
+  }
+  if (typeof articulo === 'object' && 'movido' in articulo) {
+    // Permanente: Google pasa lo que tenía de la vieja a la nueva.
+    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600')
+    res.setHeader('Location', `/blog/${articulo.movido}`)
+    res.status(301).send('')
     return
   }
   if (articulo === 'no_existe' || !esDeEstaWeb(articulo)) {

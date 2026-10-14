@@ -31,7 +31,6 @@ export function Footer() {
             <h5 className="ed-caps !text-[10px] text-cream/40 mb-5">{t('footer_recursos')}</h5>
             <ul className="space-y-3">
               <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/blog">{t('blog_label')}</Link></li>
-              <li><Link className="text-cream/70 hover:text-coral transition-colors text-sm" to="/calculadora-ahorro">{t('footer_calculadora')}</Link></li>
             </ul>
           </div>
 

@@ -36,9 +36,6 @@ const PASOS = [
 ]
 const ROMANOS = ['i.', 'ii.', 'iii.']
 
-const COSTE_ESPANA = ['Salario bruto', 'Seguridad Social a cargo de la empresa (~33 %)', 'Puesto de trabajo, equipo, formación', 'Selección, bajas, sustituciones, despido']
-const COSTE_GTC = ['Profesional dedicado, en tu horario', 'Contratación y nómina las gestiona GTC', 'Seguimiento de Calidad incluido', 'Reemplazo si no encaja, sin coste']
-
 // Las preguntas salen de src/data/preguntasFrecuentes.ts (las mismas que la home).
 const FAQ = PREGUNTAS_LANDING.map(({ pregunta, respuesta }) => [pregunta.es, respuesta.es] as const)
 const FAQ_SCHEMA = esquemaPreguntas(PREGUNTAS_LANDING, 'es')
@@ -223,7 +220,7 @@ function TarjetaFormulario() {
         </span>
         <span className="ed-label text-gold">Una factura</span>
       </div>
-      <p className="text-[14px] lg:text-[15px] leading-[1.5] text-cream/80">Una factura mensual. Contratación, nómina y seguimiento incluidos.</p>
+      <p className="text-[14px] lg:text-[15px] leading-[1.5] text-cream/80">Una factura mensual por el servicio. Coordinación y control de calidad incluidos.</p>
       <div className="ed-form-anuncio mt-1.5">
         <FormularioLead formulario="asistente-virtual" cta="Quiero recibir perfiles" contexto="Landing asistente virtual" modoCaptacion="express" />
       </div>
@@ -259,58 +256,6 @@ function Encabezado() {
         </div>
         <TarjetaFormulario />
       </div>
-    </section>
-  )
-}
-
-/* ——— 01 LO QUE CUESTA ——— */
-
-function Coste() {
-  return (
-    <section id="coste" className="pt-16 lg:pt-[110px]">
-      <Wrap>
-        <SecHead tag={<SecTag n="01" name="Lo que cuesta de verdad" />}>
-          <h2 className={H2}>
-            Un empleado en España cuesta más de <span className="ed-serif-it">30.000 € al año.</span>
-          </h2>
-        </SecHead>
-        <Reveal className="mt-[18px] lg:mt-14 grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] gap-3 md:gap-6 items-center">
-          <div className="h-full bg-cream-2 rounded-[20px] p-5 lg:p-8 flex flex-col gap-2.5">
-            <span className="ed-label text-ink-soft">Administrativo en plantilla · España</span>
-            <span className="ed-serif text-navy leading-none text-[34px] lg:text-[44px]">
-              <span className="whitespace-nowrap">≈ 2.700 €</span> <span className="text-[15px] lg:text-lg text-ink-soft">/mes</span>
-            </span>
-            <ul className="list-disc pl-[18px] flex flex-col gap-1 text-[14px] lg:text-[15px] leading-[1.45] text-ink-soft">
-              {COSTE_ESPANA.map(x => <li key={x}>{x}</li>)}
-            </ul>
-          </div>
-          <span className="ed-serif-it text-center text-lg lg:text-2xl text-ink-soft">frente a</span>
-          <div className="h-full bg-navy text-cream rounded-[20px] p-5 lg:p-8 flex flex-col gap-2.5">
-            <span className="ed-label text-cream/70">Mismo perfil con GTC</span>
-            <span className="ed-serif leading-none text-[34px] lg:text-[44px]">
-              <span className="whitespace-nowrap">1.300 €</span> <span className="text-[15px] lg:text-lg text-cream/70">/mes</span>
-            </span>
-            <ul className="list-disc pl-[18px] flex flex-col gap-1 text-[14px] lg:text-[15px] leading-[1.45] text-cream/80">
-              {COSTE_GTC.map(x => <li key={x}>{x}</li>)}
-            </ul>
-          </div>
-        </Reveal>
-        <Reveal className="mt-6 lg:mt-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-8">
-          <div className="flex items-center gap-1.5 sm:gap-4">
-            <Img3D src="/img/3d/ahorro.webp" className="ed-3d shrink-0 w-[150px] h-[150px] lg:w-[220px] lg:h-[190px] object-cover" />
-            <div className="flex flex-col gap-1 min-w-0">
-              <span className="ed-serif font-light text-navy leading-[0.9] tracking-[-0.03em] whitespace-nowrap text-[clamp(56px,17vw,72px)] lg:text-[112px]">52 %</span>
-              <span className="text-[14px] lg:text-[17px] leading-[1.4] text-ink-soft max-w-[22em]">menos de coste al año, sin renunciar a la calidad.</span>
-            </div>
-          </div>
-          <Link
-            to="/calculadora-ahorro"
-            className="self-start sm:self-center shrink-0 inline-flex items-center min-h-[44px] font-label font-semibold text-[15px] lg:text-base text-navy underline decoration-coral decoration-2 underline-offset-[6px] hover:text-navy-deep"
-          >
-            Calcúlalo con tus números&nbsp;<span aria-hidden="true">→</span>
-          </Link>
-        </Reveal>
-      </Wrap>
     </section>
   )
 }
@@ -515,7 +460,6 @@ export default function AsistenteVirtual() {
 
       <main id="main-content">
         <Encabezado />
-        <Coste />
         <Proceso />
         <Areas />
         <Resenas />

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Navigate } from 'react-router-dom'
 import { captureUTMs } from '@/lib/utm'
 import { captureCountry } from '@/lib/geo'
 import { Analytics } from '@vercel/analytics/react'
@@ -13,7 +13,6 @@ import HomePage from '@/pages/Index'
 const Nosotros = lazy(() => import('@/pages/Nosotros'))
 const Contacto = lazy(() => import('@/pages/Contacto'))
 const Servicios = lazy(() => import('@/pages/Servicios'))
-const CalculadoraAhorro = lazy(() => import('@/pages/CalculadoraAhorro'))
 const Blog = lazy(() => import('@/pages/Blog'))
 const BlogPost = lazy(() => import('@/pages/BlogPost'))
 const PoliticaPrivacidad = lazy(() => import('@/pages/PoliticaPrivacidad'))
@@ -48,7 +47,8 @@ export default function App() {
             <Route path="/nosotros" element={<Nosotros />} />
             <Route path="/que-es-gtc" element={<QueEsGtc />} />
             <Route path="/contacto" element={<Contacto />} />
-            <Route path="/servicios" element={<Servicios />} />            <Route path="/calculadora-ahorro" element={<CalculadoraAhorro />} />
+            <Route path="/servicios" element={<Servicios />} />
+            <Route path="/calculadora-ahorro" element={<Navigate to="/servicios" replace />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/blog/:id" element={<BlogPost />} />
             <Route path="/politica-de-privacidad" element={<PoliticaPrivacidad />} />            <Route path="*" element={<NotFound />} />

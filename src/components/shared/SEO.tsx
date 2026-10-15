@@ -50,7 +50,7 @@ const LOCAL_BUSINESS_SCHEMA = {
   image: `${CORP_URL}/og-image.png`,
   // Las cifras salen de src/data/cifras.ts, igual que en la web de empresas.
   description:
-    `Conectamos empresas españolas con profesionales remotos de alto rendimiento en Latinoamérica: ${CIFRAS.profesionales.enFrase.es} trabajando en ${CIFRAS.empresas.enFrase.es}. Asistentes virtuales, SDRs y perfiles administrativos con ahorro de hasta el 52%.`,
+    `Servicios de asistencia virtual gestionada para empresas españolas, con ${CIFRAS.profesionales.enFrase.es} trabajando en ${CIFRAS.empresas.enFrase.es}. Una factura mensual, calidad y continuidad garantizadas.`,
   telephone: '+34689539896',
   email: 'info@globaltalent-connections.com',
   priceRange: '€€',
@@ -172,9 +172,8 @@ export const SERVICIOS_FAQ_SCHEMA = {
 }
 
 const DEFAULT_KEYWORDS =
-  'asistentes virtuales España, talento remoto, trabajo remoto internacional, contratar asistente virtual, ' +
-  'outsourcing LATAM, profesionales remotos, reducir costes personal, asistente administrativo remoto, ' +
-  'Global Talent Connections, SDR remoto, soporte cliente remoto, marketing digital remoto'
+  'asistencia virtual gestionada, servicios gestionados para empresas, ' +
+  'externalización de tareas administrativas, soporte comercial remoto, Global Talent Connections'
 
 export default function SEO({
   title,

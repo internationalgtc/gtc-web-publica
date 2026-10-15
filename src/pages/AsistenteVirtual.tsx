@@ -40,7 +40,7 @@ const ROMANOS = ['i.', 'ii.', 'iii.']
 const FAQ = PREGUNTAS_LANDING.map(({ pregunta, respuesta }) => [pregunta.es, respuesta.es] as const)
 const FAQ_SCHEMA = esquemaPreguntas(PREGUNTAS_LANDING, 'es')
 
-const RESENAS = ['Sergio Varo', 'Curro Sabán']
+const RESENAS = ['Sergio Varo', 'Ingrid De Cordido']
   .map(autor => RESENAS_GOOGLE.find(r => r.autor === autor))
   .filter((r): r is NonNullable<typeof r> => !!r && !!r.texto)
 

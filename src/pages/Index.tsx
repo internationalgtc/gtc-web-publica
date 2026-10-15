@@ -524,7 +524,7 @@ function Testimonios() {
   const lang = useLang()
   const resena = (autor: string) => RESENAS_GOOGLE.find(r => r.autor === autor && r.texto)
   const principal = resena('Sergio Varo')
-  const otras = ['Curro Sabán', 'Karelis Rojas Contreras'].map(resena).filter((r): r is (typeof RESENAS_GOOGLE)[number] => Boolean(r))
+  const otras = ['Ingrid De Cordido', 'Karelis Rojas Contreras'].map(resena).filter((r): r is (typeof RESENAS_GOOGLE)[number] => Boolean(r))
   const nota = RESUMEN_GOOGLE.rating.toLocaleString(lang === 'es' ? 'es-ES' : 'en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 
   return (

@@ -218,6 +218,7 @@ export default defineConfig({
         // El prerender corre en localhost: si algún href absoluto se coló, se
         // devuelve al dominio real para no publicar enlaces a 127.0.0.1.
         renderedRoute.html = renderedRoute.html
+          .replace(/<html([^>]*)\sclass="fuentes-listas"/, '<html$1')
           .replace(/https?:\/\/localhost(:\d+)?/g, 'https://globaltalent-connections.com')
           .replace(/https?:\/\/127\.0\.0\.1(:\d+)?/g, 'https://globaltalent-connections.com')
       },

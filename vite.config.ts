@@ -164,9 +164,31 @@ function llmsTxt(): Plugin {
   }
 }
 
+// El CSS principal va en línea en el HTML: la hoja externa bloqueaba el primer
+// pintado ~450 ms en móvil (Lighthouse 12, 16-oct-2026). Las hojas de los
+// chunks diferidos siguen como archivos.
+function cssEnLinea(): Plugin {
+  return {
+    name: 'gtc-css-en-linea',
+    apply: 'build',
+    enforce: 'post',
+    generateBundle(_, bundle) {
+      const html = bundle['index.html']
+      if (!html || html.type !== 'asset' || typeof html.source !== 'string') return
+      const m = html.source.match(/<link rel="stylesheet"[^>]*href="\/(assets\/index-[^"]+\.css)"[^>]*>/)
+      if (!m) return
+      const hoja = bundle[m[1]]
+      if (!hoja || hoja.type !== 'asset') return
+      html.source = html.source.replace(m[0], `<style>${String(hoja.source)}</style>`)
+      delete bundle[m[1]]
+    },
+  }
+}
+
 export default defineConfig({
   plugins: [
     react(),
+    cssEnLinea(),
     ...(PRERENDER_ACTIVO ? [
     // Antes, TODA ruta devolvía el mismo index.html de 6 KB con un <div id="root">
     // vacío: el contenido lo pintaba React en el navegador. Google Ads puntúa la

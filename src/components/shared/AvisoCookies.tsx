@@ -29,11 +29,12 @@ function guardarEleccion(v: Eleccion) {
 // rechazar está al mismo nivel que aceptar. Vercel Analytics no usa cookies y queda fuera.
 export function AvisoCookies() {
   const t = useT()
-  // Oculto hasta montar: el prerender no debe fijar el aviso en el HTML.
-  const [visible, setVisible] = useState(false)
+  // Visible desde el primer render si no hay elección guardada: así el HTML
+  // prerenderizado ya lo trae y no aparece con el JS (era el LCP en móvil,
+  // medido el 16-oct-2026). Quien ya eligió lo ve desaparecer al hidratar.
+  const [visible, setVisible] = useState(() => (typeof window === 'undefined' ? false : leerEleccion() === null))
 
   useEffect(() => {
-    setVisible(leerEleccion() === null)
     const abrir = () => setVisible(true)
     window.addEventListener(EVENTO_ABRIR_AVISO_COOKIES, abrir)
     return () => window.removeEventListener(EVENTO_ABRIR_AVISO_COOKIES, abrir)

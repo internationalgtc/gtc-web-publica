@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/((?!.*\\.xlsx$).*)",
+      "source": "/(empleos|areas|beneficios|politica-de-privacidad|empleos/[^/]+|blog/[^/]+)",
       "destination": "/spa.html"
     }
   ],

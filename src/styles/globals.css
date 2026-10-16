@@ -58,27 +58,27 @@ html.fuentes-listas {
   font-family: 'Fraunces Fallback';
   font-style: normal;
   src: local('Georgia');
-  size-adjust: 101%;
-  ascent-override: 96.8%;
-  descent-override: 25.2%;
+  size-adjust: 100.5%;
+  ascent-override: 97.3%;
+  descent-override: 25.4%;
   line-gap-override: 0%;
 }
 @font-face {
   font-family: 'Fraunces Fallback';
   font-style: italic;
   src: local('Georgia Italic'), local('Georgia-Italic');
-  size-adjust: 93%;
-  ascent-override: 105.2%;
-  descent-override: 27.4%;
+  size-adjust: 92%;
+  ascent-override: 106.3%;
+  descent-override: 27.7%;
   line-gap-override: 0%;
 }
 @font-face {
   font-family: 'Montserrat Fallback';
   font-style: normal;
   src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
-  size-adjust: 112%;
-  ascent-override: 86.4%;
-  descent-override: 22.4%;
+  size-adjust: 110.5%;
+  ascent-override: 87.6%;
+  descent-override: 22.7%;
   line-gap-override: 0%;
 }
 

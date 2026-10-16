@@ -204,6 +204,10 @@ export default defineConfig(async () => {
     },
     build: {
       target: 'es2020',
+      // Sin <link rel="modulepreload">: los chunks de JS salían con prioridad alta a la
+      // vez que el póster del hero (LCP) y lo retrasaban ~2 s en móvil lento
+      // (Lighthouse 12, 16-oct-2026). Los carga el módulo de entrada cuando ejecuta.
+      modulePreload: false,
       cssCodeSplit: true,
       rollupOptions: {
         output: {

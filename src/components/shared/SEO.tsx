@@ -11,6 +11,8 @@ interface SEOProps {
   jobPostingSchema?: object
   keywords?: string
   breadcrumbs?: Array<{ name: string; url: string }>
+  /** Página que no debe indexarse (p. ej. un artículo retirado). */
+  noIndex?: boolean
 
 }
 
@@ -115,6 +117,7 @@ export default function SEO({
   jobPostingSchema,
   keywords,
   breadcrumbs,
+  noIndex = false,
 }: SEOProps) {
   const fullTitle = title === 'Home'
     ? 'Global Talent Connections | Asistentes Virtuales y Talento Remoto para Empresas'
@@ -141,6 +144,7 @@ export default function SEO({
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords ?? DEFAULT_KEYWORDS} />
       <link rel="canonical" href={url} />
+      {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
       {/* Hreflang */}
       <link rel="alternate" hrefLang="es" href={url} />

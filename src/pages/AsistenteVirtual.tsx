@@ -452,7 +452,7 @@ export default function AsistenteVirtual() {
         title="Asistente virtual para empresas desde 1.300 €/mes"
         description="Un profesional remoto dedicado, seleccionado y evaluado, en tu equipo en 5 días hábiles. Desde 1.300 €/mes, sin permanencia y con reemplazo garantizado."
         path="/asistente-virtual"
-        keywords="asistente virtual para empresas, contratar asistente virtual, asistente virtual precio, secretaria virtual empresas, externalizar tareas administrativas"
+        keywords="asistente virtual para empresas, asistencia virtual gestionada, asistente virtual precio, secretaria virtual empresas, externalizar tareas administrativas"
         faqSchema={FAQ_SCHEMA}
       />
 

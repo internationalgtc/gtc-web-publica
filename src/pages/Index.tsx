@@ -413,7 +413,7 @@ function Foto({ m, grande }: { m: TeamMember; grande: boolean }) {
       </div>
     )
   }
-  return <img src={m.foto} alt={m.nombre} loading="lazy" decoding="async" className={`${forma} object-cover object-[50%_15%] bg-cream-2`} />
+  return <img src={m.foto} alt={m.nombre} width={600} height={800} loading="lazy" decoding="async" className={`${forma} object-cover object-[50%_15%] bg-cream-2`} />
 }
 
 function Equipo() {

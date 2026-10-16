@@ -1,301 +1,138 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { ArrowRight, BriefcaseBusiness } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { trackLead } from '@/lib/tracking'
-import { getUTMs, getLandingUrl } from '@/lib/utm'
+import { WHATSAPP_LINK } from '@/data/chatbotData'
 
-type Message = { role: 'user' | 'assistant'; content: string }
-
-const CHAT_API = import.meta.env.VITE_GTC_CHAT_URL
-  ? `${import.meta.env.VITE_GTC_CHAT_URL}/api/chat/lead`
-  : import.meta.env.DEV
-    ? 'http://localhost:3000/api/chat/lead'
-    // Sin var (preview de Vercel): mismo origen, pega contra el backend del propio deploy.
-    : '/api/chat/lead'
-
-function TypingDots() {
-  return (
-    <div className="flex items-start gap-2">
-      <div className="w-7 h-7 rounded-full bg-navy flex items-center justify-center flex-shrink-0 text-white text-xs font-label font-bold">
-        G
-      </div>
-      <div className="bg-off-white border border-gray-200 rounded-lg rounded-tl-none px-3 py-2">
-        <div className="flex items-center gap-1">
-          {[0, 1, 2].map(i => (
-            <span
-              key={i}
-              className="w-1.5 h-1.5 rounded-full bg-blue-prime animate-bounce"
-              style={{ animationDelay: `${i * 0.15}s` }}
-            />
-          ))}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function ChatBubble({ msg }: { msg: Message }) {
-  const isUser = msg.role === 'user'
-  const lines = msg.content.split('\n').filter(Boolean)
-
-  return (
-    <div className={`flex items-start gap-2 ${isUser ? 'flex-row-reverse' : ''}`}>
-      {!isUser && (
-        <div className="w-7 h-7 rounded-full bg-navy flex items-center justify-center flex-shrink-0 text-white text-xs font-label font-bold">
-          G
-        </div>
-      )}
-      <div className={`max-w-[85%] rounded-lg px-3 py-2 text-sm font-body ${
-        isUser
-          ? 'bg-navy text-white rounded-tr-none'
-          : 'bg-off-white border border-gray-200 text-dark-gray rounded-tl-none'
-      }`}>
-        {lines.map((line, i) => {
-          if (line.startsWith('_') && line.endsWith('_')) {
-            return <p key={i} className="text-blue-prime text-xs mt-1">{line.slice(1, -1)}</p>
-          }
-          return <p key={i} className={i > 0 ? 'mt-2' : ''}>{line}</p>
-        })}
-      </div>
-    </div>
-  )
-}
+const CLIENT_FORM_URL = 'https://www.globaltalentconnections.online/solicitar-asistente?origen=chatbot&utm_source=web&utm_medium=chatbot&utm_campaign=chatbot-web&utm_content=form%3Achatbot'
 
 export default function ChatWidget() {
   const { i18n } = useTranslation()
   const lang = i18n.language === 'en' ? 'en' : 'es'
-
-  const [isOpen, setIsOpen]           = useState(false)
-  const [messages, setMessages]       = useState<Message[]>([])
-  const [input, setInput]             = useState('')
-  const [isTyping, setIsTyping]       = useState(false)
-  const [hasStarted, setHasStarted]   = useState(false)
-  const [finished, setFinished]       = useState(false)
-  const [showBadge, setShowBadge]     = useState(true)
-  const [quickReplies, setQuickReplies] = useState<string[]>([])
-  const [redirect, setRedirect]       = useState<{ url: string; label: string } | null>(null)
-  const messagesEndRef = useRef<HTMLDivElement>(null)
-  const inputRef       = useRef<HTMLInputElement>(null)
+  const [isOpen, setIsOpen] = useState(false)
+  const [showBadge, setShowBadge] = useState(true)
+  // /asistente-virtual tiene una barra fija abajo (su tope a 72px, solo por debajo de lg) con el
+  // botón «Solicitar»: el chat, a 24px del borde, lo tapaba. Ahí sube por encima de la
+  // barra; en el resto de páginas y desde lg queda exactamente donde estaba.
+  const { pathname } = useLocation()
+  const sobreBarraMovil = pathname.replace(/\/+$/, '') === '/asistente-virtual'
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, isTyping])
-
-  const sendToAPI = useCallback(async (history: Message[], currentLang: string) => {
-    setIsTyping(true)
-    try {
-      const res = await fetch(CHAT_API, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: history,
-          lang: currentLang,
-          ...getUTMs(),
-          landing_url: getLandingUrl(),
-        }),
-      })
-      const data = await res.json()
-      setMessages(prev => [...prev, { role: 'assistant', content: data.message }])
-      setQuickReplies(data.quickReplies ?? [])
-      if (data.redirect) {
-        // El visitante es candidato: lo mandamos a vacantes, no se crea lead.
-        setRedirect({ url: data.redirect, label: data.redirectLabel ?? 'Ver vacantes' })
-        setFinished(true)
-      }
-      if (data.leadCreated) {
-        setFinished(true)
-        // Avisar a GA4 / Google Ads / Meta Pixel que el chatbot capturó un lead
-        // (antes el chatbot creaba el lead en el backend pero no disparaba el
-        // evento, así que esos leads eran invisibles para analytics/ads).
-        trackLead('chatbot')
-      }
-    } catch {
-      setMessages(prev => [...prev, {
-        role: 'assistant',
-        content: lang === 'en'
-          ? 'Sorry, an error occurred. Please try again.'
-          : 'Lo siento, ocurrió un error. Por favor intentá de nuevo.',
-      }])
-    } finally {
-      setIsTyping(false)
+    const closeWithEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false)
     }
-  }, [lang])
+    window.addEventListener('keydown', closeWithEscape)
+    return () => window.removeEventListener('keydown', closeWithEscape)
+  }, [])
 
-  const openChat = useCallback(async () => {
+  const open = () => {
     setIsOpen(true)
     setShowBadge(false)
-    if (!hasStarted) {
-      setHasStarted(true)
-      await sendToAPI([], lang)
-    }
-    setTimeout(() => inputRef.current?.focus(), 100)
-  }, [hasStarted, sendToAPI, lang])
-
-  const handleSend = async (text?: string) => {
-    const content = (text ?? input).trim()
-    if (!content || isTyping || finished) return
-    setInput('')
-    setQuickReplies([])
-    const userMsg: Message = { role: 'user', content }
-    const newHistory = [...messages, userMsg]
-    setMessages(newHistory)
-    await sendToAPI(newHistory, lang)
   }
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend() }
-  }
-
-  const prevLangRef = useRef(lang)
-  useEffect(() => {
-    if (prevLangRef.current === lang) return
-    prevLangRef.current = lang
-    setMessages([])
-    setQuickReplies([])
-    setRedirect(null)
-    setFinished(false)
-    setHasStarted(false)
-    if (isOpen) {
-      setHasStarted(true)
-      sendToAPI([], lang)
-    }
-  }, [lang, isOpen, sendToAPI])
-
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsOpen(false) }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [])
 
   return (
     <>
-      {/* Chat window */}
       <div
         role="dialog"
         aria-modal="true"
-        className={`fixed z-[100] flex flex-col bg-white border border-gray-200 shadow-2xl rounded-2xl
-          bottom-[84px] right-4 left-4 h-[420px] max-h-[calc(100vh-110px)]
-          sm:left-auto sm:right-6 sm:w-96 sm:h-[480px]
+        aria-labelledby="gtc-help-title"
+        className={`fixed z-[100] ${sobreBarraMovil ? 'bottom-[152px] lg:bottom-[84px]' : 'bottom-[84px]'} right-4 left-4 overflow-hidden rounded-2xl border border-navy/10 bg-cream shadow-2xl sm:left-auto sm:right-6 sm:w-[420px]
           transition-all duration-200 ease-out
           ${isOpen ? 'opacity-100 scale-100 pointer-events-auto' : 'opacity-0 scale-95 pointer-events-none'}`}
         style={{ transformOrigin: 'bottom right' }}
       >
-        {/* Header */}
-        <div className="flex items-center gap-3 px-4 py-3 bg-navy rounded-t-2xl flex-shrink-0">
-          <div className="w-8 h-8 rounded-full bg-coral flex items-center justify-center flex-shrink-0 text-white text-sm font-label font-bold">
-            G
-          </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-label font-semibold text-white">
-              {lang === 'en' ? 'GTC Assistant' : 'Asistente GTC'}
+        <header className="flex items-center gap-3 bg-navy px-5 py-4">
+          <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-coral font-label text-sm font-bold text-white">G</div>
+          <div className="min-w-0 flex-1">
+            <p id="gtc-help-title" className="font-label text-sm font-semibold text-white">
+              {lang === 'en' ? 'Tell us what you need' : 'Cuéntanos qué necesitas'}
             </p>
-            <p className="text-xs font-body text-blue-light flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
-              Online
+            <p className="font-body text-xs text-blue-light">
+              {lang === 'en' ? 'For companies looking for a managed service' : 'Para empresas que buscan un servicio gestionado'}
             </p>
           </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-colors"
-            aria-label="Cerrar chat"
+            className="flex h-9 w-9 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+            aria-label={lang === 'en' ? 'Close' : 'Cerrar'}
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </div>
+        </header>
 
-        {/* Messages */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          {messages.length === 0 && !isTyping && (
-            <div className="flex items-center justify-center h-full">
-              <p className="text-sm font-body text-dark-gray text-center px-6">
-                {lang === 'en' ? 'Starting conversation...' : 'Iniciando conversación...'}
-              </p>
-            </div>
-          )}
-          {messages.map((msg, i) => <ChatBubble key={i} msg={msg} />)}
-          {isTyping && <TypingDots />}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* Input */}
-        <div className="px-4 py-3 border-t border-gray-200 flex-shrink-0 md:rounded-b-2xl">
-          {redirect ? (
-            <a
-              href={redirect.url}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-coral text-white text-sm font-label font-bold tracking-widest uppercase hover:opacity-90 transition-opacity mb-2"
-            >
-              {redirect.label}
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </a>
-          ) : quickReplies.length > 0 ? (
-            <div className="flex flex-col gap-2 mb-2">
-              {quickReplies.map(option => (
-                <button
-                  key={option}
-                  onClick={() => handleSend(option)}
-                  disabled={isTyping}
-                  className="w-full text-left px-4 py-2.5 rounded-xl border border-blue-prime/30 bg-off-white text-sm font-body text-navy hover:bg-blue-prime hover:text-white hover:border-blue-prime transition-colors disabled:opacity-50"
-                >
-                  {option}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                disabled={isTyping || finished}
-                placeholder={finished
-                  ? (lang === 'en' ? 'Inquiry registered! Goodbye 👋' : '¡Consulta registrada! Hasta pronto 👋')
-                  : (lang === 'en' ? 'Type your message…' : 'Escribí tu mensaje…')
-                }
-                className="flex-1 bg-off-white border border-gray-200 rounded-full px-4 py-2 text-sm font-body text-navy placeholder:text-dark-gray/60 focus:outline-none focus:border-blue-prime transition-colors disabled:opacity-50"
-              />
-              <button
-                onClick={() => handleSend()}
-                disabled={isTyping || !input.trim() || finished}
-                className="w-9 h-9 rounded-full bg-coral flex items-center justify-center flex-shrink-0 hover:opacity-90 transition-opacity disabled:opacity-40"
-                aria-label="Enviar"
-              >
-                <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
-                </svg>
-              </button>
-            </div>
-          )}
-          <p className="text-xs font-label text-dark-gray/60 mt-1.5 text-center tracking-wide uppercase">
-            Global Talent Connections
+        <div className="p-6">
+          <p className="font-display text-[28px] leading-tight text-navy">
+            {lang === 'en' ? 'What profile does your company need?' : '¿Qué perfil necesita tu empresa?'}
           </p>
+          <p className="mt-3 font-body text-sm leading-relaxed text-dark-gray">
+            {lang === 'en'
+              ? 'Complete the request and our team will contact you with the right remote talent.'
+              : 'Completa la solicitud y nuestro equipo te contactará con el talento remoto adecuado.'}
+          </p>
+
+          <div className="mt-6 grid gap-3">
+            <a
+              href={CLIENT_FORM_URL}
+              className="group flex items-center gap-4 rounded-xl bg-navy p-4 text-white transition-transform active:scale-[.98]"
+            >
+              <BriefcaseBusiness className="h-5 w-5 flex-shrink-0 text-coral" />
+              <span className="flex-1">
+                <span className="block font-label text-xs font-bold uppercase tracking-[.14em]">
+                  {lang === 'en' ? 'Request talent' : 'Solicitar talento'}
+                </span>
+                <span className="mt-1 block font-body text-xs text-white/60">
+                  {lang === 'en' ? 'Complete the company request' : 'Completar la solicitud de empresa'}
+                </span>
+              </span>
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </a>
+
+          </div>
         </div>
       </div>
 
+      {/*
+        WhatsApp, apilado encima del botón de ayuda (bottom-6 + h-14 = 80px, y 8 de aire).
+        En /asistente-virtual NO se muestra: esa landing ya tiene WhatsApp en su barra fija
+        de abajo y con los dos se tapaba el contenido en el celular (decisión de Larisa, 28-sep-2026).
+        Se esconde con el panel abierto: el panel le pasaría por arriba igual.
+        Es un <a> y no un <button>: tiene que poder abrirse en otra pestaña y copiarse el enlace.
+      */}
+      {!sobreBarraMovil && (
+      <a
+        href={WHATSAPP_LINK}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={lang === 'en' ? 'Message us on WhatsApp' : 'Escríbenos por WhatsApp'}
+        className={`fixed bottom-[88px] right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-2xl transition-all duration-200 ease-out hover:scale-105 active:scale-95 focus:outline-none
+          ${isOpen ? 'pointer-events-none scale-95 opacity-0' : 'pointer-events-auto scale-100 opacity-100'}`}
+      >
+        <svg className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.58-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+        </svg>
+      </a>
+      )}
 
-      {/* FAB */}
       <button
-        onClick={isOpen ? () => setIsOpen(false) : openChat}
-        aria-label="Abrir asistente"
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-coral text-white shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform duration-150 focus:outline-none"
+        onClick={isOpen ? () => setIsOpen(false) : open}
+        aria-label={lang === 'en' ? 'Open help' : 'Abrir ayuda'}
+        className={`fixed ${sobreBarraMovil ? 'bottom-[84px] lg:bottom-6' : 'bottom-6'} right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-coral text-white shadow-2xl transition-transform duration-150 hover:scale-105 active:scale-95 focus:outline-none`}
       >
         {isOpen ? (
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         ) : (
-          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.75}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
           </svg>
         )}
         {showBadge && !isOpen && (
-          <span className="absolute -top-0.5 -right-0.5 flex">
-            <span className="animate-ping absolute h-4 w-4 rounded-full bg-navy opacity-75" />
-            <span className="relative flex h-4 w-4 items-center justify-center rounded-full bg-navy border-2 border-white" />
+          <span className="absolute -right-0.5 -top-0.5 flex">
+            <span className="absolute h-4 w-4 animate-ping rounded-full bg-navy opacity-75" />
+            <span className="relative flex h-4 w-4 rounded-full border-2 border-white bg-navy" />
           </span>
         )}
       </button>

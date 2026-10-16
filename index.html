@@ -8,6 +8,22 @@
   <!-- La meta description la pone cada página vía el componente SEO (react-helmet).
        No se fija acá para no duplicarla. og:description sí queda abajo como fallback
        estático para los bots sociales que no ejecutan JS. -->
+  <!-- Fuentes: el HTML arranca con los respaldos; cuando Fraunces y Montserrat ya
+       bajaron (y SIEMPRE después de un frame pintado) se activa la clase que las
+       aplica. En la misma sesión la clase va de entrada (no hay parpadeo). En el
+       prerender no se activa: el HTML publicado tiene que arrancar sin ella. -->
+  <script>
+    (function () {
+      var h = document.documentElement
+      if (window.__PRERENDER_INJECTED) return
+      function listo() { h.classList.add('fuentes-listas'); try { sessionStorage.setItem('gtc-fuentes', '1') } catch (e) {} }
+      try { if (sessionStorage.getItem('gtc-fuentes') === '1') { h.classList.add('fuentes-listas'); return } } catch (e) {}
+      if (!('fonts' in document)) { listo(); return }
+      requestAnimationFrame(function () { requestAnimationFrame(function () {
+        Promise.all([document.fonts.load("330 1em Fraunces"), document.fonts.load("italic 330 1em Fraunces"), document.fonts.load("400 1em Montserrat")]).then(listo, listo)
+      }) })
+    })()
+  </script>
   <!-- Precargas, en orden de importancia: el póster del hero (LCP), después las
        tres fuentes que pintan la primera pantalla (titular, itálica del titular, texto). -->
   <link rel="preload" as="image" href="/videos/hero-gtc-poster.webp" fetchpriority="high" />

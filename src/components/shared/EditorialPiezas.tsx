@@ -1,5 +1,5 @@
 import { Fragment, type ReactNode } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { EASE, Reveal } from '@/components/shared/EditorialReveal'
 
 /* Piezas del diseño «A · Revista» para las páginas internas (Servicios,
@@ -52,7 +52,6 @@ export type Tramo = { texto: string; em?: boolean; subraya?: boolean }
 
 /** H1 con entrada palabra por palabra (máscara), como el de la portada. */
 export function TituloEntrada({ tramos, className }: { tramos: Tramo[]; className: string }) {
-  const reduced = useReducedMotion()
   const palabras = tramos.flatMap(tr =>
     tr.texto
       .split(' ')
@@ -66,7 +65,7 @@ export function TituloEntrada({ tramos, className }: { tramos: Tramo[]; classNam
           <span className={`inline-block overflow-hidden align-bottom pb-[0.1em] -mb-[0.1em] ${p.em ? 'pr-[0.06em]' : ''}`}>
             <motion.span
               className={`inline-block ${p.em ? 'ed-serif-it' : ''} ${p.subraya ? 'ed-subraya' : ''}`}
-              initial={reduced ? false : { y: '112%' }}
+              initial={false}
               animate={{ y: 0 }}
               transition={{ duration: 1.15, ease: EASE, delay: 0.2 + i * 0.055 }}
             >

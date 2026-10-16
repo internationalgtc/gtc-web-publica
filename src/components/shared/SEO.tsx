@@ -17,7 +17,7 @@ interface SEOProps {
 }
 
 const BASE_URL = 'https://www.globaltalent-connections.com'
-const DEFAULT_IMAGE = `${BASE_URL}/blog/futuro-talento-remoto-2026.png`
+const DEFAULT_IMAGE = `${BASE_URL}/og-image.jpg`
 
 const ORGANIZATION_SCHEMA = {
   '@context': 'https://schema.org',

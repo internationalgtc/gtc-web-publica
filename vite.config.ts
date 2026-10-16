@@ -145,6 +145,10 @@ export default defineConfig({
         // el <title> y las meta de react-helmet todavía no se han aplicado y el
         // snapshot sale con el título genérico y sin <h1>. Se espera al <h1>, que
         // solo existe cuando la página ya pintó su contenido real.
+        // window.__PRERENDER_INJECTED: las entradas (EditorialReveal, useScrollReveal)
+        // no ocultan nada cuando ven esta marca. Sin ella el HTML prerenderizado
+        // salía con 65 bloques en opacity: 0 (medido el 16-oct-2026).
+        inject: { prerender: true },
         renderAfterElementExists: 'h1',
         // Colchón para que react-helmet termine de escribir <title>/<meta>.
         renderAfterTime: 1500,

@@ -6,6 +6,7 @@ import { useT, useLang } from '@/hooks/useT'
 import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
 import { direccion, filasOperativo, type TeamMember } from '@/data/equipo'
 import SEO from '@/components/shared/SEO'
+import { Reveal, RevealGroup, RevealItem, EASE } from '@/components/shared/EditorialReveal'
 import { CIFRAS } from '@/data/cifras'
 import { CLIENTES } from '@/data/clientes'
 import { PREGUNTAS_HOME, esquemaPreguntas } from '@/data/preguntasFrecuentes'
@@ -14,7 +15,6 @@ import { FormularioLead } from '@/components/shared/FormularioLead'
 /* Portada de empresas — rediseño «A · Revista» (28-sep-2026).
    Diseño aprobado: lienzo «A · Revista», partes Main + A-portada-2. */
 
-const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 
 const SERVICIO = [
   { tKey: 'home_gar_1_t', dKey: 'home_gar_1_d', img: '/img/3d/seleccion.webp', escalon: '' },
@@ -47,53 +47,8 @@ const IMG_3D = { width: 1200, height: 655 }
 /* Títulos de sección: misma escala en toda la portada. */
 const H2 = 'ed-serif font-[320] text-navy leading-none tracking-[-0.02em] text-[clamp(40px,6.1vw,88px)] [text-wrap:balance]'
 
-/* ——— Motion primitives ———
-   El contenido se renderiza visible; el estado oculto lo aplica framer-motion
-   vía estilos inline (JS). Con prefers-reduced-motion no se oculta nada. */
-
-function Reveal({ children, className, delay = 0, y = 36 }: { children: ReactNode; className?: string; delay?: number; y?: number }) {
-  const reduced = useReducedMotion()
-  return (
-    <motion.div
-      className={className}
-      initial={reduced ? false : { opacity: 0, y }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-12% 0px' }}
-      transition={{ duration: 1, ease: EASE, delay }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function RevealGroup({ children, className }: { children: ReactNode; className?: string }) {
-  const reduced = useReducedMotion()
-  return (
-    <motion.div
-      className={className}
-      initial={reduced ? false : 'hidden'}
-      whileInView="show"
-      viewport={{ once: true, margin: '-10% 0px' }}
-      variants={{ hidden: {}, show: { transition: { staggerChildren: 0.09 } } }}
-    >
-      {children}
-    </motion.div>
-  )
-}
-
-function RevealItem({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <motion.div
-      className={className}
-      variants={{
-        hidden: { opacity: 0, y: 40 },
-        show: { opacity: 1, y: 0, transition: { duration: 1, ease: EASE } },
-      }}
-    >
-      {children}
-    </motion.div>
-  )
-}
+/* ——— Motion primitives ——— las de src/components/shared/EditorialReveal.tsx
+   (contenido visible por defecto; antes había una copia local acá). */
 
 /* ——— Piezas comunes ——— */
 
@@ -145,7 +100,6 @@ function Estrellas({ size = 20 }: { size?: number }) {
 /** Video a sangre. Con prefers-reduced-motion se queda quieto en el póster. */
 function HeroVideo() {
   const ref = useRef<HTMLVideoElement>(null)
-  const reduced = useReducedMotion()
 
   useEffect(() => {
     const video = ref.current
@@ -196,7 +150,7 @@ function HeroTitle() {
           <span className={`inline-block overflow-hidden align-bottom pb-[0.1em] -mb-[0.1em] ${p.em ? 'pr-[0.06em]' : ''}`}>
             <motion.span
               className={`inline-block ${p.em ? 'ed-serif-it ed-subraya' : ''}`}
-              initial={reduced ? false : { y: '112%' }}
+              initial={false}
               animate={{ y: 0 }}
               transition={{ duration: 1.15, ease: EASE, delay: 0.2 + i * 0.055 }}
             >

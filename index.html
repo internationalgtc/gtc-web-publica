@@ -24,12 +24,12 @@
       }) })
     })()
   </script>
-  <!-- Precargas, en orden de importancia: el póster del hero (LCP), después las
-       tres fuentes que pintan la primera pantalla (titular, itálica del titular, texto). -->
+  <!-- Única precarga: el póster del hero, que es el LCP. Las fuentes NO se precargan:
+       se aplican después del primer pintado y las pide el script de arriba cuando ya
+       hay un frame pintado, así no compiten con el póster ni con el HTML. -->
   <link rel="preload" as="image" href="/videos/hero-gtc-poster.webp" fetchpriority="high" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/montserrat-latin.woff2" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/fraunces-latin.woff2" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/fraunces-italic-latin.woff2" />
+
+
   <link rel="icon" type="image/png" href="/favicon.png" />
 
   <!-- Open Graph (fallback estático para bots que no ejecutan JS: Slack, WhatsApp, LinkedIn) -->

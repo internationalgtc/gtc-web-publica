@@ -45,6 +45,15 @@
   line-gap-override: 0%;
 }
 @font-face {
+  font-family: 'Fraunces Fallback';
+  font-style: italic;
+  src: local('Georgia Italic'), local('Georgia-Italic');
+  size-adjust: 131.3%;
+  ascent-override: 74.5%;
+  descent-override: 19.4%;
+  line-gap-override: 0%;
+}
+@font-face {
   font-family: 'Montserrat Fallback';
   src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
   size-adjust: 141.4%;

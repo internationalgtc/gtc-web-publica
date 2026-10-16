@@ -1,5 +1,6 @@
 import { useT } from '@/hooks/useT'
 import { Reveal } from '@/components/shared/EditorialReveal'
+import SEO from '@/components/shared/SEO'
 
 const SECTIONS = Array.from({ length: 13 }, (_, i) => ({
   tk: `pp_${i + 1}_t`,
@@ -14,6 +15,11 @@ export default function PoliticaPrivacidad() {
 
   return (
     <>
+      <SEO
+        title="Política de privacidad"
+        description="Cómo trata Global Talent Connections los datos de quienes usan el portal y solicitan colaborar: responsable, finalidad, derechos y cookies."
+        path="/politica-de-privacidad"
+      />
       <section className="pt-[158px] pb-[64px]">
         <div className="max-w-[1280px] mx-auto px-6 lg:px-10">
           <Reveal y={0}>

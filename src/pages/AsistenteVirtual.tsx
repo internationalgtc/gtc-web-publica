@@ -142,6 +142,7 @@ function Cabecera() {
 /** Franja de video. Sin autoplay en el HTML: arranca por JS y, con
  *  prefers-reduced-motion, se queda quieto en el póster. */
 function VideoEncabezado() {
+  const reduced = useReducedMotion()
   const ref = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -182,7 +183,6 @@ const TITULO_A = 'Un profesional remoto dedicado,'
 const TITULO_B = 'desde 1.300 € al mes.'
 
 function Titular() {
-  const reduced = useReducedMotion()
   const palabras = [
     ...TITULO_A.split(' ').map(w => ({ w, em: false })),
     ...TITULO_B.split(' ').map(w => ({ w, em: true })),

@@ -1,8 +1,14 @@
-// Construye el structured data JobPosting (schema.org) de una vacante.
+// Construye el structured data JobPosting (schema.org) de una oportunidad.
 // Hace elegibles las páginas /empleos/[id] para el recuadro de Google Jobs.
 // Docs: https://developers.google.com/search/docs/appearance/structured-data/job-posting
+//
+// Se mantiene el tipo JobPosting porque es lo que Google indexa en «Empleos»,
+// pero con employmentType CONTRACTOR y sin baseSalary: GTC no contrata, los
+// profesionales son colaboradores independientes (spec de Ariel, 16-oct-2026).
 
-const BASE_URL = 'https://www.globaltalent-connections.com'
+// El portal vive en su propio subdominio: la URL de la oportunidad va ahí.
+const BASE_URL = 'https://empleos.globaltalent-connections.com'
+const CORP_URL = 'https://www.globaltalent-connections.com'
 
 // Países de LATAM desde donde se puede postular (audiencia real del sitio según GA4).
 const LATAM_COUNTRIES = [
@@ -11,16 +17,15 @@ const LATAM_COUNTRIES = [
   'República Dominicana', 'Honduras', 'El Salvador', 'Nicaragua',
 ]
 
-// Google exige una fecha de publicación. Es única para todas por ahora — refrescar
-// periódicamente para que las vacantes no figuren "viejas" en Google Jobs.
-const DATE_POSTED = '2026-06-01'
-const VALID_THROUGH = '2026-08-31'
-
-function employmentType(type: string): string {
-  const t = (type || '').toLowerCase()
-  if (t.includes('parcial') || t.includes('part')) return 'PART_TIME'
-  if (t.includes('pasant') || t.includes('intern') || t.includes('práctic')) return 'INTERN'
-  return 'FULL_TIME'
+// Google exige una fecha de publicación y una de caducidad. Sale de `opened_at`
+// de Nexus cuando la oportunidad viene de la API; si no, de la fecha del build.
+const DIAS_VIGENTE = 90
+const dia = (d: Date) => d.toISOString().slice(0, 10)
+function fechas(openedAt?: string): { datePosted: string; validThrough: string } {
+  const desde = openedAt ? new Date(openedAt) : new Date()
+  const base = Number.isNaN(desde.getTime()) ? new Date() : desde
+  const hasta = new Date(Math.max(base.getTime(), Date.now()) + DIAS_VIGENTE * 86400000)
+  return { datePosted: dia(base), validThrough: dia(hasta) }
 }
 
 export interface JobForSchema {
@@ -30,11 +35,12 @@ export interface JobForSchema {
   type: string
   requirements?: string[]
   imageUrl?: string
+  openedAt?: string
 }
 
 export function buildJobPostingSchema(job: JobForSchema) {
   const requirementsHtml = job.requirements?.length
-    ? `<p><strong>Requisitos:</strong></p><ul>${job.requirements.map((r) => `<li>${r}</li>`).join('')}</ul>`
+    ? `<p><strong>Qué buscamos:</strong></p><ul>${job.requirements.map((r) => `<li>${r}</li>`).join('')}</ul>`
     : ''
   const descriptionHtml = `<p>${job.description}</p>${requirementsHtml}`
 
@@ -43,14 +49,13 @@ export function buildJobPostingSchema(job: JobForSchema) {
     '@type': 'JobPosting',
     title: job.title,
     description: descriptionHtml,
-    datePosted: DATE_POSTED,
-    validThrough: VALID_THROUGH,
-    employmentType: employmentType(job.type),
+    ...fechas(job.openedAt),
+    employmentType: 'CONTRACTOR',
     hiringOrganization: {
       '@type': 'Organization',
       name: 'Global Talent Connections',
-      sameAs: BASE_URL,
-      logo: `${BASE_URL}/og-image.png`,
+      sameAs: CORP_URL,
+      logo: `${CORP_URL}/og-image.png`,
     },
     // Trabajo 100% remoto: se marca como teletrabajo + países donde se puede postular.
     jobLocationType: 'TELECOMMUTE',

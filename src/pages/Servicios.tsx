@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, BarChart3, Code, Palette, Users, FileSpreadsheet, Headphones, Megaphone, BrainCircuit, Building2, Cog, ShoppingCart, type LucideIcon } from 'lucide-react'
 import { RevealSection } from '@/components/shared/RevealSection'
-import SEO, { SERVICIOS_FAQ_SCHEMA } from '@/components/shared/SEO'
+import SEO from '@/components/shared/SEO'
+import { SERVICIOS_FAQ_SCHEMA } from '@/components/shared/faqCorporativa'
 import { useT } from '@/hooks/useT'
 
 interface Servicio {

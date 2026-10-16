@@ -1,0 +1,18 @@
+# Guardia de vocabulario del portal de candidatos (auditoría legal).
+# Corre en cada push y PR a `candidatos`: si una frase vuelve a hablar de
+# empleo, salario, jornada o contratación, el check sale en rojo.
+name: vocabulario-portal
+on:
+  push:
+    branches: [candidatos]
+  pull_request:
+    branches: [candidatos]
+jobs:
+  vocabulario:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run verificar:vocabulario

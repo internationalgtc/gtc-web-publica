@@ -8,7 +8,8 @@ import { getCountry } from '@/lib/geo'
 import { useT, useLang } from '@/hooks/useT'
 import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
 import { direccion, filasOperativo, type TeamMember } from '@/data/equipo'
-import SEO, { HOME_FAQ_SCHEMA } from '@/components/shared/SEO'
+import SEO from '@/components/shared/SEO'
+import { HOME_FAQ_SCHEMA } from '@/components/shared/faqCorporativa'
 
 const EASE: [number, number, number, number] = [0.16, 1, 0.3, 1]
 

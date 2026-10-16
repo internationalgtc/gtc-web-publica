@@ -36,6 +36,8 @@ export interface Job {
   /** Perfil general (sin cliente detrás): se postula para entrar al banco de
    *  talento, no a una búsqueda abierta. Lo marca Nexus (`is_evergreen`). */
   esPerfilGeneral?: boolean;
+  /** Fecha de apertura en Nexus (ISO). Alimenta datePosted del JobPosting. */
+  openedAt?: string;
   /** @deprecated No se usa — el botón "Aplicar" apunta a Nexus /postular-express */
   url?: string;
 
@@ -89,7 +91,7 @@ export const JOBS: Job[] = [
     applicants: 0,
     imageUrl: "/img-empleos/automatizador.jpg",
     description:
-      "Buscamos el motor de innovación operativa de nuestra empresa. Tu misión será identificar cuellos de botella y transformarlos en flujos de trabajo autónomos mediante herramientas No-Code/Low-Code e Inteligencia Artificial. El objetivo es maximizar la productividad y garantizar que la información fluya sin errores entre departamentos.",
+      "Buscamos el motor de innovación operativa de nuestra empresa. Tu misión será identificar cuellos de botella y transformarlos en flujos de trabajo autónomos mediante herramientas No-Code/Low-Code e Inteligencia Artificial. El objetivo es maximizar la eficiencia y garantizar que la información fluya sin errores entre departamentos.",
     responsibilities: [
       { titulo: "Diseñar, testear y desplegar automatizaciones complejas en Make (excluyente) y Zapier." },
       { titulo: "Implementar y optimizar agentes de IA basados en LLMs (ChatGPT, Gemini) para tareas operativas." },
@@ -187,7 +189,7 @@ export const JOBS: Job[] = [
       { titulo: "Liderar y coordinar al equipo de Content Manager y Responsable de Marca." },
       { titulo: "Optimizar constantemente el CPL (Costo por Lead) y el CAC (Costo de Adquisición)." },
       { titulo: "Gestionar el presupuesto de pauta en Meta, Google y LinkedIn Ads (B2B)." },
-      { titulo: "Sincronizar con RRHH para alinear la captación de talento con las vacantes activas." },
+      { titulo: "Coordinar con el equipo de GTC para alinear la captación de talento con los proyectos activos." },
       { titulo: "Diseñar, testear y optimizar funnels de conversión de alto rendimiento." },
     ],
     requirements: [

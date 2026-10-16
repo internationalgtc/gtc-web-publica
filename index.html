@@ -31,6 +31,8 @@
   <meta name="msvalidate.01" content="EC1EEB6D6F39050A44D6F17DE0C48308" />
 
   <!-- Fonts: Fraunces (display editorial) + Montserrat (headlines) + Poppins (subtitles) + Lato (body) + Inter (UI) -->
+  <!-- El póster del video del hero es el LCP de la portada: se precarga con prioridad alta. -->
+  <link rel="preload" as="image" href="/videos/hero-gtc-poster.webp" fetchpriority="high" />
   <!-- Tipografías propias: solo se precargan las dos que pintan el hero. -->
   <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/fraunces-latin.woff2" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/montserrat-latin.woff2" />

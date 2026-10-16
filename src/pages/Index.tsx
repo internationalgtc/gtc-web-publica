@@ -99,6 +99,7 @@ function Estrellas({ size = 20 }: { size?: number }) {
 
 /** Video a sangre. Con prefers-reduced-motion se queda quieto en el póster. */
 function HeroVideo() {
+  const reduced = useReducedMotion()
   const ref = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -136,7 +137,6 @@ function HeroVideo() {
    la segunda parte) va en cursiva con subrayado coral. */
 function HeroTitle() {
   const t = useT()
-  const reduced = useReducedMotion()
   const [destacada, ...resto] = t('home_hero_title_b').split(' ')
   const palabras = [
     ...t('home_hero_title_a').split(' ').map(w => ({ w, em: false })),

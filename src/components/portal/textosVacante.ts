@@ -8,8 +8,8 @@ export function useTextosVacante() {
   const en = lang === 'en'
   return {
     lang,
-    titulo: (j: Job) => (en && JOBS_EN[j.id] ? JOBS_EN[j.id].title : j.title),
-    descripcion: (j: Job) => (en && JOBS_EN[j.id]?.description) || j.description,
+    titulo: (j: Job) => (en && JOBS_EN[j.localId ?? j.id] ? JOBS_EN[j.localId ?? j.id].title : j.title),
+    descripcion: (j: Job) => (en && JOBS_EN[j.localId ?? j.id]?.description) || j.description,
     area: (d: string) => (en && DEPT_EN[d] ? DEPT_EN[d] : d),
     lugar: (l: string) => (en && LOCATION_EN[l] ? LOCATION_EN[l] : l),
     // El campo `type` de las fichas sigue guardando «Jornada Completa» (es el

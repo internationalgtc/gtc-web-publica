@@ -1,0 +1,34 @@
+# Publica el portal todos los días a las 07:00 de Madrid (y a mano desde Actions).
+# Las oportunidades cambian solas en Nexus: el prerender y el sitemap tienen que
+# rehacerse aunque nadie toque el código. Compila con Chromium en el runner y
+# sube el build ya hecho (en Vercel no hay Chromium).
+#
+# Secretos del repo: VERCEL_TOKEN (token personal de Vercel con acceso al equipo
+# gtc2), VERCEL_ORG_ID (team_c0lsZMwGAdkKbepBimENtlUl), VERCEL_PROJECT_ID (gtc-empleos).
+name: publicar-portal-diario
+on:
+  schedule:
+    - cron: '0 5 * * *'   # 07:00 CEST / 06:00 CET
+  workflow_dispatch:
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: candidatos
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx puppeteer browsers install chrome
+      - run: npm run verificar:vocabulario
+      - run: npx vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+      - run: PRERENDER=1 npx vercel build --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+      - run: node scripts/verificar-prerender.mjs
+      - run: npx vercel deploy --prebuilt --prod --yes --token=${{ secrets.VERCEL_TOKEN }}
+      - run: node scripts/verificar-publicado.mjs

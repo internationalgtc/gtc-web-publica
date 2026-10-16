@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, Navigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { JOBS, JOBS_EN } from '@/data/jobs'
 import type { Job } from '@/data/jobs'
@@ -41,6 +41,7 @@ export default function DetallesDeEmpleoPage() {
   const [buscando, setBuscando] = useState(!staticJob)
   // El resto de vacantes vivas alimenta «Otras vacantes» al pie.
   const [todas, setTodas] = useState<Job[]>([])
+  const [slugNuevo, setSlugNuevo] = useState<string | null>(null)
   // Las etiquetas de la ficha (disponibilidad, qué buscamos) las manda Nexus:
   // es el mismo vocabulario que usa el CRM, no se escriben a mano acá.
   const [etiquetas, setEtiquetas] = useState<EtiquetasPortal>(ETIQUETAS_POR_DEFECTO)
@@ -58,12 +59,17 @@ export default function DetallesDeEmpleoPage() {
       if (ctrl.signal.aborted) return
       setTodas(jobs)
       setEtiquetas(etiquetas)
+      // URL numérica vieja (/empleos/73) de una oportunidad que sigue viva: a su slug.
+      const viva = jobs.find(j => j.localId === id)
+      if (viva && viva.id !== id) { setSlugNuevo(viva.id); return }
       if (!staticJob) setJob(jobs.find(j => j.id === id))
       if (!usandoReserva) setAbierta(jobs.some(j => j.id === id))
       setBuscando(false)
     })
     return () => ctrl.abort()
   }, [id, staticJob])
+
+  if (slugNuevo) return <Navigate to={`/empleos/${slugNuevo}`} replace />
 
   if (buscando) {
     return (
@@ -102,7 +108,7 @@ export default function DetallesDeEmpleoPage() {
   }
 
   const applyUrl = urlPostulacion(job.title, lang)
-  const en = lang === 'en' && JOBS_EN[job.id] ? JOBS_EN[job.id] : null
+  const en = lang === 'en' && JOBS_EN[job.localId ?? job.id] ? JOBS_EN[job.localId ?? job.id] : null
   const descripcion = en?.description || job.description
   const responsibilities = en?.responsibilities || job.responsibilities
   const requirements = en?.requirements || job.requirements

@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, type ReactNode } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
@@ -32,9 +32,6 @@ const PROCESO = [
 const PASO_DESTACADO = 1
 
 const AREAS = Array.from({ length: CIFRAS.areas }, (_, i) => ({ nameKey: `home_area_${i + 1}`, tagKey: `home_area_${i + 1}_tag` }))
-
-const COSTE_ESPANA = ['home_coste_es_1', 'home_coste_es_2', 'home_coste_es_3', 'home_coste_es_4']
-const COSTE_GTC = ['home_coste_gtc_1', 'home_coste_gtc_2', 'home_coste_gtc_3', 'home_coste_gtc_4']
 
 /* Videos servidos desde public/videos/ (antes Cloudinary, cuenta deshabilitada) */
 const VIDEOS_TESTIMONIO = [
@@ -454,57 +451,6 @@ function Areas() {
   )
 }
 
-/* ——— COSTE REAL ———
-   Los mismos números y listas que la landing /asistente-virtual. */
-function CosteReal() {
-  const t = useT()
-  return (
-    <section id="coste" className="pt-20 lg:pt-[130px] pb-10">
-      <Wrap>
-        <Reveal className="bg-cream-2 rounded-[28px] lg:rounded-[36px] px-5 py-10 sm:p-10 lg:px-[72px] lg:py-20 grid grid-cols-1 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-10 lg:gap-16 items-center overflow-hidden">
-          <div className="flex flex-col gap-6 lg:gap-8">
-            <div className="ed-label text-ink-soft">{t('home_coste_label')}</div>
-            <h2 className="ed-serif font-[320] text-navy leading-[1.05] tracking-[-0.02em] text-[clamp(34px,4.5vw,64px)] [text-wrap:balance]">
-              {t('home_coste_h2_a')} <span className="ed-serif-it">{t('home_coste_h2_b')}</span>
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-5">
-              <div className="bg-cream rounded-[22px] p-6 lg:p-7 flex flex-col gap-3.5">
-                <span className="ed-label text-ink-soft">{t('home_coste_es_label')}</span>
-                <span className="ed-serif font-[340] text-navy leading-none text-[clamp(38px,3.2vw,48px)]">
-                  <span className="whitespace-nowrap">{t('home_coste_es_precio')}</span> <span className="text-lg lg:text-xl text-ink-soft">{t('home_coste_mes')}</span>
-                </span>
-                <ul className="list-disc pl-[18px] flex flex-col gap-1.5 text-[15px] leading-[1.45] text-ink-soft">
-                  {COSTE_ESPANA.map(k => <li key={k}>{t(k)}</li>)}
-                </ul>
-              </div>
-              <div className="bg-navy text-cream rounded-[22px] p-6 lg:p-7 flex flex-col gap-3.5">
-                <span className="ed-label text-cream/70">{t('calc_r_gtc')}</span>
-                <span className="ed-serif font-[340] leading-none text-[clamp(38px,3.2vw,48px)]">
-                  <span className="whitespace-nowrap">{t('home_coste_gtc_precio')}</span> <span className="text-lg lg:text-xl text-cream/70">{t('home_coste_mes')}</span>
-                </span>
-                <ul className="list-disc pl-[18px] flex flex-col gap-1.5 text-[15px] leading-[1.45] text-cream/80">
-                  {COSTE_GTC.map(k => <li key={k}>{t(k)}</li>)}
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center gap-2 text-center">
-            <Img3D src="/img/3d/ahorro.webp" className="ed-3d w-full h-[200px] sm:h-[260px] lg:h-[340px] object-cover" />
-            <span className="ed-serif font-[280] text-navy leading-[0.9] tracking-[-0.04em] text-[clamp(96px,13.9vw,200px)]">{t('home_coste_pct')}</span>
-            <span className="text-[17px] lg:text-lg text-ink-soft max-w-[26em]">{t('home_coste_pct_d')}</span>
-            <Link
-              to="/calculadora-ahorro"
-              className="mt-2 inline-flex items-center gap-2 py-3 font-label font-semibold text-base text-navy underline decoration-coral decoration-2 underline-offset-[6px] hover:text-navy-deep"
-            >
-              {t('home_coste_cta')} <span aria-hidden="true">→</span>
-            </Link>
-          </div>
-        </Reveal>
-      </Wrap>
-    </section>
-  )
-}
-
 /* ——— 04 EQUIPO ———
    El roster vive en src/data/equipo.ts (fuente única; validado contra GAM). */
 function Foto({ m, grande }: { m: TeamMember; grande: boolean }) {
@@ -578,7 +524,7 @@ function Testimonios() {
   const lang = useLang()
   const resena = (autor: string) => RESENAS_GOOGLE.find(r => r.autor === autor && r.texto)
   const principal = resena('Sergio Varo')
-  const otras = ['Curro Sabán', 'Karelis Rojas Contreras'].map(resena).filter((r): r is (typeof RESENAS_GOOGLE)[number] => Boolean(r))
+  const otras = ['Ingrid De Cordido', 'Karelis Rojas Contreras'].map(resena).filter((r): r is (typeof RESENAS_GOOGLE)[number] => Boolean(r))
   const nota = RESUMEN_GOOGLE.rating.toLocaleString(lang === 'es' ? 'es-ES' : 'en-GB', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 
   return (
@@ -754,7 +700,6 @@ export default function HomePage() {
       <Servicio />
       <Proceso />
       <Areas />
-      <CosteReal />
       <Equipo />
       <Testimonios />
       <Preguntas />

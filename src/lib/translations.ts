@@ -15,8 +15,8 @@ const T: Record<string, Record<string, string>> = {
 
   // ── HERO ──
   hero_badge: CIFRAS.profesionales.texto,
-  hero_title_1: { es: 'Ahorra hasta un 52%', en: 'Save up to 52%' },
-  hero_title_2: { es: 'en talento de alto rendimiento.', en: 'on high-performance talent.' },
+  hero_title_1: { es: 'Servicio gestionado de', en: 'Managed service for' },
+  hero_title_2: { es: 'talento de alto rendimiento.', en: 'high-performance talent.' },
   hero_subtitle: { es: 'Conectamos empresas con profesionales remotos. Selección, gestión y supervisión integral.', en: 'We connect companies with remote professionals. Selection, management and comprehensive supervision.' },
   hero_cta_empresa: { es: 'Para Empresas', en: 'For Companies' },
   hero_cta_calcular: { es: 'Calcular mi ahorro', en: 'Calculate my savings' },
@@ -211,7 +211,7 @@ const T: Record<string, Record<string, string>> = {
   calc_hablemos: { es: 'Hablemos', en: "Let's talk" },
 
   // ── FOOTER ──
-  footer_desc: { es: 'Outsourcing estratégico de talento para empresas europeas y americanas.', en: 'Strategic talent outsourcing for European and American companies.' },
+  footer_desc: { es: 'Servicios gestionados para empresas europeas y americanas.', en: 'Managed services for European and American companies.' },
   footer_empresa: { es: 'Empresa', en: 'Company' },
   footer_sobre: { es: 'Sobre nosotros', en: 'About us' },
   footer_recursos: { es: 'Recursos', en: 'Resources' },
@@ -256,7 +256,7 @@ const T: Record<string, Record<string, string>> = {
   home_gar_1_t: { es: 'Selección con evidencia', en: 'Evidence-based selection' },
   home_gar_1_d: { es: 'Evaluamos experiencia, competencias y encaje con entrevistas y pruebas adaptadas al rol.', en: 'We assess experience, skills and fit through interviews and tests tailored to the role.' },
   home_gar_2_t: { es: 'Una factura mensual', en: 'One monthly invoice' },
-  home_gar_2_d: { es: 'GTC gestiona la contratación del profesional. Tu empresa recibe un servicio mensual claro y centralizado.', en: 'GTC handles the professional’s hiring. Your company receives one clear, centralized monthly service.' },
+  home_gar_2_d: { es: 'Una factura mensual por el servicio, sin gestiones adicionales para tu empresa.', en: 'One monthly invoice for the service, with no extra admin for your company.' },
   home_gar_3_t: { es: 'Seguimiento y continuidad', en: 'Follow-up and continuity' },
   home_gar_3_d: { es: 'Calidad acompaña el desempeño, gestiona incidencias y activa el reemplazo si el perfil no encaja.', en: 'Our Quality team supports performance, handles any issues and activates a replacement if the profile isn’t a fit.' },
   home_sec_proceso: { es: 'Proceso', en: 'Process' },
@@ -325,7 +325,7 @@ const T: Record<string, Record<string, string>> = {
   home_form_ventas: { es: 'Ventas', en: 'Sales' },
   home_form_dev: { es: 'Desarrollo Web / Full Stack', en: 'Web / Full Stack Development' },
   home_form_otro: { es: 'Otro', en: 'Other' },
-  home_form_cta: { es: 'Quiero encontrar talento', en: 'I want to find talent' },
+  home_form_cta: { es: 'Quiero solicitar el servicio', en: 'I want to request the service' },
 
   // --- Portada «A · Revista» (28-sep-2026) ---
   home_high_tech: { es: 'High Tech · High Touch', en: 'High Tech · High Touch' },
@@ -373,7 +373,7 @@ const T: Record<string, Record<string, string>> = {
   home_estrellas_aria: { es: '5 de 5 estrellas', en: '5 out of 5 stars' },
   home_preguntas_h2_a: { es: 'Antes de', en: 'Before you' },
   home_preguntas_h2_b: { es: 'empezar.', en: 'start.' },
-  nav_cta_home: { es: 'Encontrar talento', en: 'Find talent' },
+  nav_cta_home: { es: 'Solicitar servicio', en: 'Request service' },
 
   // ── PRIVACIDAD ──
   privacidad_label: { es: 'Legal', en: 'Legal' },
@@ -527,8 +527,8 @@ const T: Record<string, Record<string, string>> = {
   calc_ok_desc: { es: 'Mientras tanto, aquí tienes el Excel con la comparativa completa para revisarla con tu equipo.', en: 'Meanwhile, here is the Excel with the full comparison to review with your team.' },
   calc_whatsapp: { es: 'Escribirnos por WhatsApp', en: 'Message us on WhatsApp' },
   calc_incluye_titulo: { es: 'Qué incluye el precio', en: 'What the price includes' },
-  calc_inc_1: { es: 'Contratación y nómina', en: 'Hiring and payroll' },
-  calc_inc_1_d: { es: 'GTC contrata al profesional y gestiona su nómina. Tú recibes una sola factura mensual.', en: 'GTC hires the professional and manages payroll. You receive a single monthly invoice.' },
+  calc_inc_1: { es: 'Gestión completa del servicio', en: 'Complete service management' },
+  calc_inc_1_d: { es: 'Una sola factura mensual por el servicio, sin gestiones adicionales para tu empresa.', en: 'A single monthly invoice for the service, with no extra admin for your company.' },
   calc_inc_2: { es: 'Seguimiento de Calidad', en: 'Quality follow-up' },
   calc_inc_2_d: { es: 'Un equipo acompaña el desempeño, los reportes y cualquier incidencia.', en: 'A team supports performance, reporting and any incident.' },
   calc_inc_3: { es: 'Reemplazo garantizado', en: 'Guaranteed replacement' },

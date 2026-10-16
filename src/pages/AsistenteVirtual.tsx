@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, type ReactNode } from 'react'
+import { Fragment, useEffect, useRef, type ReactNode, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { MessageCircle, Phone } from 'lucide-react'
@@ -141,8 +141,31 @@ function Cabecera() {
 
 /** Franja de video. Sin autoplay en el HTML: arranca por JS y, con
  *  prefers-reduced-motion, se queda quieto en el póster. */
+/** Cuándo cargar el mp4 del hero: nunca en el prerender ni con
+ *  prefers-reduced-motion, nunca en móvil (628 KB que compiten con el LCP), y
+ *  en escritorio recién después de `load`. Hasta entonces se ve el póster,
+ *  que es una <img> precargada: el LCP es esa imagen, no un video a medio
+ *  bajar (spec de Ariel, 16-oct-2026, PR 4; medido LCP 5,3 s → objetivo < 2,5 s). */
+function useCargarVideoHero(reduced: boolean | null) {
+  const [conVideo, setConVideo] = useState(false)
+  useEffect(() => {
+    if (reduced) return
+    if (typeof window === 'undefined' || window.__PRERENDER_INJECTED || navigator.webdriver) return
+    if (!window.matchMedia('(min-width: 1024px)').matches) return
+    const arrancar = () => setConVideo(true)
+    if (document.readyState === 'complete') {
+      const id = window.setTimeout(arrancar, 300)
+      return () => window.clearTimeout(id)
+    }
+    window.addEventListener('load', arrancar, { once: true })
+    return () => window.removeEventListener('load', arrancar)
+  }, [reduced])
+  return conVideo
+}
+
 function VideoEncabezado() {
   const reduced = useReducedMotion()
+  const conVideo = useCargarVideoHero(reduced)
   const ref = useRef<HTMLVideoElement>(null)
 
   useEffect(() => {
@@ -154,22 +177,33 @@ function VideoEncabezado() {
       return
     }
     video.play().catch(() => {})
-  }, [reduced])
+  }, [reduced, conVideo])
 
   return (
     <div className="relative overflow-hidden h-[190px] sm:h-[240px] lg:h-[200px]" aria-hidden="true">
-      <video
-        ref={ref}
+      <>
+      <img
+        src="/videos/hero-gtc-poster.webp"
+        alt=""
         className="absolute inset-0 w-full h-full object-cover object-[30%_50%]"
-        src="/videos/hero-gtc.mp4"
-        poster="/videos/hero-gtc-poster.webp"
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        disablePictureInPicture
-        tabIndex={-1}
+        decoding="async"
+        aria-hidden="true"
       />
+      {conVideo && (
+        <video
+          ref={ref}
+          className="absolute inset-0 w-full h-full object-cover object-[30%_50%]"
+          src="/videos/hero-gtc.mp4"
+            autoPlay
+        muted
+          loop
+          playsInline
+          preload="auto"
+          disablePictureInPicture
+          tabIndex={-1}
+        />
+      )}
+      </>
       {/* Velo crema de la portada (62 % → 48 % → 70 %): el video siempre suave. */}
       <div className="absolute inset-0 ed-hero-velo-v" />
       <div className="absolute inset-x-0 bottom-0 h-[70px] bg-gradient-to-b from-cream/0 to-cream" />

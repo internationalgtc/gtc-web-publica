@@ -32,3 +32,11 @@ export function trackPostulacion(slug: string | undefined, ubicacion: string) {
 export function trackLead(source: string) {
   window.gtag?.('event', 'generate_lead', { event_category: source, transport_type: 'beacon' })
 }
+
+export type CanalContacto = 'whatsapp' | 'telefono' | 'email'
+
+/** Clic a un canal directo de contacto. Solo lo usan páginas heredadas de la
+ *  web de empresas que el portal no enruta; se conserva para que compilen. */
+export function trackContacto(canal: CanalContacto, ubicacion: string) {
+  window.gtag?.('event', `contacto_${canal}`, { event_category: 'contacto', ubicacion, transport_type: 'beacon' })
+}

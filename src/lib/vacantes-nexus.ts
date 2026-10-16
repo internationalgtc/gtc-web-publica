@@ -94,7 +94,7 @@ function aJob(v: VacanteNexus): Job {
   // Hay ficha local: se conserva su contenido rico y Nexus solo aporta que
   // esta abierta. El id local mantiene andando /empleos/:id y la version en ingles.
   if (local) {
-    return { ...local, active: true, department: departamento, esPerfilGeneral: v.is_evergreen }
+    return { ...local, active: true, department: departamento, esPerfilGeneral: v.is_evergreen, openedAt: v.opened_at ?? undefined }
   }
 
   return {
@@ -104,7 +104,10 @@ function aJob(v: VacanteNexus): Job {
     title: v.title,
     department: departamento,
     location: v.location || 'Remoto',
-    type: 'Jornada Completa',
+    // Disponibilidad, no jornada (auditoría legal, T39): la ficha muestra la
+    // franja, no una relacion laboral.
+    type: 'Completa (8 h)',
+    openedAt: v.opened_at ?? undefined,
     imageUrl: (v.category && IMAGEN_POR_CATEGORIA[v.category]) || '/img-empleos/gestion.jpg',
     description: v.description || '',
     responsibilities: [],
@@ -118,20 +121,45 @@ function aJob(v: VacanteNexus): Job {
   }
 }
 
+/** Etiquetas que Nexus devuelve junto con las vacantes (bloque `etiquetas`):
+ *  el vocabulario de la auditoría legal, el mismo que usa el CRM. */
+export interface EtiquetasPortal {
+  tipo: string
+  plural: string
+  honorarios: string
+  disponibilidad: string
+  modalidad: string
+  requisitos: string
+  cta: string
+}
+
+/** Lo que devolvia la API el 16-oct-2026. Se usa mientras Nexus no responde. */
+export const ETIQUETAS_POR_DEFECTO: EtiquetasPortal = {
+  tipo: 'Oportunidad de colaboración',
+  plural: 'Oportunidades de colaboración',
+  honorarios: 'Honorarios orientativos',
+  disponibilidad: 'Disponibilidad',
+  modalidad: 'Modalidad',
+  requisitos: 'Qué buscamos',
+  cta: 'Súmate a este proyecto',
+}
+
 export interface ResultadoVacantes {
   jobs: Job[]
   /** true cuando Nexus no respondio y se esta mostrando la reserva local. */
   usandoReserva: boolean
+  etiquetas: EtiquetasPortal
 }
 
 export async function traerVacantes(signal?: AbortSignal): Promise<ResultadoVacantes> {
-  const reserva: ResultadoVacantes = { jobs: JOBS.filter((j) => j.active), usandoReserva: true }
+  const reserva: ResultadoVacantes = { jobs: JOBS.filter((j) => j.active), usandoReserva: true, etiquetas: ETIQUETAS_POR_DEFECTO }
 
   try {
     const res = await fetch(API, { signal, headers: { Accept: 'application/json' } })
     if (!res.ok) return reserva
 
-    const body = (await res.json()) as { data?: VacanteNexus[] }
+    const body = (await res.json()) as { data?: VacanteNexus[]; etiquetas?: Partial<EtiquetasPortal> }
+    const etiquetas: EtiquetasPortal = { ...ETIQUETAS_POR_DEFECTO, ...(body?.etiquetas ?? {}) }
     const vacantes = body?.data
     if (!Array.isArray(vacantes) || vacantes.length === 0) {
       // Cero vacantes con la API sana es un estado posible (nadie curo el titulo
@@ -150,7 +178,7 @@ export async function traerVacantes(signal?: AbortSignal): Promise<ResultadoVaca
       if (!porTitulo.has(normaliza(job.title))) porTitulo.set(normaliza(job.title), job)
     }
 
-    return { jobs: [...porTitulo.values()], usandoReserva: false }
+    return { jobs: [...porTitulo.values()], usandoReserva: false, etiquetas }
   } catch {
     return reserva
   }

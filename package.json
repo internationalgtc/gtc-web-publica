@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "verificar:vocabulario": "node scripts/verificar-vocabulario.mjs",
+    "test": "node scripts/verificar-vocabulario.mjs"
   },
   "repository": {
     "type": "git",

@@ -42,8 +42,8 @@ export default function EmpleosPage() {
   return (
     <>
       <SEO
-        title="Trabajo remoto — Empleos abiertos en Latinoamérica"
-        description="Trabajo remoto desde casa: vacantes abiertas en marketing, ventas, administración, desarrollo, diseño, finanzas y más. Empleos 100% remotos para Argentina, Chile, Colombia, México, Perú y toda Latinoamérica. Postúlate hoy."
+        title="Colaboración remota — Oportunidades abiertas en Latinoamérica"
+        description="Colaboración remota desde casa: oportunidades abiertas en marketing, ventas, administración, desarrollo, diseño, finanzas y más. 100 % en remoto para Argentina, Chile, Colombia, México, Perú y toda Latinoamérica. Súmate hoy."
         path="/empleos"
       />
 

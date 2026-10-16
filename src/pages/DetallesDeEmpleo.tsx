@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { JOBS, JOBS_EN } from '@/data/jobs'
 import type { Job } from '@/data/jobs'
-import { traerVacantes } from '@/lib/vacantes-nexus'
+import { traerVacantes, ETIQUETAS_POR_DEFECTO, type EtiquetasPortal } from '@/lib/vacantes-nexus'
 import { useT } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
 import { buildJobPostingSchema } from '@/lib/jobPosting'
@@ -41,6 +41,9 @@ export default function DetallesDeEmpleoPage() {
   const [buscando, setBuscando] = useState(!staticJob)
   // El resto de vacantes vivas alimenta «Otras vacantes» al pie.
   const [todas, setTodas] = useState<Job[]>([])
+  // Las etiquetas de la ficha (disponibilidad, qué buscamos) las manda Nexus:
+  // es el mismo vocabulario que usa el CRM, no se escriben a mano acá.
+  const [etiquetas, setEtiquetas] = useState<EtiquetasPortal>(ETIQUETAS_POR_DEFECTO)
   // Las 45 fichas locales inactivas siguen respondiendo por URL (Google las
   // tiene indexadas). Una búsqueda que ya cerró no puede ofrecer «Postularme»:
   // abierta = Nexus la lista hoy (o, sin Nexus, el archivo la marca activa).
@@ -51,9 +54,10 @@ export default function DetallesDeEmpleoPage() {
     setBuscando(!staticJob)
     setAbierta(staticJob?.active !== false)
     const ctrl = new AbortController()
-    traerVacantes(ctrl.signal).then(({ jobs, usandoReserva }) => {
+    traerVacantes(ctrl.signal).then(({ jobs, usandoReserva, etiquetas }) => {
       if (ctrl.signal.aborted) return
       setTodas(jobs)
+      setEtiquetas(etiquetas)
       if (!staticJob) setJob(jobs.find(j => j.id === id))
       if (!usandoReserva) setAbierta(jobs.some(j => j.id === id))
       setBuscando(false)
@@ -116,7 +120,7 @@ export default function DetallesDeEmpleoPage() {
   const meta: { label: string; value: string }[] = [
     { label: t('det_area'), value: area(job.department) },
     { label: t('det_ubicacion'), value: lugar(job.location) },
-    { label: t('det_jornada'), value: jornada(job.type) },
+    { label: lang === 'es' ? etiquetas.disponibilidad : t('det_jornada'), value: jornada(job.type) },
   ]
   if (experience) meta.push({ label: t('det_experiencia'), value: experience })
   if (education) meta.push({ label: t('det_formacion'), value: education })
@@ -153,7 +157,7 @@ export default function DetallesDeEmpleoPage() {
   if (requirements.length > 0) {
     bloques.push({
       key: 'requisitos',
-      titulo: t('det_requisitos'),
+      titulo: lang === 'es' ? etiquetas.requisitos : t('det_requisitos'),
       contenido: (
         <ul>
           {requirements.map((r, i) => (
@@ -186,8 +190,8 @@ export default function DetallesDeEmpleoPage() {
   return (
     <>
       <SEO
-        title={`${titulo(job)} — Trabajo remoto`}
-        description={`Trabajo remoto de ${job.title} en Global Talent Connections. Empleo 100% remoto desde Latinoamérica (Argentina, Chile, Colombia, México y más). Postúlate hoy.`}
+        title={`${titulo(job)} — Colaboración remota`}
+        description={`Oportunidad de colaboración 100 % remota como ${job.title} con Global Talent Connections, desde Latinoamérica (Argentina, Chile, Colombia, México y más). Súmate hoy.`}
         path={`/empleos/${job.id}`}
         type="article"
         jobPostingSchema={
@@ -200,6 +204,7 @@ export default function DetallesDeEmpleoPage() {
                 type: job.type,
                 requirements: job.requirements,
                 imageUrl: job.imageUrl,
+                openedAt: job.openedAt,
               })
         }
       />

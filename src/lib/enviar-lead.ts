@@ -28,6 +28,8 @@ export interface DatosLead {
   company_size?: string
   /** Variante breve para tráfico de anuncios: se contacta por WhatsApp. */
   capture_mode?: 'express'
+  /** Casilla «He leído la información sobre protección de datos» (obligatoria). */
+  acepta_privacidad: boolean
 }
 
 /** Qué formulario lo mandó. Viaja para poder medir cuál convierte. */
@@ -56,6 +58,11 @@ export async function enviarLead(datos: DatosLead, formulario: OrigenFormulario)
       // solo cuando la visita no trae uno propio de campaña.
       formulario,
       capture_mode: datos.capture_mode,
+      // Protección de datos (auditoría legal, T61): la casilla y cuándo se marcó.
+      // Nexus guardará el campo cuando lo acepte (pedido a Javier); hasta
+      // entonces viaja igual y no rompe nada.
+      acepta_privacidad: datos.acepta_privacidad,
+      acepta_privacidad_fecha: new Date().toISOString(),
       utm_content: utms.utm_content || `form:${formulario}`,
       referrer: getReferrer(),
       landing_url: getLandingUrl(),

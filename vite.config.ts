@@ -4,6 +4,7 @@ import path from 'path'
 import fs from 'fs'
 import os from 'os'
 import { createRequire } from 'module'
+import { execFileSync } from 'child_process'
 import prerender from '@prerenderer/rollup-plugin'
 import type { Plugin } from 'vite'
 import { blogPosts } from './src/data/blogPosts'
@@ -117,6 +118,41 @@ function separarHomeDeLaSpa(): Plugin {
   }
 }
 
+// sitemap.xml se genera en el build con el último commit que tocó cada página
+// (o translations.ts, que las alimenta a todas). Antes era un archivo a mano
+// con todas las fechas en junio.
+function sitemapXml(): Plugin {
+  const BASE = 'https://www.globaltalent-connections.com'
+  const fecha = (archivos: string[]) => {
+    const fechas = archivos.map(a => {
+      try { return execFileSync('git', ['log', '-1', '--format=%cs', '--', a], { cwd: __dirname, encoding: 'utf8' }).trim() } catch { return '' }
+    }).filter(Boolean)
+    return fechas.sort().at(-1) ?? new Date().toISOString().slice(0, 10)
+  }
+  const T = 'src/lib/translations.ts'
+  const paginas: Array<[string, string[], string, string]> = [
+    ['/', ['src/pages/Index.tsx', T, 'src/data/cifras.ts'], 'weekly', '1.0'],
+    ['/servicios', ['src/pages/Servicios.tsx', T], 'monthly', '0.9'],
+    ['/asistente-virtual', ['src/pages/AsistenteVirtual.tsx', T], 'monthly', '0.8'],
+    ['/nosotros', ['src/pages/Nosotros.tsx', 'src/data/equipo.ts', T], 'monthly', '0.7'],
+    ['/que-es-gtc', ['src/pages/QueEsGtc.tsx', 'src/data/queEsGtc.ts', T], 'monthly', '0.7'],
+    ['/contacto', ['src/pages/Contacto.tsx', T], 'monthly', '0.8'],
+    ['/blog', ['src/pages/Blog.tsx', 'src/data/blogPosts.ts'], 'weekly', '0.6'],
+    ...blogPosts.map(p => [`/blog/${p.id}`, ['src/data/blogPosts.ts'], 'monthly', '0.5'] as [string, string[], string, string]),
+    ['/politica-de-privacidad', ['src/pages/PoliticaPrivacidad.tsx', T], 'yearly', '0.3'],
+  ]
+  const filas = paginas.map(([ruta, archivos, freq, prio]) =>
+    `  <url>\n    <loc>${BASE}${ruta}</loc>\n    <lastmod>${fecha(archivos)}</lastmod>\n    <changefreq>${freq}</changefreq>\n    <priority>${prio}</priority>\n  </url>`)
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<!-- Generado en el build (vite.config.ts): lastmod = último commit de cada página. -->\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${filas.join('\n')}\n</urlset>\n`
+  return {
+    name: 'gtc-sitemap-xml',
+    apply: 'build',
+    generateBundle() {
+      this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: xml })
+    },
+  }
+}
+
 // /llms.txt se genera en el build con los mismos textos y cifras de la web.
 function llmsTxt(): Plugin {
   return {
@@ -166,6 +202,7 @@ export default defineConfig({
     }),
     ] : []),
     llmsTxt(),
+    sitemapXml(),
     separarHomeDeLaSpa(),
   ],
   resolve: {

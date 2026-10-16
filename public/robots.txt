@@ -2,4 +2,3 @@ User-agent: *
 Allow: /
 
 Sitemap: https://www.globaltalent-connections.com/sitemap.xml
-Sitemap: https://www.globaltalent-connections.com/blog/sitemap.xml

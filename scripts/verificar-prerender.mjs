@@ -51,7 +51,9 @@ const p404 = leer(path.join(STATIC, '404.html'))
 if (!p404) errores.push('/404.html: falta (las direcciones que no existen darían la página 404 genérica de Vercel)')
 else if (!/<div id="root"><\/div>/.test(p404)) errores.push('/404.html: no es el esqueleto vacío de la SPA')
 
-// 4. llms.txt generado en el build.
+// 4. sitemap.xml y llms.txt generados en el build.
+const sm = leer(path.join(STATIC, 'sitemap.xml'))
+if (!sm || !/<lastmod>\d{4}-\d{2}-\d{2}<\/lastmod>/.test(sm) || !sm.includes('/contacto')) errores.push('/sitemap.xml: falta o no tiene las rutas con lastmod')
 const llms = leer(path.join(STATIC, 'llms.txt'))
 if (!llms || !llms.startsWith('# Global Talent Connections')) errores.push('/llms.txt: falta o no tiene el formato esperado')
 

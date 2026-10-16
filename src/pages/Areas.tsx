@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { DEPARTMENTS, DEPT_EN } from '@/data/jobs'
 import type { Job } from '@/data/jobs'
-import { traerVacantes } from '@/lib/vacantes-nexus'
+import { traerVacantes, vacantesIniciales } from '@/lib/vacantes-nexus'
 import { useLang, useT } from '@/hooks/useT'
 import { urlPostulacion } from '@/lib/nexus'
 import { trackPostulacion } from '@/lib/tracking'
@@ -21,8 +21,8 @@ const pad = (n: number) => String(n).padStart(2, '0')
 export default function AreasPage() {
   const t = useT()
   const lang = useLang()
-  const [perfiles, setPerfiles] = useState<Job[]>([])
-  const [cargando, setCargando] = useState(true)
+  const [perfiles, setPerfiles] = useState<Job[]>(() => vacantesIniciales()?.jobs.filter(j => j.esPerfilGeneral) ?? [])
+  const [cargando, setCargando] = useState(() => vacantesIniciales() === null)
 
   useEffect(() => {
     const ctrl = new AbortController()

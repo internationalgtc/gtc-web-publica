@@ -50,7 +50,7 @@ export function Header() {
 
       <nav className="flex justify-between items-center gap-4 px-5 sm:px-8 lg:px-[72px] h-[74px] w-full max-w-[1440px] mx-auto">
         <Link to="/" className="flex items-center gap-2.5 sm:gap-3.5 min-w-0" aria-label={t('portal_inicio_aria')}>
-          <img src={logoDark} alt="Global Talent Connections" className="h-7 lg:h-8 w-auto object-contain shrink-0" />
+          <img src={logoDark} alt="Global Talent Connections" width={480} height={131} className="h-7 lg:h-8 w-auto object-contain shrink-0" />
           <span className="ed-label text-ink-soft border-l border-navy/25 pl-2.5 sm:pl-3.5 whitespace-nowrap">
             <span className="sm:hidden">{t('portal_label_corto')}</span>
             <span className="hidden sm:inline">{t('portal_label')}</span>

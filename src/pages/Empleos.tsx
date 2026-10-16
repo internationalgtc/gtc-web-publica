@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { ArrowRight } from 'lucide-react'
 import { JOBS, DEPARTMENTS } from '@/data/jobs'
-import { traerVacantes } from '@/lib/vacantes-nexus'
+import { traerVacantes, vacantesIniciales } from '@/lib/vacantes-nexus'
 import type { Job } from '@/data/jobs'
 import { useT } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
@@ -29,7 +29,7 @@ export default function EmpleosPage() {
   // Las vacantes salen del modulo de Nexus, que se actualiza solo cuando el
   // lead avanza o muere. `JOBS` queda como estado inicial y como reserva: si
   // Nexus no responde, la pagina muestra lo de siempre en lugar de vaciarse.
-  const [activeJobs, setActiveJobs] = useState<Job[]>(() => JOBS.filter(j => j.active))
+  const [activeJobs, setActiveJobs] = useState<Job[]>(() => vacantesIniciales()?.jobs ?? JOBS.filter(j => j.active))
 
   useEffect(() => {
     const ctrl = new AbortController()

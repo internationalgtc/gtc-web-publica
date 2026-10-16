@@ -78,6 +78,7 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
   const claro = tono === 'claro'
   const [form, setForm] = useState({ ...VACIO, description: mensajeInicial || '', assistant_type: perfilFijo || '' })
   const [estado, setEstado] = useState<'idle' | 'enviando' | 'ok' | 'error'>('idle')
+  const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false)
   const set = (campo: keyof typeof VACIO) => (e: { target: { value: string } }) =>
     setForm(f => ({ ...f, [campo]: e.target.value }))
 
@@ -88,6 +89,9 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
     // viene con algo, se le responde que salió bien y no se manda nada.
     const trampa = (document.getElementById(`gtc-web-${formulario}`) as HTMLInputElement)?.value
     if (trampa) { setEstado('ok'); return }
+    // Sin la casilla de protección de datos no sale nada (el navegador ya lo
+    // frena con `required`; esto cubre el envío programático).
+    if (!aceptaPrivacidad) return
     setEstado('enviando')
     try {
       const datos = esCaptacionExpress
@@ -101,7 +105,7 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
           }
         : { ...form, description: [contexto, form.description].filter(Boolean).join('\n\n') }
       await enviarLead(
-        datos,
+        { ...datos, acepta_privacidad: aceptaPrivacidad },
         formulario,
       )
       trackComplete()
@@ -210,6 +214,26 @@ export function FormularioLead({ formulario, cta, pedirTamano = false, contexto,
       <p className={claro ? 'text-sm text-ink-soft mt-4' : 'ed-caps !text-[9.5px] !tracking-[0.16em] text-cream/35 mt-6'}>
         {esCaptacionExpress ? 'Te contactamos por WhatsApp para definir el rol.' : t('form_presupuesto_hint')}
       </p>
+
+      {/* Protección de datos (auditoría legal, T61 / spec de Ariel PR 6): casilla
+          obligatoria con enlace a la política y una línea de quién trata los datos. */}
+      <div className={`mt-6 flex flex-col gap-2 ${claro ? 'text-ink-soft' : 'text-cream/70'}`}>
+        <label htmlFor={`${formulario}-privacidad`} className="flex items-start gap-3 text-[13.5px] leading-relaxed cursor-pointer">
+          <input
+            id={`${formulario}-privacidad`}
+            type="checkbox"
+            required
+            checked={aceptaPrivacidad}
+            onChange={e => setAceptaPrivacidad(e.target.checked)}
+            className="mt-[3px] h-4 w-4 shrink-0 accent-coral"
+          />
+          <span>
+            {t('form_privacidad_check')}{' '}
+            <a href="/politica-de-privacidad" target="_blank" rel="noopener noreferrer" className={`underline underline-offset-2 ${claro ? 'text-navy' : 'text-cream'}`}>{t('form_privacidad_link')}</a>.
+          </span>
+        </label>
+        <p className="text-[12px] leading-relaxed">{t('form_privacidad_info')}</p>
+      </div>
 
       <div className={claro ? 'mt-6 flex flex-col gap-4' : 'mt-8 flex flex-col sm:flex-row sm:items-center gap-5'}>
         <button type="submit" className={`ed-btn ed-btn-primary ${claro ? 'w-full justify-center !px-5 !tracking-[0.1em] sm:!tracking-[0.14em]' : ''}`} disabled={estado === 'enviando'}>

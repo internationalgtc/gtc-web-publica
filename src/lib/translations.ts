@@ -520,6 +520,9 @@ const T: Record<string, Record<string, string>> = {
   form_ok_titulo: { es: 'Gracias. Ya tenemos tu solicitud.', en: 'Thank you. We have your request.' },
   form_ok_desc: { es: 'Una persona del equipo te escribe en menos de 24 horas con los siguientes pasos.', en: 'Someone from the team will email you within 24 hours with the next steps.' },
   form_enviando: { es: 'Enviando…', en: 'Sending…' },
+  form_privacidad_check: { es: 'He leído la información sobre protección de datos y la', en: 'I have read the data protection information and the' },
+  form_privacidad_link: { es: 'política de privacidad', en: 'privacy policy' },
+  form_privacidad_info: { es: 'Responsable: Global Talent Connections. Finalidad: atender tu solicitud y preparar la propuesta de servicio. Derechos: acceso, rectificación, supresión y demás, escribiendo a info@globaltalent-connections.com.', en: 'Data controller: Global Talent Connections. Purpose: to handle your request and prepare the service proposal. Rights: access, rectification, erasure and others, by writing to info@globaltalent-connections.com.' },
   form_error: { es: 'No se pudo enviar. Revisa la conexión e inténtalo de nuevo.', en: 'Could not send. Check your connection and try again.' },
   serv_atencion_alt: { es: 'Atención al Cliente', en: 'Customer Service' },
 

@@ -224,7 +224,7 @@ const T: Record<string, Record<string, string>> = {
 
   // ── AVISO DE COOKIES ──
   cookies_titulo: { es: 'Cookies', en: 'Cookies' },
-  cookies_texto: { es: 'Usamos cookies de Google, LinkedIn y Meta para medir las visitas y mostrar nuestros anuncios a personas interesadas. Solo se activan si las aceptas. Puedes cambiar tu elección cuando quieras desde el pie de página.', en: 'We use cookies from Google, LinkedIn and Meta to measure visits and show our ads to interested people. They are only activated if you accept them. You can change your choice at any time from the footer.' },
+  cookies_texto: { es: 'Cookies de Google, LinkedIn y Meta para medir visitas y mostrar anuncios, solo si las aceptas. Puedes cambiarlo en el pie de página.', en: 'Google, LinkedIn and Meta cookies to measure visits and show ads, only if you accept. You can change it in the footer.' },
   cookies_mas_info: { es: 'Más información', en: 'More information' },
   cookies_aceptar: { es: 'Aceptar', en: 'Accept' },
   cookies_rechazar: { es: 'Rechazar', en: 'Reject' },

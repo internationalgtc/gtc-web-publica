@@ -394,7 +394,7 @@ const T: Record<string, Record<string, string>> = {
   ben_1_t: { es: 'Crecimiento profesional', en: 'Professional growth' },
   ben_1_d: { es: 'Trabaja con empresas europeas y estadounidenses. Desarrolla habilidades internacionales desde tu casa.', en: 'Work with European and American companies. Develop international skills from home.' },
   ben_2_t: { es: 'Honorarios en dólares', en: 'Fees in US dollars' },
-  ben_2_d: { es: 'Recibe un salario competitivo, muy por encima del promedio local de tu país.', en: 'Receive a competitive salary, well above your local average.' },
+  ben_2_d: { es: 'Recibe honorarios competitivos, muy por encima del promedio local de tu país.', en: 'Receive competitive fees, well above your local average.' },
   ben_3_t: { es: 'Cultura inclusiva', en: 'Inclusive culture' },
   ben_3_d: { es: 'Formas parte de un equipo diverso con compañeros de toda Latinoamérica y Europa.', en: 'Be part of a diverse team with colleagues from across Latin America and Europe.' },
   ben_4_t: { es: 'Reconocimiento', en: 'Recognition' },

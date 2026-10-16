@@ -35,33 +35,35 @@
 /* Respaldos con las MISMAS métricas que Fraunces y Montserrat. size-adjust
    MEDIDO renderizando texto real en Chromium (16-oct-2026): Fraunces 330 a
    40-60 px ocupa el 97-100 % del ancho de Georgia, su itálica el 88-91 %,
-   Montserrat 400 el 110,4 % de Arial. Mientras la fuente real baja, el texto
-   ocupa el mismo espacio: sin salto de layout al cambiar de fuente. */
+   Montserrat 400 el 110,4 % de Arial. El respaldo va un 1-2 % MÁS ANCHO a
+   propósito: cuando llega la real el texto se achica y el navegador no cuenta
+   ese repintado como un LCP nuevo (con el respaldo más angosto, el LCP de las
+   páginas de texto pasaba a ser la llegada de la fuente: 4,3 s en móvil). */
 @font-face {
   font-family: 'Fraunces Fallback';
   font-style: normal;
   src: local('Georgia');
-  size-adjust: 98%;
-  ascent-override: 99.8%;
-  descent-override: 26.0%;
+  size-adjust: 101%;
+  ascent-override: 96.8%;
+  descent-override: 25.2%;
   line-gap-override: 0%;
 }
 @font-face {
   font-family: 'Fraunces Fallback';
   font-style: italic;
   src: local('Georgia Italic'), local('Georgia-Italic');
-  size-adjust: 90%;
-  ascent-override: 108.7%;
-  descent-override: 28.3%;
+  size-adjust: 93%;
+  ascent-override: 105.2%;
+  descent-override: 27.4%;
   line-gap-override: 0%;
 }
 @font-face {
   font-family: 'Montserrat Fallback';
   font-style: normal;
   src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
-  size-adjust: 110.4%;
-  ascent-override: 87.7%;
-  descent-override: 22.7%;
+  size-adjust: 112%;
+  ascent-override: 86.4%;
+  descent-override: 22.4%;
   line-gap-override: 0%;
 }
 

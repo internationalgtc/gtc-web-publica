@@ -1,0 +1,18 @@
+# Guardia de vocabulario de la web de empresas (auditoría legal).
+# Corre en cada push y PR a `main`: si una frase vuelve a hablar de contratar,
+# nómina, jornada o vacantes, el check sale en rojo.
+name: vocabulario-web
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+jobs:
+  vocabulario:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm run verificar:vocabulario

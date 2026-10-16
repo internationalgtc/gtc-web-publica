@@ -685,7 +685,7 @@ export default function HomePage() {
     <div className="bg-cream text-ink">
       <SEO
         title="Home"
-        description="Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño."
+        description="Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, activamos el servicio y acompañamos su desempeño."
         path="/"
         faqSchema={esquemaPreguntas(PREGUNTAS_HOME, lang)}
       />

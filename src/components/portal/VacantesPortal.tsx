@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { ArrowRight, Search } from 'lucide-react'
 import { DEPARTMENTS, type Job } from '@/data/jobs'
 import { urlPostulacion } from '@/lib/nexus'
+import { trackPostulacion } from '@/lib/tracking'
 import { useT } from '@/hooks/useT'
 import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
 import { TuSeguridad } from '@/components/portal/TuSeguridad'
@@ -190,6 +191,7 @@ export function VacantesPortal({ jobs, deptInicial = '', limite }: { jobs: Job[]
             href={urlPostulacion(job.title, lang)}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackPostulacion(job.id, 'listado')}
           >
             {t('det_postular')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
           </a>

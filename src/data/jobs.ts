@@ -38,6 +38,9 @@ export interface Job {
   esPerfilGeneral?: boolean;
   /** Fecha de apertura en Nexus (ISO). Alimenta datePosted del JobPosting. */
   openedAt?: string;
+  /** Id de la ficha local (src/data/jobs.ts) cuando la oportunidad de Nexus la
+   *  reutiliza: sirve para JOBS_EN y para redirigir la URL numérica vieja. */
+  localId?: string;
   /** @deprecated No se usa — el botón "Aplicar" apunta a Nexus /postular-express */
   url?: string;
 

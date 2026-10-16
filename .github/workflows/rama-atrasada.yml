@@ -1,0 +1,27 @@
+# Aviso de rama atrasada (spec de Ariel, 16-oct-2026, sección 5, opción B):
+# la web pública sale de `main` y el portal de `candidatos`; si `candidatos`
+# queda más de 10 commits por detrás de `main`, este check sale en rojo para
+# que se sincronice (lo que entra en main se trae a candidatos a mano, porque
+# un merge directo da 29 conflictos: medido el 16-oct-2026).
+name: rama-atrasada
+on:
+  push:
+    branches: [main, candidatos]
+  schedule:
+    - cron: '30 5 * * 1-5'
+  workflow_dispatch:
+jobs:
+  comparar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: candidatos vs main
+        run: |
+          atras=$(git rev-list --count origin/candidatos..origin/main)
+          echo "candidatos está $atras commits por detrás de main"
+          if [ "$atras" -gt 10 ]; then
+            echo "::error::candidatos está $atras commits por detrás de main (límite 10). Traer lo de main a candidatos."
+            exit 1
+          fi

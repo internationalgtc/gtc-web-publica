@@ -94,7 +94,9 @@ function aJob(v: VacanteNexus): Job {
   // Hay ficha local: se conserva su contenido rico y Nexus solo aporta que
   // esta abierta. El id local mantiene andando /empleos/:id y la version en ingles.
   if (local) {
-    return { ...local, active: true, department: departamento, esPerfilGeneral: v.is_evergreen, openedAt: v.opened_at ?? undefined }
+    // La URL pública es el slug de Nexus (antes quedaba el id numérico local:
+    // /empleos/73). El id local sigue en localId para JOBS_EN y la redirección.
+    return { ...local, id: v.public_slug || local.id, localId: local.id, active: true, department: departamento, esPerfilGeneral: v.is_evergreen, openedAt: v.opened_at ?? undefined }
   }
 
   return {
@@ -151,14 +153,23 @@ export interface ResultadoVacantes {
   etiquetas: EtiquetasPortal
 }
 
+type CuerpoApi = { data?: VacanteNexus[]; etiquetas?: Partial<EtiquetasPortal> }
+
 export async function traerVacantes(signal?: AbortSignal): Promise<ResultadoVacantes> {
   const reserva: ResultadoVacantes = { jobs: JOBS.filter((j) => j.active), usandoReserva: true, etiquetas: ETIQUETAS_POR_DEFECTO }
 
   try {
-    const res = await fetch(API, { signal, headers: { Accept: 'application/json' } })
-    if (!res.ok) return reserva
-
-    const body = (await res.json()) as { data?: VacanteNexus[]; etiquetas?: Partial<EtiquetasPortal> }
+    // En el prerender (build) la pagina corre en localhost y la API la bloquea
+    // por CORS: vite.config.ts lee la API una vez y la inyecta aca. Asi el HTML
+    // prerenderizado lleva las oportunidades vivas, no la reserva local.
+    const inyectado = typeof window !== 'undefined' ? (window.__PRERENDER_INJECTED as { vacantes?: CuerpoApi } | undefined)?.vacantes : undefined
+    let body: CuerpoApi
+    if (inyectado) body = inyectado
+    else {
+      const res = await fetch(API, { signal, headers: { Accept: 'application/json' } })
+      if (!res.ok) return reserva
+      body = (await res.json()) as CuerpoApi
+    }
     const etiquetas: EtiquetasPortal = { ...ETIQUETAS_POR_DEFECTO, ...(body?.etiquetas ?? {}) }
     const vacantes = body?.data
     if (!Array.isArray(vacantes) || vacantes.length === 0) {

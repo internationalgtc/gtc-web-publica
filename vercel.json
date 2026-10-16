@@ -1,16 +1,48 @@
 {
   "rewrites": [
-    { "source": "/((?!.*\\.xlsx$).*)", "destination": "/index.html" }
+    {
+      "source": "/((?!.*\\.xlsx$).*)",
+      "destination": "/spa.html"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/empleos/2",
+      "destination": "/empleos/asistente-de-arquitectura-cd1894",
+      "permanent": true
+    },
+    {
+      "source": "/empleos/73",
+      "destination": "/empleos/asistente-de-arquitectura-cd1894",
+      "permanent": true
+    },
+    {
+      "source": "/empleos/6",
+      "destination": "/empleos/asistente-para-e-commerce-c88005",
+      "permanent": true
     }
   ]
 }

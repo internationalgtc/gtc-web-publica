@@ -30,7 +30,6 @@ ${datos.map(d => `- ${d}`).join('\n')}
 - [Inicio](${BASE}/): qué hacemos, cómo es el proceso, el equipo y preguntas frecuentes.
 - [Servicios](${BASE}/servicios): las áreas profesionales.
 - [Asistente virtual](${BASE}/asistente-virtual): precio, qué incluye y preguntas frecuentes.
-- [Calculadora de ahorro](${BASE}/calculadora-ahorro): cuánto cuesta frente a contratar en España.
 - [Nosotros](${BASE}/nosotros): equipo y sedes.
 - [Contacto](${BASE}/contacto)
 - [Blog](${BASE}/blog)

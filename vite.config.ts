@@ -83,7 +83,8 @@ const RUTAS_BLOG = blogPosts.map(p => `/blog/${p.id}`)
 const RUTAS_PRERENDER = [
   '/',
   '/asistente-virtual',
-  '/calculadora-ahorro',
+  // /calculadora-ahorro se apagó el 14-oct-2026 (auditoría Garrigues, T02):
+  // redirige a /servicios, no hay HTML que prerenderizar.
   '/servicios',
   '/contacto',
   '/nosotros',

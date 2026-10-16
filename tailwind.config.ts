@@ -70,12 +70,12 @@ export default {
         },
       },
       fontFamily: {
-        display: ['Fraunces', 'Georgia', 'serif'],
-        headline: ['Montserrat', 'sans-serif'],
+        display: ['Fraunces', 'Fraunces Fallback', 'Georgia', 'serif'],
+        headline: ['Montserrat', 'Montserrat Fallback', 'Arial', 'sans-serif'],
         // Montserrat reemplaza a Poppins, Lato e Inter: dos familias propias (PR 4).
-        subtitle: ['Montserrat', 'sans-serif'],
-        body: ['Montserrat', 'sans-serif'],
-        label: ['Montserrat', 'sans-serif'],
+        subtitle: ['Montserrat', 'Montserrat Fallback', 'Arial', 'sans-serif'],
+        body: ['Montserrat', 'Montserrat Fallback', 'Arial', 'sans-serif'],
+        label: ['Montserrat', 'Montserrat Fallback', 'Arial', 'sans-serif'],
       },
       borderRadius: {
         lg: 'var(--radius)',

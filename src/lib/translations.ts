@@ -232,7 +232,7 @@ const T: Record<string, Record<string, string>> = {
 
   // ── AVISO DE COOKIES ──
   cookies_titulo: { es: 'Cookies', en: 'Cookies' },
-  cookies_texto: { es: 'Usamos cookies de Google Analytics para medir las visitas a este portal. Solo se activan si las aceptas. Puedes cambiar tu elección cuando quieras desde el pie de página.', en: 'We use Google Analytics cookies to measure visits to this portal. They are only activated if you accept them. You can change your choice at any time from the footer.' },
+  cookies_texto: { es: 'Solo Google Analytics para medir visitas, y solo si lo aceptas. Puedes cambiarlo en el pie de página.', en: 'Only Google Analytics to measure visits, and only if you accept. You can change it in the footer.' },
   cookies_mas_info: { es: 'Más información', en: 'More information' },
   cookies_aceptar: { es: 'Aceptar', en: 'Accept' },
   cookies_rechazar: { es: 'Rechazar', en: 'Reject' },

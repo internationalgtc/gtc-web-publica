@@ -1,18 +1,20 @@
-import fotoInma from '@/assets/equipo/inma.jpg'
-import fotoDaniel from '@/assets/equipo/daniel.jpg'
-import fotoAntonio from '@/assets/equipo/antonio.jpg'
-import fotoPilar from '@/assets/equipo/mariangel.jpg'
-import fotoAriel from '@/assets/equipo/ariel.jpg'
-import fotoGladymar from '@/assets/equipo/gladymar.jpg'
-import fotoReyna from '@/assets/equipo/reyna.jpg'
-import fotoFabiola from '@/assets/equipo/fabiola.jpg'
-import fotoLarisa from '@/assets/equipo/larisa.jpg'
-import fotoDelfina from '@/assets/equipo/delfina.jpg'
-import fotoNelson from '@/assets/equipo/nelson.jpg'
-import fotoJavier from '@/assets/equipo/javier-2.jpg'
-import fotoRocio from '@/assets/equipo/rocio.jpg'
-import fotoGiuliana from '@/assets/equipo/giuliana.jpg'
-import fotoRomina from '@/assets/equipo/romina.jpg'
+import fotoInma from '@/assets/equipo/inma.webp'
+import fotoDaniel from '@/assets/equipo/daniel.webp'
+import fotoAntonio from '@/assets/equipo/antonio.webp'
+import fotoPilar from '@/assets/equipo/mariangel.webp'
+import fotoAriel from '@/assets/equipo/ariel.webp'
+import fotoGladymar from '@/assets/equipo/gladymar.webp'
+import fotoReyna from '@/assets/equipo/reyna.webp'
+import fotoFabiola from '@/assets/equipo/fabiola.webp'
+import fotoLarisa from '@/assets/equipo/larisa.webp'
+import fotoDelfina from '@/assets/equipo/delfina.webp'
+import fotoNelson from '@/assets/equipo/nelson.webp'
+import fotoJavier from '@/assets/equipo/javier-2.webp'
+import fotoRocio from '@/assets/equipo/rocio.webp'
+import fotoGiuliana from '@/assets/equipo/giuliana.webp'
+import fotoRomina from '@/assets/equipo/romina.webp'
+// Foto de Matheo: su selfie con la ropa cambiada a saco y camisa (Gemini, 28-sep-2026); cara y pelo sin tocar.
+import fotoMatheo from '@/assets/equipo/matheo.webp'
 
 export interface TeamMember {
   id: number
@@ -45,6 +47,7 @@ export const equipo: TeamMember[] = [
   { id: 12, nombre: 'Javier Martinez', foto: fotoJavier, rol: 'Developer', rolEn: 'Developer', email: 'jmartinez@globaltalent-connections.com', linkedin: 'https://www.linkedin.com/in/javierjmc/', nivel: 'operativo' },
   { id: 13, nombre: 'Fabiola Lozano', foto: fotoFabiola, rol: 'Quality Analyst', rolEn: 'Quality Analyst', email: 'flozano@globaltalent-connections.com', linkedin: 'https://www.linkedin.com/in/fabiolalozano/', nivel: 'operativo' },
   { id: 15, nombre: 'Delfina Palacio', foto: fotoDelfina, rol: 'Community Manager', rolEn: 'Community Manager', email: 'dpalacio@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
+  { id: 23, nombre: 'Matheo Telesca', foto: fotoMatheo, rol: 'Developer', rolEn: 'Developer', email: 'mtelesca@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 17, nombre: 'Rocío Rojas', foto: fotoRocio, rol: 'Quality Analyst', rolEn: 'Quality Analyst', email: 'rrojas@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
 ]
 
@@ -57,7 +60,7 @@ const porId = (ids: number[]) =>
 export const direccion = porId([18, 1, 3, 5])           // Inma · Daniel · Antonio · Ariel
 export const filasOperativo: TeamMember[][] = [
   porId([4, 9, 21, 22]),   // Pilar · Reyna · Giuliana · Romina
-  porId([12, 11, 10]),     // Javier · Nelson · Larisa (equipo de desarrollo)
+  porId([12, 11, 10, 23]), // Javier · Nelson · Larisa · Matheo (equipo de desarrollo)
   porId([6, 13, 17, 15]),  // Gladymar · Fabiola · Rocio · Delfina
 ]
 export const operativo = filasOperativo.flat()

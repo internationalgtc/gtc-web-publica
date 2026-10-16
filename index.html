@@ -8,6 +8,12 @@
   <!-- La meta description la pone cada página vía el componente SEO (react-helmet).
        No se fija acá para no duplicarla. og:description sí queda abajo como fallback
        estático para los bots sociales que no ejecutan JS. -->
+  <!-- Precargas, en orden de importancia: el póster del hero (LCP), después las
+       tres fuentes que pintan la primera pantalla (titular, itálica del titular, texto). -->
+  <link rel="preload" as="image" href="/videos/hero-gtc-poster.webp" fetchpriority="high" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/montserrat-latin.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/fraunces-latin.woff2" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/fraunces-italic-latin.woff2" />
   <link rel="icon" type="image/png" href="/favicon.png" />
 
   <!-- Open Graph (fallback estático para bots que no ejecutan JS: Slack, WhatsApp, LinkedIn) -->
@@ -31,11 +37,6 @@
   <meta name="msvalidate.01" content="EC1EEB6D6F39050A44D6F17DE0C48308" />
 
   <!-- Fonts: Fraunces (display editorial) + Montserrat (headlines) + Poppins (subtitles) + Lato (body) + Inter (UI) -->
-  <!-- El póster del video del hero es el LCP de la portada y de la ficha: se precarga con prioridad alta. -->
-  <link rel="preload" as="image" href="/videos/hero-gtc-poster.webp" fetchpriority="high" />
-  <!-- Tipografías propias: solo se precargan las dos que pintan el hero. -->
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/fraunces-latin.woff2" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/montserrat-latin.woff2" />
 
   <!-- Medición y publicidad (Google Tag Manager, Google Analytics 4 + Google Ads, LinkedIn
        Insight, Meta Pixel). NO se carga al entrar: la LSSI (art. 22.2) exige consentimiento

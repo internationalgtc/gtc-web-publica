@@ -32,33 +32,36 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Respaldos con las MISMAS métricas que Fraunces y Montserrat (size-adjust y
-   ascent/descent-override medidos con fontkit el 16-oct-2026). Mientras la
-   fuente real baja, el texto ocupa exactamente el mismo espacio: sin salto de
-   layout al cambiar de fuente (la portada medía CLS 0,197 por esto). */
+/* Respaldos con las MISMAS métricas que Fraunces y Montserrat. size-adjust
+   MEDIDO renderizando texto real en Chromium (16-oct-2026): Fraunces 330 a
+   40-60 px ocupa el 97-100 % del ancho de Georgia, su itálica el 88-91 %,
+   Montserrat 400 el 110,4 % de Arial. Mientras la fuente real baja, el texto
+   ocupa el mismo espacio: sin salto de layout al cambiar de fuente. */
 @font-face {
   font-family: 'Fraunces Fallback';
+  font-style: normal;
   src: local('Georgia');
-  size-adjust: 137.6%;
-  ascent-override: 71.1%;
-  descent-override: 18.5%;
+  size-adjust: 98%;
+  ascent-override: 99.8%;
+  descent-override: 26.0%;
   line-gap-override: 0%;
 }
 @font-face {
   font-family: 'Fraunces Fallback';
   font-style: italic;
   src: local('Georgia Italic'), local('Georgia-Italic');
-  size-adjust: 131.3%;
-  ascent-override: 74.5%;
-  descent-override: 19.4%;
+  size-adjust: 90%;
+  ascent-override: 108.7%;
+  descent-override: 28.3%;
   line-gap-override: 0%;
 }
 @font-face {
   font-family: 'Montserrat Fallback';
+  font-style: normal;
   src: local('Arial'), local('Helvetica Neue'), local('Helvetica');
-  size-adjust: 141.4%;
-  ascent-override: 68.5%;
-  descent-override: 17.8%;
+  size-adjust: 110.4%;
+  ascent-override: 87.7%;
+  descent-override: 22.7%;
   line-gap-override: 0%;
 }
 

@@ -155,41 +155,43 @@ export interface ResultadoVacantes {
 
 type CuerpoApi = { data?: VacanteNexus[]; etiquetas?: Partial<EtiquetasPortal> }
 
-export async function traerVacantes(signal?: AbortSignal): Promise<ResultadoVacantes> {
-  const reserva: ResultadoVacantes = { jobs: JOBS.filter((j) => j.active), usandoReserva: true, etiquetas: ETIQUETAS_POR_DEFECTO }
+function procesar(body: CuerpoApi, reserva: ResultadoVacantes): ResultadoVacantes {
+  const etiquetas: EtiquetasPortal = { ...ETIQUETAS_POR_DEFECTO, ...(body?.etiquetas ?? {}) }
+  const vacantes = body?.data
+  if (!Array.isArray(vacantes) || vacantes.length === 0) return reserva
+  const ordenadas = [...vacantes].sort((a, b) => Number(a.is_evergreen) - Number(b.is_evergreen))
+  const porTitulo = new Map<string, Job>()
+  for (const v of ordenadas) {
+    const job = aJob(v)
+    if (!porTitulo.has(normaliza(job.title))) porTitulo.set(normaliza(job.title), job)
+  }
+  return { jobs: [...porTitulo.values()], usandoReserva: false, etiquetas }
+}
 
+const RESERVA = (): ResultadoVacantes => ({ jobs: JOBS.filter((j) => j.active), usandoReserva: true, etiquetas: ETIQUETAS_POR_DEFECTO })
+
+/** Lo que el build dejó en el HTML (window.__GTC_VACANTES) o lo que inyecta el
+ *  prerender: sirve para arrancar la página con la lista real sin esperar a la
+ *  red. null si no hay nada (dev, o un HTML viejo). */
+export function vacantesIniciales(): ResultadoVacantes | null {
+  if (typeof window === 'undefined') return null
+  const w = window as Window & { __GTC_VACANTES?: CuerpoApi }
+  const body = (w.__PRERENDER_INJECTED as { vacantes?: CuerpoApi } | undefined)?.vacantes ?? w.__GTC_VACANTES
+  if (!body) return null
+  const r = procesar(body, RESERVA())
+  return r.usandoReserva ? null : r
+}
+
+export async function traerVacantes(signal?: AbortSignal): Promise<ResultadoVacantes> {
+  const reserva = RESERVA()
   try {
     // En el prerender (build) la pagina corre en localhost y la API la bloquea
-    // por CORS: vite.config.ts lee la API una vez y la inyecta aca. Asi el HTML
-    // prerenderizado lleva las oportunidades vivas, no la reserva local.
+    // por CORS: vite.config.ts lee la API una vez y la inyecta aca.
     const inyectado = typeof window !== 'undefined' ? (window.__PRERENDER_INJECTED as { vacantes?: CuerpoApi } | undefined)?.vacantes : undefined
-    let body: CuerpoApi
-    if (inyectado) body = inyectado
-    else {
-      const res = await fetch(API, { signal, headers: { Accept: 'application/json' } })
-      if (!res.ok) return reserva
-      body = (await res.json()) as CuerpoApi
-    }
-    const etiquetas: EtiquetasPortal = { ...ETIQUETAS_POR_DEFECTO, ...(body?.etiquetas ?? {}) }
-    const vacantes = body?.data
-    if (!Array.isArray(vacantes) || vacantes.length === 0) {
-      // Cero vacantes con la API sana es un estado posible (nadie curo el titulo
-      // publico todavia), pero mostrar una pagina vacia no le sirve a nadie.
-      return reserva
-    }
-
-    // Dos clientes pueden pedir el mismo puesto: en la web es un aviso, no dos.
-    // Las busquedas VIVAS van antes que los perfiles generales para que, si un
-    // titulo esta repetido, el aviso que queda sea el de contenido real (brief
-    // curado) y no la ficha generica de una linea.
-    const ordenadas = [...vacantes].sort((a, b) => Number(a.is_evergreen) - Number(b.is_evergreen))
-    const porTitulo = new Map<string, Job>()
-    for (const v of ordenadas) {
-      const job = aJob(v)
-      if (!porTitulo.has(normaliza(job.title))) porTitulo.set(normaliza(job.title), job)
-    }
-
-    return { jobs: [...porTitulo.values()], usandoReserva: false, etiquetas }
+    if (inyectado) return procesar(inyectado, reserva)
+    const res = await fetch(API, { signal, headers: { Accept: 'application/json' } })
+    if (!res.ok) return reserva
+    return procesar((await res.json()) as CuerpoApi, reserva)
   } catch {
     return reserva
   }

@@ -91,6 +91,23 @@ function separarHomeDeLaSpa(): Plugin {
   }
 }
 
+/** Las oportunidades leídas en el build van también al HTML: la página arranca
+ *  con la lista ya cargada (sin «Cargando…» ni lista vacía que después salta) y
+ *  en segundo plano pide la API para refrescar. El build corre todos los días. */
+function vacantesEnHtml(cuerpo: CuerpoApi | null): Plugin {
+  return {
+    name: 'gtc-vacantes-en-html',
+    apply: 'build',
+    enforce: 'post',
+    generateBundle(_, bundle) {
+      const html = bundle['index.html']
+      if (!cuerpo || !html || html.type !== 'asset' || typeof html.source !== 'string') return
+      const json = JSON.stringify(cuerpo).replace(/</g, '\\u003c')
+      html.source = html.source.replace('</head>', `  <script>window.__GTC_VACANTES=${json}</script>\n</head>`)
+    },
+  }
+}
+
 /** sitemap.xml con las rutas fijas y las oportunidades vivas (lastmod = opened_at). */
 function sitemap(vivas: Oportunidad[]): Plugin {
   const hoy = new Date().toISOString().slice(0, 10)
@@ -172,6 +189,7 @@ export default defineConfig(async () => {
           },
         }),
       ] : []),
+      vacantesEnHtml(cuerpo),
       sitemap(vivas),
       separarHomeDeLaSpa(),
     ],

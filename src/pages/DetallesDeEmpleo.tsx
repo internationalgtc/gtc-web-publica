@@ -3,7 +3,7 @@ import { useParams, Link, Navigate } from 'react-router-dom'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { JOBS, JOBS_EN } from '@/data/jobs'
 import type { Job } from '@/data/jobs'
-import { traerVacantes, ETIQUETAS_POR_DEFECTO, type EtiquetasPortal } from '@/lib/vacantes-nexus'
+import { traerVacantes, vacantesIniciales, ETIQUETAS_POR_DEFECTO, type EtiquetasPortal } from '@/lib/vacantes-nexus'
 import { useT } from '@/hooks/useT'
 import SEO from '@/components/shared/SEO'
 import { buildJobPostingSchema } from '@/lib/jobPosting'
@@ -36,15 +36,17 @@ export default function DetallesDeEmpleoPage() {
   // Primero el archivo local (render inmediato, sin red). Si el id no está ahí,
   // es una vacante que vino de Nexus: se resuelve contra la misma fuente que
   // arma el listado. Sin este paso, TODA card de Nexus caía en "no encontrada".
-  const staticJob = useMemo(() => JOBS.find(j => j.id === id), [id])
+  // …o la que el build dejó en el HTML: así la ficha de Nexus también arranca
+  // pintada (sin «Cargando…» que saque el hero y lo vuelva a poner).
+  const staticJob = useMemo(() => JOBS.find(j => j.id === id) ?? vacantesIniciales()?.jobs.find(j => j.id === id), [id])
   const [job, setJob] = useState<Job | undefined>(staticJob)
   const [buscando, setBuscando] = useState(!staticJob)
   // El resto de vacantes vivas alimenta «Otras vacantes» al pie.
-  const [todas, setTodas] = useState<Job[]>([])
+  const [todas, setTodas] = useState<Job[]>(() => vacantesIniciales()?.jobs ?? [])
   const [slugNuevo, setSlugNuevo] = useState<string | null>(null)
   // Las etiquetas de la ficha (disponibilidad, qué buscamos) las manda Nexus:
   // es el mismo vocabulario que usa el CRM, no se escriben a mano acá.
-  const [etiquetas, setEtiquetas] = useState<EtiquetasPortal>(ETIQUETAS_POR_DEFECTO)
+  const [etiquetas, setEtiquetas] = useState<EtiquetasPortal>(() => vacantesIniciales()?.etiquetas ?? ETIQUETAS_POR_DEFECTO)
   // Las 45 fichas locales inactivas siguen respondiendo por URL (Google las
   // tiene indexadas). Una búsqueda que ya cerró no puede ofrecer «Postularme»:
   // abierta = Nexus la lista hoy (o, sin Nexus, el archivo la marca activa).

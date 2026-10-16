@@ -6,7 +6,7 @@ import SEO from '@/components/shared/SEO'
 import { CIFRAS } from '@/data/cifras'
 import { JOBS, type Job } from '@/data/jobs'
 import { equipo, type TeamMember } from '@/data/equipo'
-import { traerVacantes } from '@/lib/vacantes-nexus'
+import { traerVacantes, vacantesIniciales } from '@/lib/vacantes-nexus'
 import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
 import { Img3D, SecHead, SecTag, TituloEntrada, Wrap } from '@/components/shared/EditorialPiezas'
 import { VacantesPortal } from '@/components/portal/VacantesPortal'
@@ -150,7 +150,7 @@ function Oportunidades() {
   const t = useT()
   // Mismas vacantes que la bolsa: Nexus, con src/data/jobs.ts como estado
   // inicial y como reserva si Nexus no responde.
-  const [jobs, setJobs] = useState<Job[]>(() => JOBS.filter(j => j.active))
+  const [jobs, setJobs] = useState<Job[]>(() => vacantesIniciales()?.jobs ?? JOBS.filter(j => j.active))
   useEffect(() => {
     const ctrl = new AbortController()
     traerVacantes(ctrl.signal).then(({ jobs }) => {
@@ -283,6 +283,8 @@ function Comunidad() {
                   <img
                     src={m.foto ?? undefined}
                     alt={m.nombre}
+                    width={600}
+                    height={800}
                     loading="lazy"
                     decoding="async"
                     className="w-full h-[190px] object-cover object-[50%_20%] rounded-[14px] bg-cream-2"

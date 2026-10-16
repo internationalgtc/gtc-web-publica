@@ -6,6 +6,7 @@ import type { Job } from '@/data/jobs'
 import { traerVacantes } from '@/lib/vacantes-nexus'
 import { useLang, useT } from '@/hooks/useT'
 import { urlPostulacion } from '@/lib/nexus'
+import { trackPostulacion } from '@/lib/tracking'
 import SEO from '@/components/shared/SEO'
 import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
 
@@ -76,7 +77,7 @@ export default function AreasPage() {
             <RevealGroup>
               {perfiles.map((p, i) => (
                 <RevealItem key={p.id}>
-                  <a className="ed-area-row" href={urlPostulacion(p.title, lang)} target="_blank" rel="noopener noreferrer">
+                  <a className="ed-area-row" href={urlPostulacion(p.title, lang)} target="_blank" rel="noopener noreferrer" onClick={() => trackPostulacion(p.title, 'areas_perfil')}>
                     <span className="font-display italic text-sm text-sand">/ {pad(i + 1)}</span>
                     <span className="name font-display font-normal text-[clamp(22px,2.6vw,36px)] tracking-[-0.01em]">{p.title}</span>
                     <span className="tag ed-caps !text-[11px] text-sand">{deptLabel(p.department)}</span>
@@ -89,7 +90,7 @@ export default function AreasPage() {
             <RevealGroup>
               {areasReserva.map((d, i) => (
                 <RevealItem key={d}>
-                  <a className="ed-area-row" href={urlPostulacion(undefined, lang)} target="_blank" rel="noopener noreferrer">
+                  <a className="ed-area-row" href={urlPostulacion(undefined, lang)} target="_blank" rel="noopener noreferrer" onClick={() => trackPostulacion(undefined, 'areas_banco')}>
                     <span className="font-display italic text-sm text-sand">/ {pad(i + 1)}</span>
                     <span className="name font-display font-normal text-[clamp(22px,2.6vw,36px)] tracking-[-0.01em]">{deptLabel(d)}</span>
                     <span className="tag ed-caps !text-[11px] text-sand">{t('cand_cta_general')}</span>
@@ -104,7 +105,7 @@ export default function AreasPage() {
           <Reveal>
             <div className="mt-[90px] pt-9 border-t border-navy/15 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
               <p className="font-display text-[clamp(20px,2.2vw,30px)] leading-snug max-w-[30ch]">{t('areas_sin_area')}</p>
-              <a className="ed-btn ed-btn-outline shrink-0" href={urlPostulacion(undefined, lang)} target="_blank" rel="noopener noreferrer">
+              <a className="ed-btn ed-btn-outline shrink-0" href={urlPostulacion(undefined, lang)} target="_blank" rel="noopener noreferrer" onClick={() => trackPostulacion(undefined, 'areas_banco')}>
                 {t('cand_cta_general')} <ArrowRight className="w-4 h-4 arrow" />
               </a>
             </div>

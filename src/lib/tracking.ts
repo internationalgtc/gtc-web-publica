@@ -1,17 +1,34 @@
+// Medición del portal de candidatos: SOLO Google Analytics 4 (G-J6SJCJ1PK7).
+//
+// Hasta el 16-oct-2026 esta rama cargaba el GTM de la agencia y
+// mandaba la conversión de formulario a la cuenta de Google Ads de la agencia
+// . En `main` eso se corrigió el 15-sep-2026 (PR #31) y nunca
+// llegó acá. Además, en el portal no va NINGUNA conversión de Ads: los candidatos
+// no son el público de las campañas y contar cada postulación como conversión
+// ensucia la optimización. Spec de Ariel del 16-oct-2026, PR 1.
+
+/**
+ * Clic en «Postularme»: el candidato salta al formulario de Nexus
+ * (globaltalentconnections.online/postular-express), o sea a otro dominio.
+ * Sin este evento no se sabe cuántos saltan ni cuántos llegan.
+ *
+ * `slug` identifica la oportunidad (public_slug de Nexus o el id local);
+ * `ubicacion` dice desde qué pantalla salió el clic (ficha, listado, áreas…).
+ */
+export function trackPostulacion(slug: string | undefined, ubicacion: string) {
+  // beacon: el clic navega a otro dominio y sin esto el evento se pierde.
+  window.gtag?.('event', 'candidato_postula', {
+    slug: slug ?? '(sin slug)',
+    ubicacion,
+    transport_type: 'beacon',
+  })
+}
+
+/**
+ * Páginas heredadas de la web de empresas que siguen en esta rama sin ruta
+ * (Index, Contacto, CalculadoraAhorro, ChatWidget). No se muestran en el
+ * portal; se conserva solo para que compile. Sin conversión de Ads.
+ */
 export function trackLead(source: string) {
-  // transport_type: 'beacon' → el evento se envía con navigator.sendBeacon, que
-  // sobrevive aunque el navegador se ocupe justo después (p. ej. una descarga o
-  // un cierre de pestaña). Sin esto, la calculadora perdía ~85% de sus leads en
-  // GA4/Ads: disparaba el evento justo cuando arrancaba la descarga del Excel y
-  // el beacon no llegaba a salir.
-  // GA4
   window.gtag?.('event', 'generate_lead', { event_category: source, transport_type: 'beacon' })
-  // Google Ads — acción de conversión de FORMULARIO/LEAD (AW-18022609299/<label>).
-  // La etiqueta se obtuvo del contenedor GTM (GTM-W66STSP6); los tags de GTM no
-  // disparan en este sitio React (sus triggers son del sitio WordPress viejo:
-  // form_submit nativo / JoinChat / clic-a-teléfono), así que disparamos la
-  // conversión directo acá. Antes iba sin label → Ads no la contaba.
-  window.gtag?.('event', 'conversion', { send_to: 'AW-18022609299/e2oZCKrri5McEJPj7JFD', transport_type: 'beacon' })
-  // Meta Pixel
-  window.fbq?.('track', 'Lead', { content_name: source })
 }

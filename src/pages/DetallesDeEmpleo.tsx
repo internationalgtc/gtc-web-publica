@@ -10,6 +10,7 @@ import { buildJobPostingSchema } from '@/lib/jobPosting'
 import { Reveal, RevealGroup, RevealItem } from '@/components/shared/EditorialReveal'
 import { Wrap } from '@/components/shared/EditorialPiezas'
 import { urlPostulacion } from '@/lib/nexus'
+import { trackPostulacion } from '@/lib/tracking'
 import { HeroVideo } from '@/components/portal/HeroVideo'
 import { TuSeguridad } from '@/components/portal/TuSeguridad'
 import { pad, partirPuesto, useTextosVacante } from '@/components/portal/textosVacante'
@@ -282,6 +283,7 @@ export default function DetallesDeEmpleoPage() {
                           href={applyUrl}
                           target="_blank"
                           rel="noopener noreferrer"
+                          onClick={() => trackPostulacion(job.id, 'ficha_lateral')}
                         >
                           {t('det_postular')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
                         </a>
@@ -409,6 +411,7 @@ export default function DetallesDeEmpleoPage() {
             href={applyUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => trackPostulacion(job.id, 'ficha_barra_movil')}
           >
             {t('det_postular')}
           </a>

@@ -48,7 +48,7 @@ export default function ChatWidget() {
               {lang === 'en' ? 'Tell us what you need' : 'Cuéntanos qué necesitas'}
             </p>
             <p className="font-body text-xs text-blue-light">
-              {lang === 'en' ? 'For companies looking to hire' : 'Para empresas que buscan contratar'}
+              {lang === 'en' ? 'For companies looking for a managed service' : 'Para empresas que buscan un servicio gestionado'}
             </p>
           </div>
           <button

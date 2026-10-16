@@ -10,8 +10,8 @@ export const conversationFlow: ConversationFlow = {
   initial: {
     message: "👋 Hola, soy el asistente virtual de Global Talent Connections.\n¿En qué puedo ayudarte hoy?",
     options: [
-      { id: "empresa", icon: "🔹", label: "Contratar asistente virtual calificado para mi empresa", action: "empresa" },
-      { id: "postular", icon: "🔹", label: "¿Desea postularse a una vacante?", action: "postular" },
+      { id: "empresa", icon: "🔹", label: "Activar un servicio de asistente virtual para mi empresa", action: "empresa" },
+      { id: "postular", icon: "🔹", label: "¿Quieres colaborar con GTC como profesional?", action: "postular" },
       { id: "servicios", icon: "🔹", label: "¿Busca información sobre nuestros servicios?", action: "servicios" },
       { id: "info", icon: "🔹", label: "¿Busca información sobre la empresa?", action: "info" },
       { id: "contacto", icon: "🔹", label: "Contacto / Soporte", action: "contacto" },
@@ -34,14 +34,14 @@ export const conversationFlow: ConversationFlow = {
     options: [
       { id: "exp_si", icon: "✅", label: "Sí, tengo experiencia", action: "postular_exp" },
       { id: "exp_no", icon: "🌱", label: "No, pero quiero empezar", action: "postular_nuevo" },
-      { id: "ver_vacantes", icon: "💼", label: "Ver vacantes disponibles", action: "open_jobs" },
+      { id: "ver_vacantes", icon: "💼", label: "Ver oportunidades abiertas", action: "open_jobs" },
       { id: "volver", icon: "🔙", label: "Volver al inicio", action: "initial" },
     ],
   },
   servicios: {
     message: "Ofrecemos Asistentes Virtuales especializados en diversas áreas:\n\n📋 Administrativo Inteligente\n🏛️ Arquitectura\n📢 Comunicación Corporativa\n💰 Financiero y Contable\n📱 Marketing Digital\n🛒 E-commerce\n💻 Desarrollo Web\n🎨 Diseño Gráfico\n🤖 Automatización con IA\n📊 Gestión y Calidad\n👥 Recursos Humanos\n\n¿Te interesa alguna área en particular?",
     options: [
-      { id: "empresa", icon: "🏢", label: "Soy empresa, quiero contratar", action: "empresa" },
+      { id: "empresa", icon: "🏢", label: "Soy empresa, quiero activar un servicio", action: "empresa" },
       { id: "postular", icon: "👤", label: "Quiero trabajar con ustedes", action: "postular" },
       { id: "web", icon: "🌐", label: "Visitar sitio web", action: "open_website" },
       { id: "volver", icon: "🔙", label: "Volver al inicio", action: "initial" },
@@ -64,7 +64,7 @@ export const conversationFlow: ConversationFlow = {
     ],
   },
   proceso: {
-    message: "📌 Nuestro proceso de selección:\n\n1️⃣ Profundizamos en tu realidad: retos, cultura y metas\n\n2️⃣ Búsqueda de talento a nivel mundial y valoración ágil\n\n3️⃣ Pruebas técnicas, entrevistas psicológicas y encaje cultural\n\n4️⃣ Selección final de candidatos destacados y apoyo en negociación\n\n¿Listo para empezar?",
+    message: "📌 Cómo arranca el servicio:\n\n1️⃣ Profundizamos en tu realidad: retos, cultura y metas\n\n2️⃣ Búsqueda de talento a nivel mundial y valoración ágil\n\n3️⃣ Pruebas técnicas, entrevistas psicológicas y encaje cultural\n\n4️⃣ Selección final de candidatos destacados y apoyo en negociación\n\n¿Listo para empezar?",
     options: [
       { id: "contactar", icon: "🚀", label: "¡Sí, quiero empezar!", action: "contactar_empresa" },
       { id: "volver", icon: "🔙", label: "Volver al inicio", action: "initial" },
@@ -106,16 +106,16 @@ export const conversationFlow: ConversationFlow = {
     ],
   },
   postular_exp: {
-    message: "¡Genial! Buscamos profesionales con experiencia como tú. 🌟\n\nNuestros asistentes trabajan con empresas en España de forma remota.\n\n¿Quieres ver las vacantes disponibles o contactar directamente con RRHH?",
+    message: "¡Genial! Buscamos profesionales con experiencia como tú. 🌟\n\nNuestros asistentes trabajan con empresas en España de forma remota.\n\n¿Quieres ver las oportunidades abiertas o contactar directamente con el equipo?",
     options: [
-      { id: "ver_vacantes", icon: "💼", label: "Ver vacantes disponibles", action: "open_jobs" },
+      { id: "ver_vacantes", icon: "💼", label: "Ver oportunidades abiertas", action: "open_jobs" },
       { id: "volver", icon: "🔙", label: "Volver al inicio", action: "initial" },
     ],
   },
   postular_nuevo: {
     message: "¡Todos empezamos en algún momento! 🌱\n\nValoraremos tu perfil y te orientaremos sobre cómo prepararte para esta carrera.\n\n¿Qué te gustaría hacer?",
     options: [
-      { id: "ver_vacantes", icon: "💼", label: "Ver vacantes disponibles", action: "open_jobs" },
+      { id: "ver_vacantes", icon: "💼", label: "Ver oportunidades abiertas", action: "open_jobs" },
       { id: "volver", icon: "🔙", label: "Volver al inicio", action: "initial" },
     ],
   },
@@ -136,8 +136,8 @@ export const conversationFlowEN: ConversationFlow = {
   initial: {
     message: "👋 Hi, I'm the virtual assistant at Global Talent Connections.\nHow can I help you today?",
     options: [
-      { id: "empresa", icon: "🔹", label: "Hire a qualified virtual assistant for my company", action: "empresa" },
-      { id: "postular", icon: "🔹", label: "Want to apply for a position?", action: "postular" },
+      { id: "empresa", icon: "🔹", label: "Activate a virtual assistant service for my company", action: "empresa" },
+      { id: "postular", icon: "🔹", label: "Want to collaborate with GTC as a professional?", action: "postular" },
       { id: "servicios", icon: "🔹", label: "Looking for information about our services?", action: "servicios" },
       { id: "info", icon: "🔹", label: "Looking for information about the company?", action: "info" },
       { id: "contacto", icon: "🔹", label: "Contact / Support", action: "contacto" },
@@ -167,7 +167,7 @@ export const conversationFlowEN: ConversationFlow = {
   servicios: {
     message: "We offer specialized Virtual Assistants in various areas:\n\n📋 Smart Administrative\n🏛️ Architecture\n📢 Corporate Communications\n💰 Finance & Accounting\n📱 Digital Marketing\n🛒 E-commerce\n💻 Web Development\n🎨 Graphic Design\n🤖 AI Automation\n📊 Management & Quality\n👥 Human Resources\n\nInterested in any particular area?",
     options: [
-      { id: "empresa", icon: "🏢", label: "I'm a company, I want to hire", action: "empresa" },
+      { id: "empresa", icon: "🏢", label: "I'm a company, I want to activate a service", action: "empresa" },
       { id: "postular", icon: "👤", label: "I want to work with you", action: "postular" },
       { id: "web", icon: "🌐", label: "Visit website", action: "open_website" },
       { id: "volver", icon: "🔙", label: "Back to start", action: "initial" },
@@ -190,7 +190,7 @@ export const conversationFlowEN: ConversationFlow = {
     ],
   },
   proceso: {
-    message: "📌 Our selection process:\n\n1️⃣ We dive deep into your reality: challenges, culture and goals\n\n2️⃣ Global talent search and agile assessment\n\n3️⃣ Technical tests, psychological interviews and cultural fit\n\n4️⃣ Final candidate selection and negotiation support\n\nReady to get started?",
+    message: "📌 How the service starts:\n\n1️⃣ We dive deep into your reality: challenges, culture and goals\n\n2️⃣ Global talent search and agile assessment\n\n3️⃣ Technical tests, psychological interviews and cultural fit\n\n4️⃣ Final candidate selection and negotiation support\n\nReady to get started?",
     options: [
       { id: "contactar", icon: "🚀", label: "Yes, let's start!", action: "contactar_empresa" },
       { id: "volver", icon: "🔙", label: "Back to start", action: "initial" },

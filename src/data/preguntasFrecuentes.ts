@@ -58,7 +58,7 @@ const ORIGEN: Pregunta = {
 }
 
 const PERFILES: Pregunta = {
-  pregunta: { es: '¿Qué perfiles puedo contratar?', en: 'What profiles can I hire?' },
+  pregunta: { es: '¿Qué perfiles puedo activar?', en: 'What profiles can I activate?' },
   respuesta: {
     es: `Profesionales en ${CIFRAS.areas} áreas: administración, marketing digital, finanzas y contabilidad, ventas, diseño, automatización e IA, atención al cliente, desarrollo web, comunicación, e-commerce y arquitectura.`,
     en: `Professionals in ${CIFRAS.areas} areas: administration, digital marketing, finance and accounting, sales, design, automation and AI, customer support, web development, communications, e-commerce and architecture.`,

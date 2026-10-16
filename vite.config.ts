@@ -184,6 +184,7 @@ export default defineConfig(async () => {
           postProcess(renderedRoute) {
             if (renderedRoute.route === '/') renderedRoute.outputPath = HOME_PRERENDER
             renderedRoute.html = renderedRoute.html
+              .replace(/<html([^>]*)\sclass="fuentes-listas"/, '<html$1')
               .replace(/https?:\/\/localhost(:\d+)?/g, BASE)
               .replace(/https?:\/\/127\.0\.0\.1(:\d+)?/g, BASE)
           },

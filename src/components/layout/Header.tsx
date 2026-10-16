@@ -45,7 +45,7 @@ export function Header() {
 
       <nav className="flex justify-between items-center px-6 lg:px-10 h-[74px] w-full max-w-[1280px] mx-auto">
         <Link to="/" className="flex items-center" aria-label="Global Talent Connections - Inicio">
-          <img src={logoDark} alt="Global Talent Connections" className="h-7 w-auto object-contain" />
+          <img src={logoDark} alt="Global Talent Connections" width={480} height={131} className="h-7 w-auto object-contain" />
         </Link>
 
         <div className="hidden md:flex items-center gap-7">

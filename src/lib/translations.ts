@@ -232,7 +232,7 @@ const T: Record<string, Record<string, string>> = {
   // ── HOME EDITORIAL (Sep 2026) ──
   home_meta_activos: CIFRAS.profesionales.texto,
   home_meta_region: { es: 'España · Latinoamérica', en: 'Spain · Latin America' },
-  home_meta_servicio: { es: 'Selección · Contratación · Acompañamiento', en: 'Selection · Hiring · Ongoing support' },
+  home_meta_servicio: { es: 'Servicio gestionado · Calidad · Acompañamiento', en: 'Managed service · Quality · Ongoing support' },
   home_hero_title_a: { es: 'Incorpora talento remoto con', en: 'Bring in remote talent with' },
   home_hero_title_b: { es: 'respaldo de principio a fin.', en: 'support from start to finish.' },
   que_es_label: { es: 'Qué es GTC', en: 'What is GTC' },
@@ -241,8 +241,7 @@ const T: Record<string, Record<string, string>> = {
   que_es_ver_precio: { es: 'Ver precio y qué incluye', en: 'See price and what is included' },
   que_es_solo_empresas: { es: 'Servicio exclusivo para empresas. No gestionamos búsquedas de empleo.', en: 'A service exclusively for companies. We do not handle job searches.' },
   home_hero_sub: { es: 'Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, gestionamos la contratación y acompañamos su desempeño.', en: 'We connect companies with professionals from Latin America. We select the profile, handle the hiring and support their performance.' },
-  home_hero_cta_primary: { es: 'Cuéntanos qué perfil necesitas', en: 'Tell us what profile you need' },
-  home_hero_cta_secondary: { es: 'Calcular tu ahorro', en: 'Calculate your savings' },
+  home_hero_cta_primary: { es: 'Cuéntanos qué quieres delegar', en: 'Tell us what you want to delegate' },
   home_stat_empresas: CIFRAS.empresas.sustantivo,
   home_stat_empresas_foot: { es: 'Con profesionales trabajando', en: 'With professionals working' },
   home_stat_profesionales: CIFRAS.profesionales.sustantivo,

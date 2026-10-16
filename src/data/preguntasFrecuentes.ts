@@ -12,8 +12,8 @@ export type Pregunta = { pregunta: Texto; respuesta: Texto }
 const PRECIO: Pregunta = {
   pregunta: { es: '¿Qué incluye el precio de 1.300 €/mes?', en: 'What does the €1,300/month price include?' },
   respuesta: {
-    es: 'El profesional dedicado en tu horario, su contratación gestionada por GTC, y el seguimiento del equipo de Calidad. Tú recibes una única factura mensual.',
-    en: 'A dedicated professional working your hours, their hiring handled by GTC, and follow-up from our Quality team. You receive a single monthly invoice.',
+    es: 'El profesional dedicado en tu horario y el seguimiento del equipo de Calidad. Tú recibes una única factura mensual.',
+    en: 'A dedicated professional working your hours and follow-up from our Quality team. You receive a single monthly invoice.',
   },
 }
 

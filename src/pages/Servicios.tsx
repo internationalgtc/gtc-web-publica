@@ -193,7 +193,7 @@ export default function ServiciosPage() {
         title="Servicios de Talento Remoto"
         description="Asistentes virtuales y profesionales remotos para marketing, administración, diseño, desarrollo, ventas, RRHH y más. Perfiles desde 1.300 €/mes."
         path="/servicios"
-        keywords="servicios asistente virtual, asistente virtual marketing, asistente administrativo remoto, SDR remoto, diseñador gráfico remoto, desarrollador remoto, atención cliente remoto, RRHH remoto, contratar profesional remoto España"
+        keywords="servicios asistente virtual, asistente virtual marketing, asistente administrativo remoto, SDR remoto, diseñador gráfico remoto, desarrollador remoto, atención cliente remoto, RRHH remoto, servicios gestionados para empresas"
         breadcrumbs={[{ name: 'Servicios', url: '/servicios' }]}
       />
       <Encabezado />

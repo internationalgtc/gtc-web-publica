@@ -19,7 +19,7 @@ interface SEOProps {
 const BASE_URL = 'https://empleos.globaltalent-connections.com'
 // La entidad Organization sigue siendo la web corporativa.
 const CORP_URL = 'https://www.globaltalent-connections.com'
-const DEFAULT_IMAGE = `${BASE_URL}/og-image-empleos.png`
+const DEFAULT_IMAGE = `${BASE_URL}/og-image-empleos.jpg`
 
 const ORGANIZATION_SCHEMA = {
   '@context': 'https://schema.org',

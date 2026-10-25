@@ -44,7 +44,7 @@ export function Footer() {
                 <a className="hover:text-coral transition-colors" href={WHATSAPP_LINK} target="_blank" rel="noopener noreferrer" onClick={() => trackContacto('whatsapp', 'footer')}>WhatsApp</a>
               </li>
               <li><a className="text-cream/70 hover:text-coral transition-colors text-sm break-words" href="mailto:info@globaltalent-connections.com" onClick={() => trackContacto('email', 'footer')}>info@globaltalent-connections.com</a></li>
-              <li><a className="text-cream/70 hover:text-coral transition-colors text-sm" href="https://linkedin.com/company/global-talent-connections-limited" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+              <li><a className="text-cream/70 hover:text-coral transition-colors text-sm" href="https://www.linkedin.com/company/global-talent-connections-gtc" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
             </ul>
           </div>
         </div>

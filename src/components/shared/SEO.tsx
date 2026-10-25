@@ -33,7 +33,7 @@ const ORGANIZATION_SCHEMA = {
     availableLanguage: ['Spanish', 'English'],
   },
   sameAs: [
-    'https://www.linkedin.com/company/global-talent-connections-limited',
+    'https://www.linkedin.com/company/global-talent-connections-gtc',
     'https://www.instagram.com/globaltalentconnections/',
     'https://www.facebook.com/people/Global-Talent-Connections/61570361473550/',
   ],
@@ -92,7 +92,7 @@ const LOCAL_BUSINESS_SCHEMA = {
     ],
   },
   sameAs: [
-    'https://www.linkedin.com/company/global-talent-connections-limited',
+    'https://www.linkedin.com/company/global-talent-connections-gtc',
     'https://www.instagram.com/globaltalentconnections/',
     'https://www.facebook.com/people/Global-Talent-Connections/61570361473550/',
   ],

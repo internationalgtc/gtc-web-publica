@@ -12,6 +12,7 @@ import fotoNelson from '@/assets/equipo/nelson.webp'
 import fotoJavier from '@/assets/equipo/javier-2.webp'
 import fotoRocio from '@/assets/equipo/rocio.webp'
 import fotoGiuliana from '@/assets/equipo/giuliana.webp'
+import fotoCarolina from '@/assets/equipo/carolina.webp'
 // Foto de Matheo: su selfie con la ropa cambiada a saco y camisa (Gemini, 28-sep-2026); cara y pelo sin tocar.
 import fotoMatheo from '@/assets/equipo/matheo.webp'
 
@@ -40,8 +41,7 @@ export const equipo: TeamMember[] = [
   // OPERATIVO
   { id: 9, nombre: 'Reyna Contreras', foto: fotoReyna, rol: 'HR Analyst', rolEn: 'HR Analyst', email: 'rcontreras@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 21, nombre: 'Giuliana Lazzeretti', foto: fotoGiuliana, rol: 'HR Analyst', rolEn: 'HR Analyst', email: 'glazzeretti@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
-  // Carolina sin foto todavía: la tarjeta muestra sus iniciales (Ariel, 23-oct-2026: Romina ya no está y faltaba Carolina).
-  { id: 24, nombre: 'Carolina Portillo', foto: null, rol: 'Gestora de Cartera', rolEn: 'Account Manager', email: 'mportillo@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
+  { id: 24, nombre: 'Carolina Portillo', foto: fotoCarolina, rol: 'Gestora de Cartera', rolEn: 'Account Manager', email: 'mportillo@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 10, nombre: 'Larisa Spatafora', foto: fotoLarisa, rol: 'Developer', rolEn: 'Developer', email: 'lspatafora@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 11, nombre: 'Nelson Alonso', foto: fotoNelson, rol: 'Developer', rolEn: 'Developer', email: 'nalonso@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 12, nombre: 'Javier Martinez', foto: fotoJavier, rol: 'Developer', rolEn: 'Developer', email: 'jmartinez@globaltalent-connections.com', linkedin: 'https://www.linkedin.com/in/javierjmc/', nivel: 'operativo' },

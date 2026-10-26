@@ -12,7 +12,6 @@ import fotoNelson from '@/assets/equipo/nelson.webp'
 import fotoJavier from '@/assets/equipo/javier-2.webp'
 import fotoRocio from '@/assets/equipo/rocio.webp'
 import fotoGiuliana from '@/assets/equipo/giuliana.webp'
-import fotoRomina from '@/assets/equipo/romina.webp'
 // Foto de Matheo: su selfie con la ropa cambiada a saco y camisa (Gemini, 28-sep-2026); cara y pelo sin tocar.
 import fotoMatheo from '@/assets/equipo/matheo.webp'
 
@@ -41,7 +40,8 @@ export const equipo: TeamMember[] = [
   // OPERATIVO
   { id: 9, nombre: 'Reyna Contreras', foto: fotoReyna, rol: 'HR Analyst', rolEn: 'HR Analyst', email: 'rcontreras@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 21, nombre: 'Giuliana Lazzeretti', foto: fotoGiuliana, rol: 'HR Analyst', rolEn: 'HR Analyst', email: 'glazzeretti@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
-  { id: 22, nombre: 'Romina Haro', foto: fotoRomina, rol: 'Marketing Specialist', rolEn: 'Marketing Specialist', email: 'rharo@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
+  // Carolina sin foto todavía: la tarjeta muestra sus iniciales (Ariel, 23-oct-2026: Romina ya no está y faltaba Carolina).
+  { id: 24, nombre: 'Carolina Portillo', foto: null, rol: 'Gestora de Cartera', rolEn: 'Account Manager', email: 'mportillo@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 10, nombre: 'Larisa Spatafora', foto: fotoLarisa, rol: 'Developer', rolEn: 'Developer', email: 'lspatafora@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 11, nombre: 'Nelson Alonso', foto: fotoNelson, rol: 'Developer', rolEn: 'Developer', email: 'nalonso@globaltalent-connections.com', linkedin: '', nivel: 'operativo' },
   { id: 12, nombre: 'Javier Martinez', foto: fotoJavier, rol: 'Developer', rolEn: 'Developer', email: 'jmartinez@globaltalent-connections.com', linkedin: 'https://www.linkedin.com/in/javierjmc/', nivel: 'operativo' },
@@ -59,7 +59,7 @@ const porId = (ids: number[]) =>
 // Gladymar reincorporada a la fila 4 (Ariel, 18-ago: 'sumala obvio').
 export const direccion = porId([18, 1, 3, 5])           // Inma · Daniel · Antonio · Ariel
 export const filasOperativo: TeamMember[][] = [
-  porId([4, 9, 21, 22]),   // Pilar · Reyna · Giuliana · Romina
+  porId([4, 9, 21, 24]),   // Pilar · Reyna · Giuliana · Carolina
   porId([12, 11, 10, 23]), // Javier · Nelson · Larisa · Matheo (equipo de desarrollo)
   porId([6, 13, 17, 15]),  // Gladymar · Fabiola · Rocio · Delfina
 ]

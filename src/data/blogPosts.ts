@@ -45,7 +45,7 @@ export const blogPosts: BlogPost[] = [
 </blockquote>
 
 <h2>2. Foco del equipo: el multiplicador silencioso</h2>
-<p>La pérdida de foco tiene un costo directo. Un empleado en oficina promedia <strong>4.8 horas</strong> de trabajo enfocado por día; uno remoto bien gestionado alcanza <strong>6.2 horas</strong> — un 29% más de tiempo real productivo. Multiplicado por un equipo de 20 personas, eso equivale a casi 3 empleados adicionales sin costo de contratación.</p>
+<p>La pérdida de foco tiene un costo directo. Un empleado en oficina promedia <strong>4.8 horas</strong> de trabajo enfocado por día; uno remoto bien gestionado alcanza <strong>6.2 horas</strong> — un 29% más de tiempo real productivo. Multiplicado por un equipo de 20 personas, eso equivale a casi 3 personas más de capacidad sin aumentar estructura.</p>
 <p>Los datos de U.S. Bureau of Labor Statistics (2024) son contundentes: un incremento de 1 punto porcentual en adopción de trabajo remoto se correlaciona con un aumento del <strong>0.08–0.09% en la productividad total</strong> de factores de la industria. No es anecdótico — es medible a escala macroeconómica.</p>
 <blockquote>"El 79% de los líderes considera que sus equipos son más productivos trabajando de forma remota. La brecha con la percepción inicial es el indicador de que el obstáculo era el modelo de gestión, no la modalidad de trabajo." — Síntesis de McKinsey Work Trend Analysis &amp; Owl Labs, 2025</blockquote>
 
@@ -66,10 +66,10 @@ export const blogPosts: BlogPost[] = [
   <li><strong>Escalabilidad</strong> → Costo por contratación calificada → <strong>−42%</strong> vs mercados locales.</li>
   <li><strong>ROI tecnológico</strong> → Retorno sobre inversión en infraestructura → <strong>280–420%</strong> promedio.</li>
 </ul>
-<p>El talento remoto no es una concesión al bienestar del empleado. Es una decisión estratégica con retorno financiero comprobado. La pregunta que deben hacerse los líderes hoy no es <em>"¿podemos permitirnos equipos remotos?"</em> sino <em>"¿podemos permitirnos no tenerlos?"</em></p>
+<p>El trabajo remoto no es una concesión: es una decisión estratégica con retorno financiero comprobado. La pregunta que deben hacerse los líderes hoy no es <em>"¿podemos permitirnos equipos remotos?"</em> sino <em>"¿podemos permitirnos no tenerlos?"</em></p>
 
 <h2>¿Tu empresa ya está capturando este ROI?</h2>
-<p>En <strong>Global Talent Connections</strong> conectamos organizaciones con talento remoto de alto rendimiento. No solo cubrimos posiciones — diseñamos equipos que ejecutan con velocidad, foco y escalabilidad real.</p>
+<p>En <strong>Global Talent Connections</strong> conectamos organizaciones con talento remoto de alto rendimiento. No solo prestamos servicios — diseñamos equipos que ejecutan con velocidad, foco y escalabilidad real.</p>
 <p><strong><a href="/contacto">Agenda una consulta estratégica gratuita de 30 min.</a></strong></p>
 <p>El talento correcto, en el momento correcto, cambia la ecuación del negocio.</p>
       `,
@@ -91,7 +91,7 @@ export const blogPosts: BlogPost[] = [
 </blockquote>
 
 <h2>2. Team Focus: The Silent Multiplier</h2>
-<p>Lost focus has a direct cost. An in-office employee averages <strong>4.8 hours</strong> of focused work per day; a well-managed remote worker reaches <strong>6.2 hours</strong> — 29% more real productive time. Multiplied across a team of 20 people, that is nearly 3 additional employees at no hiring cost.</p>
+<p>Lost focus has a direct cost. An in-office employee averages <strong>4.8 hours</strong> of focused work per day; a well-managed remote worker reaches <strong>6.2 hours</strong> — 29% more real productive time. Multiplied across a team of 20 people, that is nearly 3 people of extra capacity without adding overhead.</p>
 <p>U.S. Bureau of Labor Statistics data (2024) is clear: a 1-percentage-point increase in remote work adoption correlates with a <strong>0.08–0.09% increase in total factor productivity</strong> across the industry. It is not anecdotal — it is measurable at macroeconomic scale.</p>
 <blockquote>"79% of leaders believe their teams are more productive working remotely. The gap from initial perception is the indicator that the obstacle was the management model, not the work modality." — McKinsey Work Trend Analysis &amp; Owl Labs synthesis, 2025</blockquote>
 
@@ -112,10 +112,10 @@ export const blogPosts: BlogPost[] = [
   <li><strong>Scalability</strong> → Cost per qualified hire → <strong>−42%</strong> vs local markets.</li>
   <li><strong>Technology ROI</strong> → Return on infrastructure investment → <strong>280–420%</strong> average.</li>
 </ul>
-<p>Remote talent is not a concession to employee wellbeing. It is a strategic decision with proven financial returns. The question leaders must ask themselves today is not <em>"can we afford remote teams?"</em> but <em>"can we afford not to have them?"</em></p>
+<p>Remote work is not a concession: it is a strategic decision with proven financial returns. The question leaders must ask themselves today is not <em>"can we afford remote teams?"</em> but <em>"can we afford not to have them?"</em></p>
 
 <h2>Is Your Company Already Capturing This ROI?</h2>
-<p>At <strong>Global Talent Connections</strong> we connect organizations with high-performance remote talent. We do not just fill positions — we design teams that execute with speed, focus, and real scalability.</p>
+<p>At <strong>Global Talent Connections</strong> we connect organizations with high-performance remote talent. We do not just provide services — we design teams that execute with speed, focus, and real scalability.</p>
 <p><strong><a href="/contacto">Schedule a free 30-min strategic consultation.</a></strong></p>
 <p>The right talent, at the right time, changes the business equation.</p>
       `,
@@ -124,7 +124,7 @@ export const blogPosts: BlogPost[] = [
   {
     id: 'futuro-talento-remoto-2026',
     title: { es: 'El Futuro del Talento Remoto en 2026: ¿Tu equipo está listo para competir?', en: 'The Future of Remote Talent in 2026: Is your team ready to compete?' },
-    excerpt: { es: 'El trabajo remoto dejó de ser un beneficio excepcional para convertirse en la nueva arquitectura del empleo global. Los datos de 2026 son contundentes: el mercado de talento ya no entiende de fronteras geográficas.', en: 'Remote work has gone from being an exceptional benefit to becoming the new architecture of global employment. The 2026 data is conclusive: the talent market no longer recognizes geographic borders.' },
+    excerpt: { es: 'El trabajo remoto dejó de ser un beneficio excepcional para convertirse en la nueva arquitectura del trabajo global. Los datos de 2026 son contundentes: el mercado de talento ya no entiende de fronteras geográficas.', en: 'Remote work has gone from being an exceptional benefit to becoming the new architecture of global work. The 2026 data is conclusive: the talent market no longer recognizes geographic borders.' },
     author: 'Global Talent Connections',
     date: { es: '7 Abril 2026', en: 'April 7, 2026' },
     readTime: '10 min',
@@ -132,7 +132,7 @@ export const blogPosts: BlogPost[] = [
     image: '/blog/futuro-talento-remoto-2026.png',
     content: {
       es: `
-<p>El trabajo remoto dejó de ser un beneficio excepcional para convertirse en la nueva arquitectura del empleo global. Los datos de 2026 son contundentes: el mercado de talento ya no entiende de fronteras geográficas, y las empresas que no adapten sus estrategias corren el riesgo de quedarse sin los mejores profesionales del mundo.</p>
+<p>El trabajo remoto dejó de ser un beneficio excepcional para convertirse en la nueva arquitectura del trabajo global. Los datos de 2026 son contundentes: el mercado de talento ya no entiende de fronteras geográficas, y las empresas que no adapten sus estrategias corren el riesgo de quedarse sin los mejores profesionales del mundo.</p>
 <p>Desde Global Talent Connections, trabajamos cada día en la intersección de este cambio: conectando organizaciones con talento remoto de alto rendimiento. Este artículo reúne la evidencia más actualizada de fuentes de primer nivel para darte una visión clara de dónde estamos —y qué puedes hacer hoy.</p>
 
 <h2>1. El trabajo remoto ya alcanza la mitad de la fuerza laboral mundial</h2>
@@ -149,7 +149,7 @@ export const blogPosts: BlogPost[] = [
 </ul>
 <p>Para los equipos de RRHH esto significa algo claro: ofrecer flexibilidad ya no es una ventaja diferencial —es el piso mínimo para atraer talento competitivo.</p>
 
-<h2>3. Contratar talento remoto amplía exponencialmente tu pool de candidatos</h2>
+<h2>3. Trabajar con equipos remotos amplía tu acceso a talento</h2>
 <p>Abrir posiciones a candidatos remotos no es solo una cuestión de cultura —es una decisión estratégica con impacto directo en la calidad del talento contratado y en la velocidad para hacerlo.</p>
 <ul>
   <li>FlexJobs reporta que las ofertas de trabajo remoto <strong>aumentaron un 20% en el Q1 de 2026</strong>, con ventas, marketing y gestión de cuentas creciendo más del 30%.</li>
@@ -180,7 +180,7 @@ export const blogPosts: BlogPost[] = [
 <ul>
   <li><strong>Definir una política de trabajo flexible clara y comunicada.</strong> Las políticas ambiguas desincentivan postulantes: más del 60% de los candidatos priorizan la flexibilidad al mismo nivel que el salario.</li>
   <li><strong>Invertir en infraestructura digital para equipos distribuidos.</strong> Las organizaciones que lo hacen reportan un ROI de 280–420% a través de mayor productividad y menor rotación.</li>
-  <li><strong>Ampliar la búsqueda de talento geográficamente.</strong> Limitar la búsqueda a tu ciudad es limitar la calidad del talento disponible —el 68% de los empleadores ya contrata fuera de su región.</li>
+  <li><strong>Ampliar la búsqueda de talento geográficamente.</strong> Limitar la búsqueda a tu ciudad es limitar la calidad del talento disponible —el 68 % de las empresas ya trabaja con profesionales fuera de su región.</li>
   <li><strong>Diseñar esquemas híbridos estructurados por objetivos</strong>, no por presencia física. Los modelos con metas claras superan a los modelos puramente presenciales en innovación y colaboración.</li>
   <li><strong>Medir por resultados, no por horas conectado.</strong> El cambio de métrica es la palanca más importante para liberar el potencial de un equipo remoto.</li>
 </ul>
@@ -192,7 +192,7 @@ export const blogPosts: BlogPost[] = [
 <p><em>Fuentes: FlexJobs, Bureau of Labor Statistics, Stanford WFH Research, Gartner, McKinsey, Robert Half, Owl Labs, Global Workplace Analytics.</em></p>
       `,
       en: `
-<p>Remote work has gone from being an exceptional benefit to becoming the new architecture of global employment. The 2026 data is conclusive: the talent market no longer recognizes geographic borders, and companies that fail to adapt their strategies risk losing the best professionals in the world.</p>
+<p>Remote work has gone from being an exceptional benefit to becoming the new architecture of global work. The 2026 data is conclusive: the talent market no longer recognizes geographic borders, and companies that fail to adapt their strategies risk losing the best professionals in the world.</p>
 <p>At Global Talent Connections, we work every day at the intersection of this shift: connecting organizations with high-performance remote talent. This article brings together the most up-to-date evidence from top-tier sources to give you a clear picture of where we stand — and what you can do today.</p>
 
 <h2>1. Remote Work Now Reaches Half of the Global Workforce</h2>
@@ -209,7 +209,7 @@ export const blogPosts: BlogPost[] = [
 </ul>
 <p>For HR teams this means something clear: offering flexibility is no longer a competitive advantage — it is the bare minimum to attract competitive talent.</p>
 
-<h2>3. Hiring Remote Talent Exponentially Expands Your Candidate Pool</h2>
+<h2>3. Working with Remote Teams Expands Your Access to Talent</h2>
 <p>Opening positions to remote candidates is not just a cultural matter — it is a strategic decision with a direct impact on the quality of hired talent and the speed to do so.</p>
 <ul>
   <li>FlexJobs reports that remote job listings <strong>increased by 20% in Q1 2026</strong>, with sales, marketing, and account management growing by more than 30%.</li>
@@ -240,7 +240,7 @@ export const blogPosts: BlogPost[] = [
 <ul>
   <li><strong>Define a clear and communicated flexible work policy.</strong> Ambiguous policies discourage applicants: more than 60% of candidates prioritize flexibility at the same level as salary.</li>
   <li><strong>Invest in digital infrastructure for distributed teams.</strong> Organizations that do so report an ROI of 280–420% through higher productivity and lower turnover.</li>
-  <li><strong>Expand the talent search geographically.</strong> Limiting your search to your city means limiting the quality of available talent — 68% of employers already hire outside their region.</li>
+  <li><strong>Expand the talent search geographically.</strong> Limiting your search to your city means limiting the quality of available talent — 68% of companies already work with professionals outside their region.</li>
   <li><strong>Design structured hybrid models based on objectives</strong>, not physical presence. Models with clear goals outperform purely in-person models in innovation and collaboration.</li>
   <li><strong>Measure by results, not by hours logged in.</strong> The shift in metrics is the most important lever to unlock the potential of a remote team.</li>
 </ul>

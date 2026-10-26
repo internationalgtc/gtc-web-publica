@@ -24,5 +24,5 @@ Dos líneas al cerrar cada sesión: hecho y verificado, siguiente paso exacto, d
 
 ## 2026-10-26
 
-- **Hecho y verificado.** #96: foto de Carolina en /nosotros, con el mismo fondo y encuadre que el resto del equipo. #97: título y descripciones para Google de /, /contacto, /servicios y /asistente-virtual con los textos de Antonio (T36, T37, T47, T20, T14; pedido de Ariel en la reunión del 26-oct). Publicado con `npm run deploy:prod` y comprobado en vivo. Ojo: en la planilla esas filas eran «CON LA OPERATIVA» (31-oct) y salieron antes.
+- **Hecho y verificado.** #96: foto de Carolina en /nosotros, con el mismo fondo y encuadre que el resto del equipo. #97: título y descripciones para Google de /, /contacto, /servicios y /asistente-virtual con los textos de Antonio (T36, T37, T47, T20, T14; Ariel lo marcó como corrección urgente en la reunión del 26-oct). Publicado con `npm run deploy:prod` y comprobado en vivo. En la planilla esas filas eran «CON LA OPERATIVA» (31-oct) y salieron antes.
 - **Siguiente paso.** #98 (blog, T76/T77) abierto sin publicar hasta que lo pidan. El artículo de Leax «Ahorro con un asistente virtual» queda para la auditoría de Leax. Los videos de clientes no se tocan (T28, decisión 6.4). Los títulos de /servicios y /asistente-virtual no tienen texto en la planilla.

@@ -672,7 +672,7 @@ export default function HomePage() {
     <div className="bg-cream text-ink">
       <SEO
         title="Home"
-        description="Conectamos empresas con profesionales de Latinoamérica. Seleccionamos el perfil, activamos el servicio y acompañamos su desempeño."
+        description="Servicios de soporte para empresas en 11 áreas, con un equipo de profesionales en Latinoamérica coordinado por GTC. Tú defines el resultado; nosotros organizamos el trabajo."
         path="/"
         faqSchema={esquemaPreguntas(PREGUNTAS_HOME, lang)}
       />

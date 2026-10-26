@@ -26,7 +26,7 @@ const ORGANIZATION_SCHEMA = {
   url: BASE_URL,
   logo: `${BASE_URL}/og-image.png`,
   description:
-    'Conectamos empresas con profesionales remotos de alto rendimiento. Selección, gestión y supervisión integral.',
+    'Servicios de soporte para empresas en 11 áreas, con un equipo de profesionales en Latinoamérica coordinado por GTC. Tú defines el resultado; nosotros organizamos el trabajo.',
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'sales',
@@ -114,7 +114,7 @@ export default function SEO({
   noIndex,
 }: SEOProps) {
   const fullTitle = title === 'Home'
-    ? 'Global Talent Connections | Asistentes Virtuales y Talento Remoto para Empresas'
+    ? 'Global Talent Connections | Servicios de asistencia virtual gestionada para empresas'
     : `${title} | Global Talent Connections`
   const url = `${BASE_URL}${path}`
 

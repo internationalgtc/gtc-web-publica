@@ -131,6 +131,7 @@ conteste, lo local se apaga solo. No hay que tocar código.
 
 | Fecha | Quién | Qué cambió |
 |-------|-------|------------|
+| 2026-11-06 | MatheoTe | Web Analytics de Vercel prendido en `mockup-gtc-azul` (plan incluido) y republicado con `npm run deploy:prod` desde `origin/main`. Sin cambios de código. En el portal de empleos todavía no está prendido. |
 | 2026-07-21 | Larisa | Fix grilla de la barra de stats: quedaba armada para 4 columnas con 3 datos, así que las tres quedaban corridas a la izquierda. Ahora la grilla se ajusta sola a la cantidad de stats. |
 | 2026-07-21 | Larisa | Stats del home y de Nosotros actualizados contra Nexus: 56 empresas activas (clientes con al menos un asistente trabajando) y 101 profesionales. Se eliminó el KPI de retención 95%: solo 10 clientes tienen 12 meses de antigüedad, no hay base para sostener esa cifra. Leyenda a Julio 2026 (ES+EN). |
 | 2026-07-21 | Larisa | Videos de testimonios: la cuenta de Cloudinary `dax2r7ro2` quedó deshabilitada (devolvía 401 en toda la cuenta) y la sección se veía sin videos. Los 4 videos + posters pasaron a `public/videos/`, recomprimidos a 720p30 MP4 (63 MB → 17,8 MB). Ya no dependen de un servicio externo. |

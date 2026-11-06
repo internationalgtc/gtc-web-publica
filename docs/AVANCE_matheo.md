@@ -31,3 +31,8 @@ Dos líneas al cerrar cada sesión: hecho y verificado, siguiente paso exacto, d
 
 - **Hecho y verificado.** #98 (blog, T76 y T77 de la planilla de Antonio) quedó mergeado el 26 sin querer al cortar el comando; Matheo decidió dejarlo porque suma y hoy se publicó con `npm run deploy:prod` desde `origin/main` (vocabulario OK). Comprobado en vivo en /blog/roi-talento-remoto: ya no dice «cubrimos posiciones» ni «empleados adicionales».
 - **Siguiente paso.** Nada abierto en la web. El mail de primer contacto en HTML para Criterian (pedido de Ariel en la reunión del 27-oct) está con Ariel para revisión; le faltan el link al calendario y la firma.
+
+## 2026-11-06
+
+- **Hecho y verificado.** Web Analytics de Vercel prendido en `mockup-gtc-azul` (plan incluido, sin gasto nuevo) y republicado con `npm run deploy:prod` desde `origin/main` (61d2c37, «✅ publicado»); el script de analítica responde 200. Visitas sin cookies medidas con `form_events` sin el robot que abre home y /contacto cada 15 min desde el 8-sep: unas 2.360 IP distintas en octubre y 2-3 empresas reales por mes.
+- **Siguiente paso.** Ver en una semana los números de Web Analytics contra `form_events`. Falta decidir si se prende también en el proyecto del portal de empleos. Sin cambios de código abiertos en la web.

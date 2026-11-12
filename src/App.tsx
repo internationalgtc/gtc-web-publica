@@ -19,6 +19,7 @@ const PoliticaPrivacidad = lazy(() => import('@/pages/PoliticaPrivacidad'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
 const AsistenteVirtual = lazy(() => import('@/pages/AsistenteVirtual'))
 const QueEsGtc = lazy(() => import('@/pages/QueEsGtc'))
+const DiagnosticoDelegar = lazy(() => import('@/pages/DiagnosticoDelegar'))
 
 function PageLoader() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/nosotros" element={<Nosotros />} />
             <Route path="/que-es-gtc" element={<QueEsGtc />} />
+            <Route path="/diagnostico-delegar" element={<DiagnosticoDelegar />} />
             <Route path="/contacto" element={<Contacto />} />
             <Route path="/servicios" element={<Servicios />} />
             <Route path="/calculadora-ahorro" element={<Navigate to="/servicios" replace />} />

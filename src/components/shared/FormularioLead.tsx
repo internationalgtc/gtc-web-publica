@@ -64,6 +64,8 @@ interface Props {
   exitoExtra?: ReactNode
   /** Ocultar el campo de perfil: lo fija la página (calculadora). */
   perfilFijo?: string
+  /** Valor con el que arranca el campo de perfil, que sigue editable (diagnóstico). */
+  perfilInicial?: string
   /** Formulario breve para tráfico de anuncios: contacto por WhatsApp. */
   modoCaptacion?: 'completo' | 'express'
   /** Aspecto: 'oscuro' (texto crema, directo sobre navy) o 'claro' (tarjeta
@@ -71,12 +73,12 @@ interface Props {
   tono?: 'oscuro' | 'claro'
 }
 
-export function FormularioLead({ formulario, cta, pedirTamano = false, contexto, mensajeInicial, onExito, exitoExtra, perfilFijo, modoCaptacion = 'completo', tono = 'oscuro' }: Props) {
+export function FormularioLead({ formulario, cta, pedirTamano = false, contexto, mensajeInicial, onExito, exitoExtra, perfilFijo, perfilInicial, modoCaptacion = 'completo', tono = 'oscuro' }: Props) {
   const t = useT()
   const { trackComplete } = useCompanyFormTracking(formulario)
   const esCaptacionExpress = modoCaptacion === 'express'
   const claro = tono === 'claro'
-  const [form, setForm] = useState({ ...VACIO, description: mensajeInicial || '', assistant_type: perfilFijo || '' })
+  const [form, setForm] = useState({ ...VACIO, description: mensajeInicial || '', assistant_type: perfilFijo || perfilInicial || '' })
   const [estado, setEstado] = useState<'idle' | 'enviando' | 'ok' | 'error'>('idle')
   const [aceptaPrivacidad, setAceptaPrivacidad] = useState(false)
   const set = (campo: keyof typeof VACIO) => (e: { target: { value: string } }) =>

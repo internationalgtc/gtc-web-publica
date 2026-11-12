@@ -9,7 +9,8 @@
     "build:sin-prerender": "PRERENDER=0 vite build",
     "deploy:prod": "PRERENDER=1 vercel build --prod --yes && node scripts/verificar-prerender.mjs && vercel deploy --prebuilt --prod --yes && node scripts/verificar-publicado.mjs",
     "verificar:vocabulario": "node scripts/verificar-vocabulario.mjs",
-    "test": "node scripts/verificar-vocabulario.mjs"
+    "verificar:diagnostico": "node --experimental-strip-types --no-warnings scripts/verificar-diagnostico.mjs",
+    "test": "node scripts/verificar-vocabulario.mjs && node --experimental-strip-types --no-warnings scripts/verificar-diagnostico.mjs"
   },
   "repository": {
     "type": "git",

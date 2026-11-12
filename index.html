@@ -54,7 +54,7 @@
 
   <!-- Fonts: Fraunces (display editorial) + Montserrat (headlines) + Poppins (subtitles) + Lato (body) + Inter (UI) -->
 
-  <!-- Medición y publicidad (Google Analytics 4 + Google Ads, LinkedIn Insight, Meta Pixel).
+  <!-- Medición y publicidad (Google Analytics 4 + Google Ads, LinkedIn Insight, Meta Pixel, Apollo).
        NO se carga al entrar: la LSSI (art. 22.2) exige consentimiento previo para cookies
        que no son técnicas. Se carga solo si la persona aceptó en el aviso de cookies
        (src/components/shared/AvisoCookies.tsx), ahora o en una visita anterior. -->
@@ -88,6 +88,10 @@
       document,'script','https://connect.facebook.net/en_US/fbevents.js');
       window.fbq('init', '1296564382354555');
       window.fbq('track', 'PageView');
+
+      // Apollo: qué empresas visitan la web (solo a nivel empresa, sin identificar personas).
+      // Snippet oficial de Apollo (tracker 6ab3b306a872a6001cb93250), tal cual lo entrega su herramienta.
+      (function initApollo(){var n=Math.random().toString(36).substring(7),o=document.createElement("script");o.src="https://assets.apollo.io/micro/website-tracker/tracker.iife.js?nocache="+n,o.async=!0,o.defer=!0,o.onload=function(){window.trackingFunctions.onLoad({appId:"6ab3b306a872a6001cb93250"})},document.head.appendChild(o)})();
     };
     try {
       if (localStorage.getItem('gtc-cookies') === 'aceptadas') window.__gtcCargarMedicion();

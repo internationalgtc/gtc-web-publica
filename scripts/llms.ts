@@ -31,6 +31,7 @@ ${datos.map(d => `- ${d}`).join('\n')}
 - [Servicios](${BASE}/servicios): las áreas profesionales.
 - [Asistente virtual](${BASE}/asistente-virtual): precio, qué incluye y preguntas frecuentes.
 - [Nosotros](${BASE}/nosotros): equipo y sedes.
+- [¿Qué deberías delegar?](${BASE}/diagnostico-delegar): ${es('diag_seo_desc')}
 - [Contacto](${BASE}/contacto)
 - [Blog](${BASE}/blog)
 `

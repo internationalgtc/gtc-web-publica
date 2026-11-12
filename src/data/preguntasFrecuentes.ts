@@ -12,56 +12,56 @@ export type Pregunta = { pregunta: Texto; respuesta: Texto }
 const PRECIO: Pregunta = {
   pregunta: { es: '¿Qué incluye el precio de 1.300 €/mes?', en: 'What does the €1,300/month price include?' },
   respuesta: {
-    es: 'El profesional dedicado en tu horario y el seguimiento del equipo de Calidad. Tú recibes una única factura mensual.',
-    en: 'A dedicated professional working your hours and follow-up from our Quality team. You receive a single monthly invoice.',
+    es: 'El servicio que presta nuestro equipo para tu empresa, coordinado por tu responsable de servicio, con informes cada semana y cada mes. Una sola factura mensual, sin costes de puesta en marcha.',
+    en: 'The service our team delivers for your company, coordinated by your service manager, with weekly and monthly reports. One monthly invoice, no set-up costs.',
   },
 }
 
 const PERMANENCIA: Pregunta = {
   pregunta: { es: '¿Hay permanencia?', en: 'Is there a minimum commitment?' },
   respuesta: {
-    es: 'No. Puedes parar el servicio con un preaviso. Si el perfil no encaja, lo reemplazamos sin coste.',
-    en: 'No. You can stop the service with prior notice. If the profile is not a fit, we replace them at no cost.',
+    es: 'No. Puedes parar el servicio con un preaviso. Si no responde a lo acordado, lo reorganizamos sin coste.',
+    en: 'No. You can stop the service with prior notice. If it falls short of what was agreed, we reorganise it at no cost.',
   },
 }
 
 const HORARIO: Pregunta = {
   pregunta: { es: '¿En qué horario trabaja?', en: 'What hours do they work?' },
   respuesta: {
-    es: 'En el tuyo. Los profesionales trabajan en horario de España, integrados en tus herramientas y tu equipo.',
-    en: 'Yours. Our professionals work on Spanish business hours, integrated into your tools and your team.',
+    es: 'En horario de España. El servicio se presta dentro de tus herramientas, coordinado con tu equipo.',
+    en: 'On Spanish business hours. The service is delivered inside your tools, coordinated with your team.',
   },
 }
 
 const PLAZO: Pregunta = {
-  pregunta: { es: '¿Cuánto tarda?', en: 'How long does it take?' },
+  pregunta: { es: '¿Cuánto tarda en arrancar?', en: 'How long does it take to start?' },
   respuesta: {
-    es: 'Recibes los primeros perfiles evaluados en 5 días hábiles desde que definimos el rol contigo.',
-    en: 'You receive the first evaluated profiles within 5 business days of defining the role with you.',
+    es: 'En 5 días hábiles desde que definimos contigo qué se delega, te presentamos a quien prestará el servicio, ya evaluado.',
+    en: 'Within 5 business days of agreeing with you what to delegate, we introduce who will deliver the service, already assessed.',
   },
 }
 
 const REEMPLAZO: Pregunta = {
-  pregunta: { es: '¿Qué pasa si el profesional no encaja?', en: 'What if the professional is not a fit?' },
+  pregunta: { es: '¿Qué pasa si el servicio no responde a lo acordado?', en: 'What if the service falls short of what was agreed?' },
   respuesta: {
-    es: 'Lo reemplazamos sin coste. El equipo de Calidad acompaña su desempeño, gestiona las incidencias y activa el reemplazo cuando hace falta.',
-    en: 'We replace them at no cost. Our Quality team follows their performance, handles any issues and triggers the replacement when needed.',
+    es: 'Lo reorganizamos sin coste. Tu responsable de servicio sigue los resultados cada semana, gestiona las incidencias y, si hace falta, cambia a la persona que lo presta.',
+    en: 'We reorganise it at no cost. Your service manager tracks results every week, handles any issues and, if needed, changes who delivers it.',
   },
 }
 
 const ORIGEN: Pregunta = {
   pregunta: { es: '¿De dónde son los profesionales?', en: 'Where are the professionals based?' },
   respuesta: {
-    es: 'De Latinoamérica. Trabajan en remoto para tu empresa, en tu horario.',
-    en: 'In Latin America. They work remotely for your company, on your hours.',
+    es: 'De Latinoamérica. Prestan el servicio en remoto, en horario de España.',
+    en: 'In Latin America. They deliver the service remotely, on Spanish business hours.',
   },
 }
 
 const PERFILES: Pregunta = {
-  pregunta: { es: '¿Qué perfiles puedo activar?', en: 'What profiles can I activate?' },
+  pregunta: { es: '¿Qué puedo delegar?', en: 'What can I delegate?' },
   respuesta: {
-    es: `Profesionales en ${CIFRAS.areas} áreas: administración, marketing digital, finanzas y contabilidad, ventas, diseño, automatización e IA, atención al cliente, desarrollo web, comunicación, e-commerce y arquitectura.`,
-    en: `Professionals in ${CIFRAS.areas} areas: administration, digital marketing, finance and accounting, sales, design, automation and AI, customer support, web development, communications, e-commerce and architecture.`,
+    es: `Servicios en ${CIFRAS.areas} áreas: administración, marketing digital, finanzas y contabilidad, ventas, diseño, automatización e IA, atención al cliente, desarrollo web, comunicación, e-commerce y arquitectura.`,
+    en: `Services in ${CIFRAS.areas} areas: administration, digital marketing, finance and accounting, sales, design, automation and AI, customer support, web development, communications, e-commerce and architecture.`,
   },
 }
 

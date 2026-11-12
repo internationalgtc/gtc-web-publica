@@ -48,6 +48,7 @@ const PROHIBIDO = {
 const ARCHIVOS = [
   'index.html',
   'src/pages/Index.tsx',
+  'src/pages/DiagnosticoDelegar.tsx',
   'src/pages/Nosotros.tsx',
   'src/pages/QueEsGtc.tsx',
   'src/pages/Contacto.tsx',
@@ -70,6 +71,8 @@ const ARCHIVOS = [
   'src/data/clientes.ts',
   'src/data/contacto.ts',
   'src/data/cifras.ts',
+  'src/data/serviciosGestionados.ts',
+  'src/lib/diagnosticoDelegar.ts',
   'scripts/llms.ts',
 ]
 const TRANSLATIONS = 'src/lib/translations.ts'
@@ -81,8 +84,6 @@ const TRANSLATIONS = 'src/lib/translations.ts'
 const EXCEPCIONES = [
   // Planilla corporativa, columna «CON LA OPERATIVA» (lanzamiento conjunto con el
   // portal, referencia 31-oct-2026). Ariel, spec 16-oct, sección 1: se dejan a propósito.
-  { clave: 'home_proc_3_t', motivo: 'T15 · «Entrevistas y eliges» · con la operativa' },
-  { archivo: 'src/data/preguntasFrecuentes.ts', patron: /El profesional dedicado en tu horario[^'`]*/, motivo: 'T06 · «en tu horario» · con la operativa' },
   { clave: 'nos_v2_d', motivo: 'T26 (C07) · métricas de productividad · con la operativa' },
   { clave: 'que_es_solo_empresas', motivo: 'T74 · «búsquedas de empleo» · con la operativa / decisión de modelo' },
   { archivo: 'src/components/shared/FormularioLead.tsx', patron: /Servicio exclusivo para empresas\. No gestionamos búsquedas de empleo\./, motivo: 'T74 · ídem' },

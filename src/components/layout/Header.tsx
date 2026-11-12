@@ -6,7 +6,7 @@ import { useT } from '@/hooks/useT'
 import logoDark from '@/assets/logos/logo-gtc-negro.png'
 
 const HOME_SECTIONS = [
-  { key: 'nav_garantias', id: 'garantias' },
+  { key: 'nav_como_funciona', id: 'como-funciona' },
   { key: 'nav_proceso', id: 'proceso' },
   { key: 'nav_areas', id: 'areas' },
   { key: 'nav_equipo', id: 'equipo' },

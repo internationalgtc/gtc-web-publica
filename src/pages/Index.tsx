@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, type ReactNode, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { motion, useReducedMotion } from 'framer-motion'
 import { ArrowRight } from 'lucide-react'
 import { useT, useLang } from '@/hooks/useT'
@@ -56,7 +56,7 @@ function Wrap({ children, className = '' }: { children: ReactNode; className?: s
   return <div className={`max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-[72px] ${className}`}>{children}</div>
 }
 
-/** Etiqueta de sección: «01 · El servicio · Más que encontrar un perfil». */
+/** Etiqueta de sección: «01 · El servicio · Un servicio, no una persona suelta». */
 function SecTag({ n, name, meta, dark = false, nameAs = 'span' }: { n: string; name: string; meta?: string; dark?: boolean; nameAs?: 'span' | 'h2' }) {
   const Name = nameAs
   return (
@@ -229,6 +229,9 @@ function Encabezado() {
             <a className="ed-pill ed-pill-navy" href="#contacto">
               {t('home_hero_cta_primary')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
             </a>
+            <Link className="ed-pill ed-pill-line" to="/diagnostico-delegar">
+              {t('home_hero_cta_diag')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
+            </Link>
           </div>
         </Reveal>
 
@@ -341,13 +344,64 @@ function Servicio() {
   )
 }
 
-/* ——— 02 PROCESO ——— */
+/* ——— 02 CÓMO FUNCIONA ———
+   Quién hace qué y qué recibe el dueño. Textos del menú comercial de Nexus
+   («Cómo trabajamos»), sin la palabra garantía: «servicio medido y con
+   seguimiento» (Ariel, 12-nov-2026). */
+const ROLES = [
+  { tKey: 'home_rol_1_t', dKey: 'home_rol_1_d' },
+  { tKey: 'home_rol_2_t', dKey: 'home_rol_2_d' },
+  { tKey: 'home_rol_3_t', dKey: 'home_rol_3_d' },
+]
+const RECIBES = ['home_recibes_1', 'home_recibes_2', 'home_recibes_3']
+
+function ComoFunciona() {
+  const t = useT()
+  return (
+    <section id="como-funciona" className="pt-16 lg:pt-[110px] pb-10 lg:pb-[60px] scroll-mt-[80px]">
+      <Wrap>
+        <SecHead tag={<SecTag n="02" name={t('home_sec_funciona')} meta={t('home_sec_funciona_meta')} />}>
+          <h2 className={H2}>
+            {t('home_funciona_h2_a')} <span className="ed-serif-it">{t('home_funciona_h2_b')}</span>
+          </h2>
+        </SecHead>
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-12 lg:gap-16 mt-12 lg:mt-[72px]">
+          <RevealGroup className="border-t border-navy/20">
+            {ROLES.map((rol, i) => (
+              <RevealItem key={rol.tKey} className="grid grid-cols-[40px_minmax(0,1fr)] lg:grid-cols-[64px_minmax(0,1fr)_minmax(0,1.2fr)] gap-x-3 lg:gap-x-8 gap-y-2 py-6 lg:py-8 border-b border-navy/20 items-baseline">
+                <span className="ed-serif-it text-gold-deep text-lg lg:text-xl">{['i.', 'ii.', 'iii.'][i]}</span>
+                <h3 className="ed-serif font-[340] text-navy text-[26px] lg:text-[34px] leading-[1.1]">{t(rol.tKey)}</h3>
+                <p className="col-start-2 lg:col-start-3 text-[16px] lg:text-[17px] leading-[1.6] text-ink-soft">{t(rol.dKey)}</p>
+              </RevealItem>
+            ))}
+          </RevealGroup>
+          <Reveal delay={0.1} className="flex flex-col gap-6 lg:pt-2">
+            <h3 className="ed-label text-navy font-semibold">{t('home_recibes_t')}</h3>
+            <ul className="flex flex-col border-t border-navy/20">
+              {RECIBES.map(key => (
+                <li key={key} className="flex gap-4 py-4 border-b border-navy/20 text-[16px] lg:text-[17px] leading-[1.55] text-ink">
+                  <span className="mt-[9px] w-[7px] h-[7px] rounded-full bg-coral shrink-0" aria-hidden="true" />
+                  {t(key)}
+                </li>
+              ))}
+            </ul>
+            <Link className="ed-pill ed-pill-line self-start" to="/diagnostico-delegar">
+              {t('home_recibes_cta')} <ArrowRight className="w-[18px] h-[18px] arrow" aria-hidden="true" />
+            </Link>
+          </Reveal>
+        </div>
+      </Wrap>
+    </section>
+  )
+}
+
+/* ——— 03 PROCESO ——— */
 function Proceso() {
   const t = useT()
   return (
     <section id="proceso" className="mt-16 lg:mt-20 bg-navy text-cream pt-20 lg:pt-[120px] pb-24 lg:pb-[150px]">
       <Wrap>
-        <SecHead tag={<SecTag dark n="02" name={t('home_sec_proceso')} meta={t('home_sec_proceso_meta')} />}>
+        <SecHead tag={<SecTag dark n="03" name={t('home_sec_proceso')} meta={t('home_sec_proceso_meta')} />}>
           <h2 className="ed-serif font-light text-cream leading-[1.02] tracking-[-0.02em] text-[clamp(38px,5.6vw,80px)] [text-wrap:balance]">
             {t('home_proceso_h2_a')} <span className="ed-serif-it text-gold">{t('home_proceso_h2_b')}</span>
           </h2>
@@ -396,14 +450,14 @@ function Proceso() {
   )
 }
 
-/* ——— 03 ÁREAS ——— */
+/* ——— 04 ÁREAS ——— */
 function Areas() {
   const t = useT()
   const celda = 'flex flex-col justify-between w-full no-underline border-r border-b min-h-[150px] lg:min-h-[200px] px-6 lg:px-[30px] pt-7 lg:pt-8 pb-6 lg:pb-[30px] transition-colors duration-300 focus-visible:outline focus-visible:outline-2 focus-visible:[outline-offset:-4px]'
   return (
     <section id="areas" className="pt-20 lg:pt-[130px] pb-10">
       <Wrap>
-        <SecHead tag={<SecTag n="03" name={t('home_sec_areas')} meta={t('home_sec_areas_meta')} />}>
+        <SecHead tag={<SecTag n="04" name={t('home_sec_areas')} meta={t('home_sec_areas_meta')} />}>
           <h2 className={H2}>
             {t('home_areas_h2_a')} <span className="ed-serif-it">{t('home_areas_h2_b')}</span>
           </h2>
@@ -421,13 +475,13 @@ function Areas() {
             </RevealItem>
           ))}
           <RevealItem className="flex">
-            <a href="#contacto" className={`${celda} gap-7 lg:gap-[30px] bg-navy border-navy text-cream hover:bg-navy-deep hover:text-cream focus-visible:outline-gold`}>
+            <Link to="/diagnostico-delegar" className={`${celda} gap-7 lg:gap-[30px] bg-navy border-navy text-cream hover:bg-navy-deep hover:text-cream focus-visible:outline-gold`}>
               <span className="ed-serif font-[340] text-[24px] lg:text-[28px] leading-[1.15]">{t('home_areas_otro_t')}</span>
               <span className="flex justify-between items-end gap-4">
                 <span className="text-[15px] leading-[1.45] text-cream/80">{t('home_areas_otro_d')}</span>
                 <ArrowRight className="w-[26px] h-[26px] text-gold shrink-0" strokeWidth={1.8} aria-hidden="true" />
               </span>
-            </a>
+            </Link>
           </RevealItem>
         </RevealGroup>
       </Wrap>
@@ -435,7 +489,7 @@ function Areas() {
   )
 }
 
-/* ——— 04 EQUIPO ———
+/* ——— 05 EQUIPO ———
    El roster vive en src/data/equipo.ts (fuente única; validado contra GAM). */
 function Foto({ m, grande }: { m: TeamMember; grande: boolean }) {
   const forma = `w-full aspect-[3/4] ${grande ? 'rounded-[18px] lg:rounded-[22px]' : 'rounded-2xl'}`
@@ -456,7 +510,7 @@ function Equipo() {
   return (
     <section id="equipo" className="pt-20 lg:pt-[130px] pb-10">
       <Wrap>
-        <SecHead tag={<SecTag n="04" name={t('home_sec_equipo')} meta={t('home_sec_equipo_meta')} />}>
+        <SecHead tag={<SecTag n="05" name={t('home_sec_equipo')} meta={t('home_sec_equipo_meta')} />}>
           <h2 className={H2}>
             {t('home_equipo_h2_a')} <span className="ed-serif-it">{t('home_equipo_h2_b')}</span>
           </h2>
@@ -500,7 +554,7 @@ function Equipo() {
   )
 }
 
-/* ——— 05 TESTIMONIOS ———
+/* ——— 06 TESTIMONIOS ———
    Las citas salen de src/data/resenasGoogle.ts (fuente única de reseñas),
    copiadas tal cual. */
 function Testimonios() {
@@ -515,7 +569,7 @@ function Testimonios() {
     <section id="testimonios" className="mt-16 lg:mt-20 bg-cream-2 pt-20 lg:pt-[120px] pb-20 lg:pb-[110px]">
       <Wrap>
         <Reveal>
-          <SecTag n="05" name={t('home_sec_testimonios')} meta={t('home_sec_testimonios_meta')} nameAs="h2" />
+          <SecTag n="06" name={t('home_sec_testimonios')} meta={t('home_sec_testimonios_meta')} nameAs="h2" />
         </Reveal>
 
         {principal?.texto && (
@@ -582,7 +636,7 @@ function Testimonios() {
   )
 }
 
-/* ——— 06 PREGUNTAS FRECUENTES ———
+/* ——— 07 PREGUNTAS FRECUENTES ———
    Salen de src/data/preguntasFrecuentes.ts, igual que los datos estructurados
    de esta página: Google y las IA leen exactamente lo que se ve. */
 function Preguntas() {
@@ -592,7 +646,7 @@ function Preguntas() {
     <section id="preguntas" className="pt-20 lg:pt-[130px] pb-16 lg:pb-[60px]">
       <Wrap className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] gap-10 lg:gap-20">
         <Reveal className="flex flex-col gap-5 lg:gap-[22px]">
-          <SecTag n="06" name={t('home_sec_preguntas')} />
+          <SecTag n="07" name={t('home_sec_preguntas')} />
           <h2 className="ed-serif font-[320] text-navy leading-none tracking-[-0.02em] text-[clamp(40px,5vw,72px)]">
             {t('home_preguntas_h2_a')} <span className="ed-serif-it">{t('home_preguntas_h2_b')}</span>
           </h2>
@@ -617,7 +671,7 @@ function Preguntas() {
   )
 }
 
-/* ——— 07 CONTACTO ———
+/* ——— 08 CONTACTO ———
    El formulario es el de siempre (FormularioLead: envío a Nexus + UTM/referrer/
    geo + tracking); acá solo cambia el contenedor. */
 function Contacto() {
@@ -629,7 +683,7 @@ function Contacto() {
     <section id="contacto" className="mt-16 lg:mt-20 bg-navy text-cream py-20 lg:py-[120px] overflow-hidden">
       <Wrap className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-12 lg:gap-20">
         <Reveal className="flex flex-col gap-6 lg:gap-7">
-          <SecTag dark n="07" name={t('contacto_label')} meta={t('home_sec_contacto_meta')} />
+          <SecTag dark n="08" name={t('contacto_label')} meta={t('home_sec_contacto_meta')} />
           <h2 className="ed-serif font-light text-cream leading-[1.02] tracking-[-0.02em] text-[clamp(38px,5.4vw,78px)] [text-wrap:balance]">
             {t('home_contacto_h2_a')} <span className="ed-serif-it text-gold">{t('home_contacto_h2_b')}</span>
           </h2>
@@ -642,6 +696,9 @@ function Contacto() {
               </li>
             ))}
           </ol>
+          <Link to="/diagnostico-delegar" className="self-start inline-flex items-center gap-2 text-[15px] lg:text-[16px] text-gold underline underline-offset-4 decoration-gold/50 hover:decoration-gold">
+            {t('home_contacto_diag')} <ArrowRight className="w-4 h-4" aria-hidden="true" />
+          </Link>
           <Img3D src="/img/3d/conexion-navy.webp" className="ed-3d-navy hidden lg:block w-full h-[300px] object-cover rounded-3xl mt-5" />
         </Reveal>
 
@@ -656,6 +713,7 @@ function Contacto() {
 }
 
 export default function HomePage() {
+  const t = useT()
   const lang = useLang()
   const { hash } = useLocation()
 
@@ -672,7 +730,7 @@ export default function HomePage() {
     <div className="bg-cream text-ink">
       <SEO
         title="Home"
-        description="Servicios de soporte para empresas en 11 áreas, con un equipo de profesionales en Latinoamérica coordinado por GTC. Tú defines el resultado; nosotros organizamos el trabajo."
+        description={t('home_seo_desc')}
         path="/"
         faqSchema={esquemaPreguntas(PREGUNTAS_HOME, lang)}
       />
@@ -681,6 +739,7 @@ export default function HomePage() {
       <Cifras />
       <Clientes />
       <Servicio />
+      <ComoFunciona />
       <Proceso />
       <Areas />
       <Equipo />

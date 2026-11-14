@@ -20,8 +20,8 @@ const PRECIO: Pregunta = {
 const PERMANENCIA: Pregunta = {
   pregunta: { es: '¿Hay permanencia?', en: 'Is there a minimum commitment?' },
   respuesta: {
-    es: 'No. Puedes parar el servicio con un preaviso. Si no responde a lo acordado, lo reorganizamos sin coste.',
-    en: 'No. You can stop the service with prior notice. If it falls short of what was agreed, we reorganise it at no cost.',
+    es: 'No. Puedes parar el servicio con un preaviso. Si algo no responde a lo acordado, lo ajustamos y lo ves en el informe siguiente.',
+    en: 'No. You can stop the service with prior notice. If something falls short of what was agreed, we adjust it and you see it in the next report.',
   },
 }
 
@@ -44,8 +44,8 @@ const PLAZO: Pregunta = {
 const REEMPLAZO: Pregunta = {
   pregunta: { es: '¿Qué pasa si el servicio no responde a lo acordado?', en: 'What if the service falls short of what was agreed?' },
   respuesta: {
-    es: 'Lo reorganizamos sin coste. Tu responsable de servicio sigue los resultados cada semana, gestiona las incidencias y, si hace falta, cambia a la persona que lo presta.',
-    en: 'We reorganise it at no cost. Your service manager tracks results every week, handles any issues and, if needed, changes who delivers it.',
+    es: 'Lo ajustamos y lo ves en el informe siguiente. Tu responsable de servicio sigue los resultados cada semana, gestiona las incidencias y, si hace falta, cambia a la persona que lo presta.',
+    en: 'We adjust it and you see it in the next report. Your service manager tracks results every week, handles any issues and, if needed, changes who delivers it.',
   },
 }
 

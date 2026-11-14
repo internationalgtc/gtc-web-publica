@@ -49,7 +49,7 @@
   ],
   "rewrites": [
     {
-      "source": "/:ruta(nosotros|contacto|servicios|blog|politica-de-privacidad|asistente-virtual|que-es-gtc)",
+      "source": "/:ruta(nosotros|contacto|servicios|blog|politica-de-privacidad|asistente-virtual|que-es-gtc|diagnostico-delegar)",
       "destination": "/spa.html"
     },
     {

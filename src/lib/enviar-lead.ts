@@ -33,7 +33,7 @@ export interface DatosLead {
 }
 
 /** Qué formulario lo mandó. Viaja para poder medir cuál convierte. */
-export type OrigenFormulario = 'home' | 'contacto' | 'asistente-virtual' | 'calculadora' | 'chatbot'
+export type OrigenFormulario = 'home' | 'contacto' | 'asistente-virtual' | 'calculadora' | 'chatbot' | 'diagnostico-delegar'
 
 export async function enviarLead(datos: DatosLead, formulario: OrigenFormulario): Promise<void> {
   const utms = getUTMs()

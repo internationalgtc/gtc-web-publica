@@ -90,6 +90,7 @@ const RUTAS_PRERENDER = [
   '/contacto',
   '/nosotros',
   '/que-es-gtc',
+  '/diagnostico-delegar',
   '/blog',
   '/politica-de-privacidad',
   // /empleos, /empleos/:id y /beneficios ya no se prerenderizan: desde el
@@ -137,6 +138,7 @@ function sitemapXml(): Plugin {
     ['/nosotros', ['src/pages/Nosotros.tsx', 'src/data/equipo.ts', T], 'monthly', '0.7'],
     ['/que-es-gtc', ['src/pages/QueEsGtc.tsx', 'src/data/queEsGtc.ts', T], 'monthly', '0.7'],
     ['/contacto', ['src/pages/Contacto.tsx', T], 'monthly', '0.8'],
+    ['/diagnostico-delegar', ['src/pages/DiagnosticoDelegar.tsx', 'src/lib/diagnosticoDelegar.ts', 'src/data/serviciosGestionados.ts', T], 'monthly', '0.8'],
     ['/blog', ['src/pages/Blog.tsx', 'src/data/blogPosts.ts'], 'weekly', '0.6'],
     ...blogPosts.map(p => [`/blog/${p.id}`, ['src/data/blogPosts.ts'], 'monthly', '0.5'] as [string, string[], string, string]),
     ['/politica-de-privacidad', ['src/pages/PoliticaPrivacidad.tsx', T], 'yearly', '0.3'],

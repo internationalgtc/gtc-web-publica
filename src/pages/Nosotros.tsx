@@ -226,7 +226,7 @@ export default function NosotrosPage() {
     <div className="bg-cream text-ink">
       <SEO
         title="Sobre Nosotros"
-        description={`Conoce a Global Talent Connections: equipo, misión y por qué ${CIFRAS.empresas.enFrase.es} confían en nuestros profesionales remotos de Latinoamérica.`}
+        description={`Conoce a Global Talent Connections: equipo, misión y por qué ${CIFRAS.empresas.enFrase.es} confían en nuestro servicio gestionado desde Latinoamérica.`}
         path="/nosotros"
         keywords="quienes somos Global Talent Connections, empresa talento remoto España, agencia asistentes virtuales, outsourcing Latinoamérica, equipo Global Talent"
         breadcrumbs={[{ name: 'Nosotros', url: '/nosotros' }]}

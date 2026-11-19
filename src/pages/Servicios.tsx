@@ -190,8 +190,8 @@ export default function ServiciosPage() {
   return (
     <div className="bg-cream text-ink">
       <SEO
-        title="Servicios de Talento Remoto"
-        description="Servicios de asistencia virtual gestionada en 11 áreas: administración, marketing, finanzas, ventas, diseño, desarrollo y más. Desde 1.300 €/mes por servicio."
+        title="Servicio de soporte remoto en 11 áreas"
+        description="Servicio de soporte remoto gestionado en 11 áreas: administración, marketing, finanzas, ventas, diseño, desarrollo y más. Desde 1.300 €/mes por servicio."
         path="/servicios"
         keywords="servicios asistente virtual, asistente virtual marketing, asistente administrativo remoto, SDR remoto, diseñador gráfico remoto, desarrollador remoto, atención cliente remoto, RRHH remoto, servicios gestionados para empresas"
         breadcrumbs={[{ name: 'Servicios', url: '/servicios' }]}

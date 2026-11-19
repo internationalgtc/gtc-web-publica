@@ -11,7 +11,7 @@ export const conversationFlow: ConversationFlow = {
     message: "👋 Hola, soy el asistente virtual de Global Talent Connections.\n¿En qué puedo ayudarte hoy?",
     options: [
       { id: "empresa", icon: "🔹", label: "Activar un servicio de soporte remoto para mi empresa", action: "empresa" },
-      { id: "postular", icon: "🔹", label: "¿Quieres colaborar con GTC como profesional?", action: "postular" },
+      { id: "postular", icon: "🔹", label: "¿Quieres colaborar con Global Talent Connections como profesional?", action: "postular" },
       { id: "servicios", icon: "🔹", label: "¿Busca información sobre nuestros servicios?", action: "servicios" },
       { id: "info", icon: "🔹", label: "¿Busca información sobre la empresa?", action: "info" },
       { id: "contacto", icon: "🔹", label: "Contacto / Soporte", action: "contacto" },
@@ -128,16 +128,16 @@ export const conversationFlow: ConversationFlow = {
   },
 };
 
-export const BOT_NAME = "Asistente GTC";
-export const BOT_NAME_EN = "GTC Assistant";
+export const BOT_NAME = "Asistente de Global Talent Connections";
+export const BOT_NAME_EN = "Global Talent Connections Assistant";
 export const BOT_TYPING_DELAY = 800;
 
 export const conversationFlowEN: ConversationFlow = {
   initial: {
     message: "👋 Hi, I'm the virtual assistant at Global Talent Connections.\nHow can I help you today?",
     options: [
-      { id: "empresa", icon: "🔹", label: "Activate a virtual assistant service for my company", action: "empresa" },
-      { id: "postular", icon: "🔹", label: "Want to collaborate with GTC as a professional?", action: "postular" },
+      { id: "empresa", icon: "🔹", label: "Activate a remote support service for my company", action: "empresa" },
+      { id: "postular", icon: "🔹", label: "Want to collaborate with Global Talent Connections as a professional?", action: "postular" },
       { id: "servicios", icon: "🔹", label: "Looking for information about our services?", action: "servicios" },
       { id: "info", icon: "🔹", label: "Looking for information about the company?", action: "info" },
       { id: "contacto", icon: "🔹", label: "Contact / Support", action: "contacto" },

@@ -329,14 +329,14 @@ const T: Record<string, Record<string, string>> = {
 
   // --- Portada «A · Revista» (28-sep-2026) ---
   home_high_tech: { es: 'High Tech · High Touch', en: 'High Tech · High Touch' },
-  home_cifras_aria: { es: 'GTC en cifras', en: 'GTC in figures' },
+  home_cifras_aria: { es: 'Global Talent Connections en cifras', en: 'Global Talent Connections in figures' },
   home_cifra_empresas: { es: `${CIFRAS.empresas.sustantivo.es} · con el servicio en marcha`, en: `${CIFRAS.empresas.sustantivo.en} · with the service up and running` },
   home_cifra_profesionales: { es: `${CIFRAS.profesionales.sustantivo.es} · prestando servicio a empresas`, en: `${CIFRAS.profesionales.sustantivo.en} · delivering services to companies` },
   home_cifra_areas: { es: 'áreas profesionales · de administración a IA', en: 'professional areas · from administration to AI' },
   home_cifra_dias_num: { es: '5 días', en: '5 days' },
   home_cifra_dias: { es: "hábiles para conocer a quien prestará tu servicio", en: "business days to meet who will deliver your service" },
-  home_clientes_label: { es: 'Ya trabajan con GTC', en: 'Already working with GTC' },
-  home_clientes_aria: { es: 'Empresas que trabajan con GTC', en: 'Companies working with GTC' },
+  home_clientes_label: { es: 'Ya trabajan con Global Talent Connections', en: 'Already working with Global Talent Connections' },
+  home_clientes_aria: { es: 'Empresas que trabajan con Global Talent Connections', en: 'Companies working with Global Talent Connections' },
   home_area_7: { es: 'Atención al cliente', en: 'Customer Service' },
   home_area_7_tag: { es: 'Soporte multicanal y tickets', en: 'Multichannel support and tickets' },
   home_area_8: { es: 'Desarrollo web', en: 'Web Development' },

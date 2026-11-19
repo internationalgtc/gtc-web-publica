@@ -26,7 +26,7 @@ const ORGANIZATION_SCHEMA = {
   url: BASE_URL,
   logo: `${BASE_URL}/og-image.png`,
   description:
-    'Servicios de soporte para empresas en 11 áreas, con un equipo de profesionales en Latinoamérica coordinado por GTC. Tú defines el resultado; nosotros organizamos el trabajo.',
+    'Servicios de soporte para empresas en 11 áreas, con un equipo de profesionales en Latinoamérica coordinado por Global Talent Connections. Tú defines el resultado; nosotros organizamos el trabajo.',
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'sales',

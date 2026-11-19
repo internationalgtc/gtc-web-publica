@@ -363,6 +363,7 @@ export default function BlogPostPage() {
         description={l(post.excerpt, lang) || titulo}
         path={`/blog/${post.id}`}
         type="article"
+        articulo={{ fechaIso: post.isoDate, autor: post.author, imagen: post.image }}
       />
 
       <section className="pt-[104px] sm:pt-[124px] lg:pt-[138px] pb-10 lg:pb-[60px]">

@@ -9,6 +9,7 @@ import { TELEFONO, TEL_LINK, WHATSAPP_LINK } from '@/data/contacto'
 import { trackContacto } from '@/lib/tracking'
 import { RESENAS_GOOGLE, RESUMEN_GOOGLE } from '@/data/resenasGoogle'
 import { CIFRAS } from '@/data/cifras'
+import { t } from '@/lib/translations'
 import { PREGUNTAS_LANDING, esquemaPreguntas } from '@/data/preguntasFrecuentes'
 import logoDark from '@/assets/logos/logo-gtc-negro.png'
 
@@ -29,12 +30,9 @@ const AREAS = [
   ['Automatización e IA', 'Procesos y tecnología'],
 ]
 
-const PASOS = [
-  ['Definimos el rol contigo', 'Funciones, herramientas, horario y presupuesto. Una llamada de 20 minutos.'],
-  ['Buscamos y evaluamos', 'RRHH entrevista y valida candidatos con pruebas técnicas, humanas y de encaje.'],
-  ['Eliges y empieza en 5 días hábiles', 'Recibes perfiles con evidencia. Tú decides. GTC formaliza la incorporación.'],
-]
-const ROMANOS = ['i.', 'ii.', 'iii.']
+// Los mismos pasos que la portada (home_proc_1…4 de translations.ts).
+const PASOS = [1, 2, 3, 4].map(n => [t(`home_proc_${n}_t`, 'es'), t(`home_proc_${n}_d`, 'es')] as const)
+const ROMANOS = ['i.', 'ii.', 'iii.', 'iv.']
 
 // Las preguntas salen de src/data/preguntasFrecuentes.ts (las mismas que la home).
 const FAQ = PREGUNTAS_LANDING.map(({ pregunta, respuesta }) => [pregunta.es, respuesta.es] as const)
@@ -213,8 +211,8 @@ function VideoEncabezado() {
 
 /* Reveal enmascarado por palabra, como el titular de la portada. «1.300 €» va
    con espacio duro para que el símbolo no quede solo en otra línea. */
-const TITULO_A = 'Un profesional remoto dedicado,'
-const TITULO_B = 'desde 1.300 € al mes.'
+const TITULO_A = 'Soporte remoto gestionado'
+const TITULO_B = 'desde 1.300 €/mes.'
 
 function Titular() {
   const palabras = [
@@ -255,7 +253,7 @@ function TarjetaFormulario() {
       </div>
       <p className="text-[14px] lg:text-[15px] leading-[1.5] text-cream/80">Una factura mensual por el servicio. Coordinación y control de calidad incluidos.</p>
       <div className="ed-form-anuncio mt-1.5">
-        <FormularioLead formulario="asistente-virtual" cta="Quiero recibir perfiles" contexto="Landing asistente virtual" modoCaptacion="express" />
+        <FormularioLead formulario="asistente-virtual" cta="Quiero mi propuesta" contexto="Landing asistente virtual" modoCaptacion="express" />
       </div>
     </div>
   )
@@ -263,17 +261,17 @@ function TarjetaFormulario() {
 
 function Encabezado() {
   return (
-    <section aria-label="Asistente virtual para empresas">
+    <section aria-label="Servicio de soporte remoto para empresas">
       <VideoEncabezado />
       <div className="max-w-[1440px] mx-auto px-3 sm:px-8 lg:px-[72px] grid grid-cols-1 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] gap-[26px] lg:gap-16 items-start">
         <div className="px-2 sm:px-0 pt-1.5 lg:pt-2 flex flex-col gap-[18px] lg:gap-6">
           <Reveal delay={0} y={0}>
-            <p className="ed-label text-ink-soft">Asistentes virtuales para empresas · España</p>
+            <p className="ed-label text-ink-soft">Servicio de soporte remoto para empresas · España</p>
           </Reveal>
           <Titular />
           <Reveal delay={0.6} y={20}>
             <p className="text-[16px] sm:text-[18px] lg:text-[19px] leading-[1.55] text-ink-soft max-w-[34em] [text-wrap:pretty]">
-              Seleccionado, evaluado y en tu equipo en 5 días hábiles. Administración, finanzas, marketing o automatización con IA. Sin permanencia. Si no encaja, lo reemplazamos.
+              Nuestro equipo gestiona el servicio y te presenta los resultados cada semana. Administración, finanzas, marketing o automatización con IA. En marcha en 5 días hábiles y sin permanencia.
             </p>
           </Reveal>
           <Reveal delay={0.7} y={20}>
@@ -301,7 +299,7 @@ function Proceso() {
       <Wrap>
         <SecHead tag={<SecTag n="02" name="Cómo funciona" />}>
           <h2 className={H2}>
-            Del perfil que necesitas a una <span className="ed-serif-it">incorporación acompañada.</span>
+            {t('home_proceso_h2_a', 'es')} <span className="ed-serif-it">{t('home_proceso_h2_b', 'es')}</span>
           </h2>
         </SecHead>
         <div className="mt-6 lg:mt-14 grid grid-cols-1 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-4 lg:gap-16 items-center">
@@ -335,7 +333,7 @@ function Areas() {
       <Wrap>
         <SecHead tag={<SecTag n="03" name="Áreas" />}>
           <h2 className={H2}>
-            Un profesional para <span className="ed-serif-it">cada necesidad.</span>
+            Un servicio para <span className="ed-serif-it">cada necesidad.</span>
           </h2>
         </SecHead>
         <Reveal className="mt-[18px] lg:mt-14">
@@ -434,7 +432,7 @@ function Cierre() {
           <h2 className="ed-serif font-[320] leading-[1.04] tracking-[-0.015em] text-[38px] sm:text-[48px] lg:text-[clamp(52px,5vw,72px)]">
             ¿Qué quieres <span className="ed-serif-it text-gold">delegar?</span>
           </h2>
-          <p className="ed-label text-cream/75 leading-[1.6]">Desde 1.300 €/mes · Sin permanencia · Reemplazo garantizado</p>
+          <p className="ed-label text-cream/75 leading-[1.6]">Desde 1.300 €/mes · Sin permanencia · Una factura al mes</p>
           <a href="#solicitar" className="ed-pill bg-coral text-navy hover:bg-coral-hover hover:text-navy focus-visible:outline-gold">
             Quiero mi propuesta
           </a>
@@ -453,7 +451,7 @@ function BarraFija() {
   return (
     <div className="lg:hidden fixed inset-x-3 bottom-3 z-40 sm:max-w-[520px] sm:mx-auto bg-navy-deep text-cream rounded-full pl-5 pr-2 py-2 flex items-center justify-between gap-3 shadow-[0_18px_40px_-12px_rgba(4,30,58,0.55)]">
       <span className="flex flex-col leading-[1.2] min-w-0">
-        <span className="text-xs text-cream/70">Asistente virtual</span>
+        <span className="text-xs text-cream/70">Soporte remoto</span>
         <strong className="text-[15px] whitespace-nowrap">desde 1.300 €/mes</strong>
       </span>
       <span className="flex items-center gap-1.5 shrink-0">
@@ -482,10 +480,10 @@ export default function AsistenteVirtual() {
   return (
     <div className="bg-cream text-ink">
       <SEO
-        title="Asistente virtual para empresas desde 1.300 €/mes"
-        description="Servicios de asistencia virtual gestionada para empresas, en marcha en 5 días hábiles. Desde 1.300 €/mes por servicio, sin permanencia y con continuidad garantizada."
+        title="Servicio de soporte remoto para empresas"
+        description="Soporte remoto gestionado desde 1.300 €/mes. Nuestro equipo gestiona el servicio y te presenta los resultados cada semana. En marcha en 5 días hábiles, sin permanencia."
         path="/asistente-virtual"
-        keywords="asistente virtual para empresas, asistencia virtual gestionada, asistente virtual precio, secretaria virtual empresas, externalizar tareas administrativas"
+        keywords="servicio de soporte remoto, soporte remoto gestionado, asistente virtual para empresas, asistencia virtual gestionada, asistente virtual precio, secretaria virtual empresas, externalizar tareas administrativas"
         faqSchema={FAQ_SCHEMA}
       />
 

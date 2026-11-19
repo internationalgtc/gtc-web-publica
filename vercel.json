@@ -1,6 +1,17 @@
 {
   "redirects": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "globaltalent-connections.com"
+        }
+      ],
+      "destination": "https://www.globaltalent-connections.com/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [
         {

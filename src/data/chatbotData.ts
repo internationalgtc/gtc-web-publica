@@ -10,7 +10,7 @@ export const conversationFlow: ConversationFlow = {
   initial: {
     message: "👋 Hola, soy el asistente virtual de Global Talent Connections.\n¿En qué puedo ayudarte hoy?",
     options: [
-      { id: "empresa", icon: "🔹", label: "Activar un servicio de asistente virtual para mi empresa", action: "empresa" },
+      { id: "empresa", icon: "🔹", label: "Activar un servicio de soporte remoto para mi empresa", action: "empresa" },
       { id: "postular", icon: "🔹", label: "¿Quieres colaborar con GTC como profesional?", action: "postular" },
       { id: "servicios", icon: "🔹", label: "¿Busca información sobre nuestros servicios?", action: "servicios" },
       { id: "info", icon: "🔹", label: "¿Busca información sobre la empresa?", action: "info" },
@@ -39,7 +39,7 @@ export const conversationFlow: ConversationFlow = {
     ],
   },
   servicios: {
-    message: "Ofrecemos Asistentes Virtuales especializados en diversas áreas:\n\n📋 Administrativo Inteligente\n🏛️ Arquitectura\n📢 Comunicación Corporativa\n💰 Financiero y Contable\n📱 Marketing Digital\n🛒 E-commerce\n💻 Desarrollo Web\n🎨 Diseño Gráfico\n🤖 Automatización con IA\n📊 Gestión y Calidad\n👥 Recursos Humanos\n\n¿Te interesa alguna área en particular?",
+    message: "Ofrecemos un servicio de soporte remoto gestionado en diversas áreas:\n\n📋 Administrativo Inteligente\n🏛️ Arquitectura\n📢 Comunicación Corporativa\n💰 Financiero y Contable\n📱 Marketing Digital\n🛒 E-commerce\n💻 Desarrollo Web\n🎨 Diseño Gráfico\n🤖 Automatización con IA\n📊 Gestión y Calidad\n👥 Recursos Humanos\n\n¿Te interesa alguna área en particular?",
     options: [
       { id: "empresa", icon: "🏢", label: "Soy empresa, quiero activar un servicio", action: "empresa" },
       { id: "postular", icon: "👤", label: "Quiero trabajar con ustedes", action: "postular" },

@@ -144,7 +144,7 @@ export default function BlogPage() {
     <div className="bg-cream text-ink">
       <SEO
         title="Blog"
-        description="Insights y casos de éxito sobre talento remoto, gestión de equipos y crecimiento empresarial con asistentes virtuales."
+        description="Insights y casos de éxito sobre talento remoto, gestión de equipos y crecimiento empresarial con un servicio de soporte remoto gestionado."
         path="/blog"
       />
       <Encabezado n={blogPosts.length + deLeax.length} />

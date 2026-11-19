@@ -106,13 +106,13 @@ const T: Record<string, Record<string, string>> = {
 
   // ── SERVICIOS ──
   servicios_label: { es: 'Nuestros Servicios', en: 'Our Services' },
-  servicios_titulo_1: { es: 'Un profesional para cada', en: 'A professional for every' },
+  servicios_titulo_1: { es: 'Un servicio para cada', en: 'A service for every' },
   servicios_titulo_2: { es: 'necesidad', en: 'need' },
-  servicios_subtitle: { es: `Seleccionamos, capacitamos y gestionamos asistentes virtuales especializados en ${CIFRAS.areas} áreas profesionales.`, en: `We select, train and manage virtual assistants specialized in ${CIFRAS.areas} professional areas.` },
-  servicios_solicitar: { es: 'Solicitar este perfil', en: 'Request this profile' },
-  servicios_no_encuentras: { es: '¿No encuentras el perfil que buscas?', en: "Can't find the profile you're looking for?" },
-  servicios_cuentanos: { es: 'Cuéntanos qué necesitas y te presentamos candidatos en 5 días hábiles.', en: 'Tell us what you need and we present candidates within 5 business days.' },
-  servicios_solicitar_asistente: { es: 'Solicitar asistente', en: 'Request assistant' },
+  servicios_subtitle: { es: `Gestionamos un servicio de soporte remoto en ${CIFRAS.areas} áreas: nuestro equipo presta el servicio y te presenta los resultados cada semana.`, en: `We run a managed remote support service in ${CIFRAS.areas} areas: our team delivers it and reports the results to you every week.` },
+  servicios_solicitar: { es: 'Solicitar este servicio', en: 'Request this service' },
+  servicios_no_encuentras: { es: '¿No encuentras lo que necesitas?', en: "Can't find what you need?" },
+  servicios_cuentanos: { es: 'Cuéntanos qué quieres delegar y en 5 días hábiles ponemos en marcha el servicio.', en: 'Tell us what you want to delegate and we start the service within 5 business days.' },
+  servicios_solicitar_asistente: { es: 'Activar el servicio', en: 'Start the service' },
 
   // ── SERVICIOS CARDS ──
   serv_admin: { es: 'Administrativo', en: 'Administrative' },
@@ -542,9 +542,9 @@ const T: Record<string, Record<string, string>> = {
   // --- Rediseño «A · Revista»: Servicios, Nosotros y Qué es GTC (28-sep-2026) ---
   // Textos nuevos del diseño aprobado: a confirmar por Larisa.
   serv_meta_areas: { es: `${CIFRAS.areas} áreas profesionales`, en: `${CIFRAS.areas} professional areas` },
-  serv_sec_perfiles: { es: 'Perfiles', en: 'Profiles' },
-  serv_sec_perfiles_meta: { es: 'Elige el que necesitas', en: 'Choose the one you need' },
-  serv_h2_a: { es: 'Once perfiles,', en: 'Eleven profiles,' },
+  serv_sec_perfiles: { es: 'Áreas', en: 'Areas' },
+  serv_sec_perfiles_meta: { es: 'Elige la que necesitas', en: 'Choose the one you need' },
+  serv_h2_a: { es: 'Once áreas,', en: 'Eleven areas,' },
   serv_h2_b: { es: 'un mismo respaldo.', en: 'the same backing.' },
   serv_incluye_meta: { es: 'Desde 1.300 €/mes', en: 'From €1,300/month' },
   serv_incluye_h2_a: { es: 'Un solo precio,', en: 'One price,' },

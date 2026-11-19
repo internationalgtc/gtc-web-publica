@@ -48,7 +48,7 @@ const LOCAL_BUSINESS_SCHEMA = {
   image: `${BASE_URL}/og-image.png`,
   // Las cifras salen de src/data/cifras.ts, igual que en la home.
   description:
-    `Servicios de asistencia virtual gestionada para empresas españolas, con ${CIFRAS.profesionales.enFrase.es} trabajando en ${CIFRAS.empresas.enFrase.es}. Una factura mensual, calidad y continuidad garantizadas.`,
+    `Servicio de soporte remoto gestionado para empresas españolas, con ${CIFRAS.profesionales.enFrase.es} trabajando en ${CIFRAS.empresas.enFrase.es}. Una factura mensual, calidad y continuidad garantizadas.`,
   telephone: TELEFONO_E164,
   email: 'info@globaltalent-connections.com',
   priceRange: '€€',
@@ -82,13 +82,13 @@ const LOCAL_BUSINESS_SCHEMA = {
   ],
   hasOfferCatalog: {
     '@type': 'OfferCatalog',
-    name: 'Servicios de talento remoto',
+    name: 'Servicio de soporte remoto gestionado',
     itemListElement: [
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Asistente Virtual Administrativo' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Asistente Virtual de Marketing Digital' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'SDR / Representante de Ventas Remoto' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Asistente Virtual Financiero' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Soporte al Cliente Remoto' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Soporte remoto administrativo' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Soporte remoto de marketing digital' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Soporte remoto de ventas' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Soporte remoto financiero' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Soporte remoto de atención al cliente' } },
     ],
   },
   sameAs: [
@@ -99,7 +99,7 @@ const LOCAL_BUSINESS_SCHEMA = {
 }
 
 const DEFAULT_KEYWORDS =
-  'asistencia virtual gestionada, servicios gestionados para empresas, ' +
+  'servicio de soporte remoto, soporte remoto gestionado, asistencia virtual gestionada, servicios gestionados para empresas, ' +
   'externalización de tareas administrativas, soporte comercial remoto, Global Talent Connections'
 
 export default function SEO({
@@ -114,7 +114,7 @@ export default function SEO({
   noIndex,
 }: SEOProps) {
   const fullTitle = title === 'Home'
-    ? 'Global Talent Connections | Servicios de asistencia virtual gestionada para empresas'
+    ? 'Global Talent Connections | Servicio de soporte remoto gestionado para empresas'
     : `${title} | Global Talent Connections`
   const url = `${BASE_URL}${path}`
 

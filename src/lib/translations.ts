@@ -447,7 +447,7 @@ const T: Record<string, Record<string, string>> = {
   pp_12_t: { es: 'Cambios en esta política', en: 'Changes to This Policy' },
   pp_12_d: { es: 'Esta política puede ser actualizada periódicamente. La fecha de última actualización se indica al final de este documento.', en: 'This policy may be updated periodically. The date of the last update is indicated at the end of this document.' },
   pp_13_t: { es: 'Contacto', en: 'Contact' },
-  pp_13_d: { es: 'Para ejercer tus derechos o resolver cualquier duda, contacta con nosotros en privacidad@globaltalentconnections.es', en: 'To exercise your rights or resolve any questions, contact us at privacidad@globaltalentconnections.es' },
+  pp_13_d: { es: 'Para ejercer tus derechos o resolver cualquier duda, contacta con nosotros en privacidad@globaltalent-connections.com', en: 'To exercise your rights or resolve any questions, contact us at privacidad@globaltalent-connections.com' },
 
   // ── SERVICIOS EXTRA ──
   serv_popular: { es: 'Más solicitado', en: 'Most requested' },

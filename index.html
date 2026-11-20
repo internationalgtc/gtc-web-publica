@@ -54,7 +54,7 @@
 
   <!-- Fonts: Fraunces (display editorial) + Montserrat (headlines) + Poppins (subtitles) + Lato (body) + Inter (UI) -->
 
-  <!-- Medición y publicidad (Google Analytics 4 + Google Ads, LinkedIn Insight, Meta Pixel, Apollo, Clarity, Leadfeeder).
+  <!-- Medición y publicidad (Google Analytics 4 + Google Ads, LinkedIn Insight, Meta Pixel, Apollo).
        NO se carga al entrar: la LSSI (art. 22.2) exige consentimiento previo para cookies
        que no son técnicas. Se carga solo si la persona aceptó en el aviso de cookies
        (src/components/shared/AvisoCookies.tsx), ahora o en una visita anterior. -->
@@ -97,16 +97,6 @@
       // Los campos de formulario se enmascaran (Clarity no guarda lo que se escribe).
       (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","zdhy8lp8eq");
       window.clarity('consent');
-
-      // Leadfeeder (Dealfront): qué empresas visitan la web. Prueba de dos semanas pedida por Ariel
-      // (18-nov-2026) para compararlo con Apollo. Snippet oficial del tracker ywVkO4XXVVd4Z6Bj.
-      // El Consent Mode y la anonimización de IP se activan en la cuenta de Leadfeeder, no acá:
-      // viajan dentro del archivo que sirve sc.lfeeder.com. Con el Consent Mode activo el tracker
-      // no guarda sus cookies hasta que se le avisa, por eso se le pasa el consentimiento al cargar.
-      document.addEventListener('ldfdr.trackerReady', function () {
-        try { window.ldfdr.acceptCookie(); } catch (e) { /* sin Consent Mode no hace falta */ }
-      });
-      (function(ss,ex){ window.ldfdr=window.ldfdr||function(){(ldfdr._q=ldfdr._q||[]).push([].slice.call(arguments));}; (function(d,s){ var fs=d.getElementsByTagName(s)[0]; function ce(src){ var cs=d.createElement(s); cs.src=src; cs.async=1; fs.parentNode.insertBefore(cs,fs); } ce('https://sc.lfeeder.com/lftracker_v1_'+ss+(ex?'_'+ex:'')+'.js'); })(document,'script'); })('ywVkO4XXVVd4Z6Bj');
     };
     try {
       if (localStorage.getItem('gtc-cookies') === 'aceptadas') window.__gtcCargarMedicion();

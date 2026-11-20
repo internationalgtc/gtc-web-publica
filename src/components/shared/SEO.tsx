@@ -22,7 +22,7 @@ const BASE_URL = 'https://www.globaltalent-connections.com'
 // Imagen al compartir un enlace: el logo sobre el azul de la marca, sin textos (20-nov-2026). La de antes decía
 // «Ahorra hasta 52 %» y «Asistentes Virtuales», que la guía de nomenclatura del 16-nov veta. Nombre nuevo para
 // que Slack, LinkedIn y WhatsApp no sigan mostrando la vieja guardada.
-const DEFAULT_IMAGE = `${BASE_URL}/og-gtc.jpg`
+const DEFAULT_IMAGE = `${BASE_URL}/og-gtc.jpg?v=2`
 
 const ORGANIZATION_SCHEMA = {
   '@context': 'https://schema.org',
@@ -50,7 +50,7 @@ const LOCAL_BUSINESS_SCHEMA = {
   name: 'Global Talent Connections',
   url: BASE_URL,
   logo: `${BASE_URL}/logo-gtc.png`,
-  image: `${BASE_URL}/og-gtc.png`,
+  image: `${BASE_URL}/og-gtc.png?v=2`,
   // Las cifras salen de src/data/cifras.ts, igual que en la home.
   description:
     `Servicio de soporte remoto gestionado para empresas españolas, con ${CIFRAS.profesionales.enFrase.es} trabajando en ${CIFRAS.empresas.enFrase.es}. Una factura mensual, calidad y continuidad garantizadas.`,

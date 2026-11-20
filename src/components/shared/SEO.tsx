@@ -13,6 +13,8 @@ interface SEOProps {
   breadcrumbs?: Array<{ name: string; url: string }>
   /** Pide a los buscadores que NO la indexen (404 y páginas retiradas). */
   noIndex?: boolean
+  /** Artículo del blog: suma los datos estructurados de artículo. */
+  articulo?: { fechaIso: string; autor: string; imagen?: string }
 
 }
 
@@ -24,7 +26,7 @@ const ORGANIZATION_SCHEMA = {
   '@type': 'Organization',
   name: 'Global Talent Connections',
   url: BASE_URL,
-  logo: `${BASE_URL}/og-image.png`,
+  logo: `${BASE_URL}/logo-gtc.png`,
   description:
     'Servicios de soporte para empresas en 11 áreas, con un equipo de profesionales en Latinoamérica coordinado por Global Talent Connections. Tú defines el resultado; nosotros organizamos el trabajo.',
   contactPoint: {
@@ -44,7 +46,7 @@ const LOCAL_BUSINESS_SCHEMA = {
   '@type': 'ProfessionalService',
   name: 'Global Talent Connections',
   url: BASE_URL,
-  logo: `${BASE_URL}/og-image.png`,
+  logo: `${BASE_URL}/logo-gtc.png`,
   image: `${BASE_URL}/og-image.png`,
   // Las cifras salen de src/data/cifras.ts, igual que en la home.
   description:
@@ -112,6 +114,7 @@ export default function SEO({
   keywords,
   breadcrumbs,
   noIndex,
+  articulo,
 }: SEOProps) {
   const fullTitle = title === 'Home'
     ? 'Global Talent Connections | Servicio de soporte remoto gestionado para empresas'
@@ -132,6 +135,24 @@ export default function SEO({
     ],
   } : null
 
+  const articuloSchema = articulo ? {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    description,
+    datePublished: articulo.fechaIso,
+    dateModified: articulo.fechaIso,
+    inLanguage: 'es',
+    mainEntityOfPage: url,
+    ...(articulo.imagen ? { image: `${BASE_URL}${articulo.imagen}` } : {}),
+    author: { '@type': 'Organization', name: articulo.autor, url: BASE_URL },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Global Talent Connections',
+      logo: { '@type': 'ImageObject', url: `${BASE_URL}/logo-gtc.png` },
+    },
+  } : null
+
   // defer={false}: react-helmet escribe <title>/<meta> en el acto, no en el
   // próximo requestAnimationFrame. En el prerender se renderizan dos páginas a
   // la vez y la que queda en segundo plano no recibe rAF: se guardaba con el
@@ -145,9 +166,10 @@ export default function SEO({
       <meta name="keywords" content={keywords ?? DEFAULT_KEYWORDS} />
       <link rel="canonical" href={url} />
 
-      {/* Hreflang */}
+      {/* Hreflang: la web tiene una sola URL por página y el HTML que lee Google
+          está en español. No se declara versión en inglés porque no existe una
+          dirección propia para ese idioma. */}
       <link rel="alternate" hrefLang="es" href={url} />
-      <link rel="alternate" hrefLang="en" href={url} />
       <link rel="alternate" hrefLang="x-default" href={url} />
 
       {/* Open Graph */}
@@ -178,6 +200,11 @@ export default function SEO({
       {faqSchema && (
         <script type="application/ld+json">
           {JSON.stringify(faqSchema)}
+        </script>
+      )}
+      {articuloSchema && (
+        <script type="application/ld+json">
+          {JSON.stringify(articuloSchema)}
         </script>
       )}
       {breadcrumbSchema && (

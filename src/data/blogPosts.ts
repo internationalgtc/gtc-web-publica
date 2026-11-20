@@ -4,6 +4,8 @@ export interface BlogPost {
   excerpt: { es: string; en: string }
   author: string
   date: { es: string; en: string }
+  /** La misma fecha en formato ISO, para los datos estructurados. */
+  isoDate: string
   readTime: string
   category: { es: string; en: string }
   image: string
@@ -23,6 +25,7 @@ export const blogPosts: BlogPost[] = [
     },
     author: 'Global Talent Connections',
     date: { es: '17 Abril 2026', en: 'April 17, 2026' },
+    isoDate: '2026-04-17',
     readTime: '9 min',
     category: { es: 'Trabajo Remoto', en: 'Remote Work' },
     image: '/images/blog-roi-talento-remoto.jpg',
@@ -127,6 +130,7 @@ export const blogPosts: BlogPost[] = [
     excerpt: { es: 'El trabajo remoto dejó de ser un beneficio excepcional para convertirse en la nueva arquitectura del trabajo global. Los datos de 2026 son contundentes: el mercado de talento ya no entiende de fronteras geográficas.', en: 'Remote work has gone from being an exceptional benefit to becoming the new architecture of global work. The 2026 data is conclusive: the talent market no longer recognizes geographic borders.' },
     author: 'Global Talent Connections',
     date: { es: '7 Abril 2026', en: 'April 7, 2026' },
+    isoDate: '2026-04-07',
     readTime: '10 min',
     category: { es: 'Trabajo Remoto', en: 'Remote Work' },
     image: '/blog/futuro-talento-remoto-2026.png',

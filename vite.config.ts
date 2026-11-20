@@ -219,6 +219,17 @@ export default defineConfig({
         if (renderedRoute.route === '/') renderedRoute.outputPath = HOME_PRERENDER
         // El prerender corre en localhost: si algún href absoluto se coló, se
         // devuelve al dominio real para no publicar enlaces a 127.0.0.1.
+        // Las og:/twitter: fijas de index.html son el respaldo de las páginas
+        // SIN prerender (spa.html y los artículos de Leax, que las reutilizan).
+        // En el HTML prerenderizado react-helmet ya escribió las de la página
+        // (llevan data-rh): las fijas quedaban duplicadas y, en las internas,
+        // primero la de la portada. Se quitan solo si la página trae la suya.
+        renderedRoute.html = renderedRoute.html.replace(
+          /[ \t]*<meta (property|name)="((?:og|twitter):[^"]+)" content="[^"]*"\s*\/?>\n?/g,
+          (etiqueta: string, atributo: string, clave: string) =>
+            new RegExp(`<meta ${atributo}="${clave}" content="[^"]*" data-rh="true"`).test(renderedRoute.html)
+              ? '' : etiqueta,
+        )
         renderedRoute.html = renderedRoute.html
           .replace(/<html([^>]*)\sclass="fuentes-listas"/, '<html$1')
           .replace(/https?:\/\/localhost(:\d+)?/g, 'https://globaltalent-connections.com')

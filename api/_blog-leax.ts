@@ -17,8 +17,12 @@ export const BASE_URL = 'https://www.globaltalent-connections.com'
 export const LEAX_API = (process.env.LEAX_API_URL ?? 'https://leaxagentic.com').replace(/\/+$/, '')
 export const LEAX_WORKSPACE = process.env.LEAX_BLOG_WORKSPACE ?? 'global-talent-connections'
 
-/** Los dos artículos escritos a mano en src/data/blogPosts.ts: no pasan por Leax. */
-export const ARTICULOS_PROPIOS = ['roi-talento-remoto', 'futuro-talento-remoto-2026']
+/**
+ * Los artículos escritos a mano en src/data/blogPosts.ts: no pasan por Leax.
+ * Vacío desde el 26-nov-2026: los dos que había usaban vocabulario que la guía
+ * del 16-nov deja fuera; sus direcciones van a /blog (vercel.json).
+ */
+export const ARTICULOS_PROPIOS: string[] = []
 
 export type ArticuloLeax = {
   slug: string

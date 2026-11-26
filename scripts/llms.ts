@@ -29,7 +29,7 @@ ${datos.map(d => `- ${d}`).join('\n')}
 - [Qué es GTC](${BASE}/que-es-gtc): esta misma definición.
 - [Inicio](${BASE}/): qué hacemos, cómo es el proceso, el equipo y preguntas frecuentes.
 - [Servicios](${BASE}/servicios): las áreas profesionales.
-- [Asistente virtual](${BASE}/asistente-virtual): precio, qué incluye y preguntas frecuentes.
+- [Servicio de soporte remoto](${BASE}/asistente-virtual): precio, qué incluye y preguntas frecuentes.
 - [Nosotros](${BASE}/nosotros): equipo y sedes.
 - [¿Qué deberías delegar?](${BASE}/diagnostico-delegar): ${es('diag_seo_desc')}
 - [Contacto](${BASE}/contacto)

@@ -483,7 +483,7 @@ export default function AsistenteVirtual() {
         title="Servicio de soporte remoto para empresas"
         description="Soporte remoto gestionado desde 1.300 €/mes. Nuestro equipo gestiona el servicio y te presenta los resultados cada semana. En marcha en 5 días hábiles, sin permanencia."
         path="/asistente-virtual"
-        keywords="servicio de soporte remoto, soporte remoto gestionado, asistente virtual para empresas, asistencia virtual gestionada, asistente virtual precio, secretaria virtual empresas, externalizar tareas administrativas"
+        keywords="servicio de soporte remoto, soporte remoto gestionado, soporte remoto para empresas, asistencia virtual gestionada, soporte remoto precio, externalizar tareas administrativas"
         faqSchema={FAQ_SCHEMA}
       />
 

@@ -38,6 +38,11 @@
       "permanent": true
     },
     {
+      "source": "/Calculadora-de-Ahorro-Estrategico-GTC.xlsx",
+      "destination": "https://www.globaltalent-connections.com/servicios",
+      "permanent": true
+    },
+    {
       "source": "/calculadora-ahorro",
       "destination": "https://www.globaltalent-connections.com/servicios",
       "permanent": true

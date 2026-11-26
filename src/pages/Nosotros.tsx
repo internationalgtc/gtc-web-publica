@@ -228,7 +228,7 @@ export default function NosotrosPage() {
         title="Sobre Nosotros"
         description={`Conoce a Global Talent Connections: equipo, misión y por qué ${CIFRAS.empresas.enFrase.es} confían en nuestro servicio gestionado desde Latinoamérica.`}
         path="/nosotros"
-        keywords="quienes somos Global Talent Connections, empresa talento remoto España, agencia asistentes virtuales, outsourcing Latinoamérica, equipo Global Talent"
+        keywords="quienes somos Global Talent Connections, servicio de soporte remoto, servicio gestionado desde Latinoamérica, equipo Global Talent Connections"
         breadcrumbs={[{ name: 'Nosotros', url: '/nosotros' }]}
       />
       <Encabezado />

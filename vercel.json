@@ -43,6 +43,16 @@
       "permanent": true
     },
     {
+      "source": "/blog/roi-talento-remoto",
+      "destination": "https://www.globaltalent-connections.com/blog",
+      "permanent": true
+    },
+    {
+      "source": "/blog/futuro-talento-remoto-2026",
+      "destination": "https://www.globaltalent-connections.com/blog",
+      "permanent": true
+    },
+    {
       "source": "/blog/herramientas-vacantes-internacionales",
       "destination": "https://www.globaltalent-connections.com/",
       "permanent": true
